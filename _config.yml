@@ -1,1 +1,51 @@
+# Site
+title: Joe's Epic Site
+description: >-
+  A short description of your GitHub Pages site.
+url: "https://JoeNissen.github.io"
+baseurl: "https://joenissen.github.io/" 
+
+# Author
+author:
+  name: Joe Nissen
+  email: jnissen@binghamton.edu
+
+# Theme (GitHub Pages supported)
+theme: minima
+
+# Markdown
+markdown: kramdown
+highlighter: rouge
+
+# Plugins (GitHub Pages–whitelisted only)
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Permalinks
+permalink: pretty
+
+# Defaults
+defaults:
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+  -
+    scope:
+      path: ""
+      type: pages
+    values:
+      layout: page
+
+# Files to exclude
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
 
