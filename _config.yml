@@ -3,7 +3,7 @@ title: Joe's Epic Site
 description: >-
   A short description of your GitHub Pages site.
 url: "https://joenissen.github.io"
-baseurl: "https://joenissen.github.io/" 
+baseurl: "" 
 
 # Author
 author:
