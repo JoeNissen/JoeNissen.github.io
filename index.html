@@ -119,6 +119,20 @@
 
     footer a { color: var(--accent); text-decoration: none; }
 
+    /* Avatar styling */
+    .avatar {
+      width: 90px;
+      height: 90px;
+      max-width: 90px;
+      max-height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.45),
+        0 0 0 6px rgba(122,162,247,0.08);
+      flex-shrink: 0;
+    }
+
     /* Mobile layout */
     @media (max-width: 768px) {
       header {
@@ -127,14 +141,12 @@
       }
 
       .avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow:
-        0 12px 30px rgba(0,0,0,0.45),
-        0 0 0 6px rgba(122,162,247,0.08);
-    }
+        width: 64px;
+        height: 64px;
+        max-width: 64px;
+        max-height: 64px;
+        margin-bottom: 2rem;
+      }
 
       .actions {
         justify-content: center;
@@ -157,7 +169,7 @@
         <a class="btn secondary" href="https://github.com/joenissen">GitHub</a>
       </div>
     </div>
-    <img src="assets/headshot_final.png" alt="Photo of Joe Nissen" class="avatar">
+    <img src="headshot_final.png" alt="Photo of Joe Nissen" class="avatar">
   </header>
 
   <section id="projects">
