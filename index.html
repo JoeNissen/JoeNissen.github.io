@@ -32,32 +32,33 @@
       margin: auto;
       display: flex;
       align-items: center;
-      gap: 2rem;
-    }
-
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid rgba(255,255,255,0.15);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      flex-shrink: 0;
+      justify-content: space-between;
+      gap: 3rem;
     }
 
     h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 800;
       letter-spacing: -0.04em;
-      margin: 0 0 1rem;
+      margin: 0 0 0.5rem;
     }
 
     h1 span { color: var(--accent); }
+
+    .tagline {
+      margin-top: -0.25rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
 
     p.lead {
       font-size: 1.25rem;
       color: var(--muted);
       max-width: 700px;
+      margin-top: 1.25rem;
     }
 
     .actions {
@@ -117,13 +118,43 @@
     }
 
     footer a { color: var(--accent); text-decoration: none; }
+
+    /* Mobile layout */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .avatar {
+        width: 160px;
+        height: 160px;
+        margin-bottom: 2rem;
+      }
+
+      .actions {
+        justify-content: center;
+      }
+    }
+  </style>  }
+
+    .card h3 { margin-top: 0; }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem 4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
   <header>
-    <img src="assets/headshot_final.png" alt="Photo of Joe Nissen" class="avatar">
     <div>
       <h1>Joe Nissen<span>.</span></h1>
+      <div class="tagline">CS MS · Systems · AI</div>
       <p class="lead">
         Computer Science master’s student focused on systems, AI, and software engineering.
         I build things that are fast, correct, and actually ship.
@@ -134,6 +165,7 @@
         <a class="btn secondary" href="https://github.com/joenissen">GitHub</a>
       </div>
     </div>
+    <img src="headshot_final.png" alt="Photo of Joe Nissen" class="avatar">
   </header>
 
   <section id="projects">
