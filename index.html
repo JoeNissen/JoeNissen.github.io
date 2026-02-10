@@ -120,3 +120,111 @@
       background: #121826;
       border: 1px solid #1f2540;
       border-radius: 12px;
+      padding: 1rem 1.25rem;
+      min-width: 260px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .contact:hover .contact-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .contact-menu p {
+      margin: 0.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .contact-menu a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Avatar */
+
+    .avatar {
+      width: 256px;
+      height: 256px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow:
+        0 12px 30px rgba(255, 255, 255, 0.5),
+        0 0 0 6px rgba(255, 255, 255, 0.5);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 2rem;
+      }
+
+      .contact-menu {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+
+  <header>
+    <div>
+      <h1>Joe Nissen<span>.</span></h1>
+
+      <p class="lead">
+        Computer Science master’s student focused on artificial intelligence,
+        machine learning, and software systems. Currently conducting research
+        in quantum computing at Binghamton University.
+      </p>
+
+      <div class="nav-cards">
+        <a class="nav-card" href="projects.html">
+          <h3>Projects</h3>
+          <p>
+            Engineering, machine learning, systems, and developer tooling work,
+            spanning research prototypes to production-quality implementations.
+          </p>
+        </a>
+
+        <a class="nav-card" href="research.html">
+          <h3>Research</h3>
+          <p>
+            Academic research in quantum computing, computational models,
+            and theoretical foundations of intelligent systems.
+          </p>
+        </a>
+      </div>
+
+      <div class="contact">
+        <button class="contact-btn">Contact</button>
+        <div class="contact-menu">
+          <p><strong>Email:</strong> <a href="mailto:jnissen@binghamton.edu">jnissen@binghamton.edu</a></p>
+          <p><strong>Phone:</strong> (518) 307-8928</p>
+        </div>
+      </div>
+    </div>
+
+    <img src="assets/headshot_final.png" alt="Photo of Joe Nissen" class="avatar">
+  </header>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script> Joe Nissen · Built with GitHub Pages
+  </footer>
+
+  <script src="assets/bg.js"></script>
+</body>
+</html>
