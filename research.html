@@ -3,38 +3,199 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Research | Joe Nissen</title>
+  <title>Joe Nissen | Computer Science</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    :root {
+      --bg: #0b0e14;
+      --fg: #e6e6eb;
+      --muted: #9aa0b4;
+      --accent: #7aa2f7;
+      --card: #121826;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      <canvas id="bg"></canvas>
+      <script src="assets/bg.js"></script>
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, #1a2040, transparent), var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 6rem 1.5rem 4rem;
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin: 0 0 0.5rem;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .tagline {
+      margin-top: -0.25rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    p.lead {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 700px;
+      margin-top: 1.25rem;
+    }
+
+    .actions {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #7aa2f7, #9d7af7);
+      color: #05060a;
+    }
+
+    .btn.secondary {
+      border-color: #2a2f45;
+      color: var(--fg);
+      background: #0f1424;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #121826, #0e1320);
+      border: 1px solid #1f2540;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    .card h3 { margin-top: 0; }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem 4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* Avatar styling */
+    .avatar {
+      width: 256px;
+      height: 256px;
+      max-width: 256px;
+      max-height: 256px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow:
+        0 12px 30px rgba(255, 255, 255, 0.5),
+        0 0 0 6px rgba(255, 255, 255, 0.5);
+      flex-shrink: 0;
+    }
+
+    /* Mobile layout */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .avatar {
+        width: 64px;
+        height: 64px;
+        max-width: 64px;
+        max-height: 64px;
+        margin-bottom: 2rem;
+      }
+
+      .actions {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <canvas id="bg"></canvas>
-  <script src="assets/bg.js"></script>
+
   <header>
-    <h1>Research<span>.</span></h1>
-    <p class="lead">
-      Quantum computing and theoretical computer science research.
-    </p>
-    <a class="btn secondary" href="index.html">← Home</a>
+    <div>
+      <h1>Research<span>.</span></h1>
+      <p class="lead">
+        Quantum computing research at Binghamton University.
+      </p>
+      <div class="actions">
+        <a class="btn secondary" href="index.html">← Home</a>
+        <a class="btn secondary" href="projects.html">Projects</a>
+      </div>
+    </div>
   </header>
 
   <section>
     <div class="card">
       <h3>Quantum State Analysis</h3>
       <p>
-        Research on quantum states, inner products, and computational representations.
-        Conducted at Binghamton University.
+        Analysis of quantum states, inner products, and computational models.
       </p>
     </div>
 
     <div class="card">
       <h3>Ongoing Work</h3>
       <p>
-        Exploring applications of quantum computation to learning and optimization.
+        Exploring quantum representations for learning and optimization.
       </p>
     </div>
   </section>
 
   <script src="assets/bg.js"></script>
 </body>
+
 </html>
