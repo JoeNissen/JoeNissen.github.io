@@ -118,8 +118,9 @@ p.lead {
 
 .contact-menu {
   position: absolute;
-  top: calc(100% + 0.75rem);
-  left: 0;
+  top: 50%;
+  left: calc(100% + 0.75rem);
+  transform: translateY(-50%) translateX(-6px);
   background: #121826;
   border: 1px solid #1f2540;
   border-radius: 12px;
@@ -128,16 +129,17 @@ p.lead {
   box-shadow: 0 20px 40px rgba(0,0,0,0.35);
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-6px);
   transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 10;
 }
 
+
 .contact:hover .contact-menu {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(-50%) translateX(0);
 }
+
 
 .contact-menu p {
   margin: 0.25rem 0;
@@ -178,14 +180,16 @@ p.lead {
     margin-inline: auto;
   }
 
-  .contact-menu {
-    left: 50%;
-    transform: translateX(-50%) translateY(-6px);
-  }
+.contact-menu {
+  top: calc(100% + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+}
 
-  .contact:hover .contact-menu {
-    transform: translateX(-50%) translateY(0);
-  }
+.contact:hover .contact-menu {
+  transform: translateX(-50%) translateY(0);
+}
+
 }
 
   </style>
