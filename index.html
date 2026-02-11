@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Joe Nissen | Computer Science</title>
@@ -10,6 +12,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at 20% -10%,
+        rgba(40, 60, 120, 0.4),
+        transparent 60%
+          ),
+      #0b0e14;
+    }
+
     :root {
       --bg: #0b0e14;
       --fg: #e6e6eb;
@@ -200,9 +218,65 @@
     }
   </style>
 </head>
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: {
+      value: 60,
+      density: {
+        enable: true,
+        value_area: 900
+      }
+    },
+    color: {
+      value: "#7aa2f7"
+    },
+    shape: {
+      type: "circle"
+    },
+    opacity: {
+      value: 0.15,
+      random: false
+    },
+    size: {
+      value: 3,
+      random: true
+    },
+    line_linked: {
+      enable: true,
+      distance: 130,
+      color: "#7aa2f7",
+      opacity: 0.08,
+      width: 1
+    },
+    move: {
+      enable: true,
+      speed: 0.6,
+      direction: "none",
+      random: false,
+      straight: false,
+      out_mode: "out",
+      bounce: false
+    }
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: {
+        enable: false
+      },
+      onclick: {
+        enable: false
+      },
+      resize: true
+    }
+  },
+  retina_detect: true
+});
+</script>
 
 <body>
-  <canvas id="bg"></canvas>
+<div id="particles-js"></div>
 
   <header>
     <div>
