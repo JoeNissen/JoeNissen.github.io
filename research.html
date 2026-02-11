@@ -3,18 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Joe Nissen | Computer Science</title>
+  <title>Joe Nissen | Research</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <style>
-    #bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-    }
 
+  <style>
     :root {
       --bg: #0b0e14;
       --fg: #e6e6eb;
@@ -26,13 +21,19 @@
     * { box-sizing: border-box; }
 
     body {
-      <canvas id="bg"></canvas>
-      <script src="assets/bg.js"></script>
       margin: 0;
       font-family: Inter, system-ui, sans-serif;
       background: radial-gradient(1200px 600px at 20% -10%, #1a2040, transparent), var(--bg);
       color: var(--fg);
       line-height: 1.6;
+    }
+
+    /* Background canvas */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
     }
 
     header {
@@ -53,15 +54,6 @@
     }
 
     h1 span { color: var(--accent); }
-
-    .tagline {
-      margin-top: -0.25rem;
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
 
     p.lead {
       font-size: 1.25rem;
@@ -117,7 +109,9 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.35);
     }
 
-    .card h3 { margin-top: 0; }
+    .card h3 {
+      margin-top: 0;
+    }
 
     footer {
       text-align: center;
@@ -126,20 +120,9 @@
       font-size: 0.9rem;
     }
 
-    footer a { color: var(--accent); text-decoration: none; }
-
-    /* Avatar styling */
-    .avatar {
-      width: 256px;
-      height: 256px;
-      max-width: 256px;
-      max-height: 256px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow:
-        0 12px 30px rgba(255, 255, 255, 0.5),
-        0 0 0 6px rgba(255, 255, 255, 0.5);
-      flex-shrink: 0;
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
     }
 
     /* Mobile layout */
@@ -149,21 +132,16 @@
         text-align: center;
       }
 
-      .avatar {
-        width: 64px;
-        height: 64px;
-        max-width: 64px;
-        max-height: 64px;
-        margin-bottom: 2rem;
-      }
-
       .actions {
         justify-content: center;
       }
     }
   </style>
 </head>
+
 <body>
+
+  <!-- Background Canvas -->
   <canvas id="bg"></canvas>
 
   <header>
@@ -180,22 +158,29 @@
   </header>
 
   <section>
-    <div class="card">
-      <h3>Quantum State Analysis</h3>
-      <p>
-        Analysis of quantum states, inner products, and computational models.
-      </p>
-    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>Quantum State Analysis</h3>
+        <p>
+          Analysis of quantum states, inner products, and computational models.
+        </p>
+      </div>
 
-    <div class="card">
-      <h3>Ongoing Work</h3>
-      <p>
-        Exploring quantum representations for learning and optimization.
-      </p>
+      <div class="card">
+        <h3>Ongoing Work</h3>
+        <p>
+          Exploring quantum representations for learning and optimization.
+        </p>
+      </div>
     </div>
   </section>
 
-  <script src="assets/bg.js"></script>
-</body>
+  <footer>
+    © 2026 Joe Nissen
+  </footer>
 
+  <!-- Background Script -->
+  <script src="assets/bg.js"></script>
+
+</body>
 </html>
