@@ -1,293 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Joe Nissen</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joe Nissen</title>
 
-  <!-- Particles.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<!-- Particles CDN -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-    body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #e5e7eb;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #e5e7eb;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-    /* ===== PARTICLES LAYER ===== */
-    #particles-js {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-    }
+/* ===== PARTICLES ===== */
+#particles-js {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
 
-    header, footer {
-      position: relative;
-      z-index: 1;
-    }
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
 
-    /* ===== LAYOUT ===== */
-    header {
-      display: flex;
-      justify-content: center;
-      padding: 60px 20px;
-    }
+.portrait img {
+  width: 240px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 
-    .container {
-      display: flex;
-      gap: 60px;
-      align-items: center;
-      max-width: 1100px;
-      width: 100%;
-    }
+.info {
+  max-width: 550px;
+}
 
-    .portrait img {
-      width: 240px;
-      border-radius: 14px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
+h1 {
+  font-size: 2.6rem;
+  margin-bottom: 18px;
+}
 
-    .info {
-      max-width: 550px;
-    }
+p {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
 
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
+/* ===== NAV BUTTONS ===== */
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 30px;
+}
 
-    p {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: #cbd5e1;
-      margin-bottom: 30px;
-    }
+.nav-buttons a {
+  text-decoration: none;
+  background: #1f2937;
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  color: #f9fafb;
+  width: 260px;
+  transition: 0.25s ease;
+}
 
-    /* ===== BUTTONS ===== */
-    .nav-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-bottom: 30px;
-    }
+.nav-buttons a:hover {
+  background: #334155;
+  transform: translateY(-2px);
+}
 
-    .nav-buttons a {
-      text-decoration: none;
-      background: #1f2937;
-      padding: 14px 28px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
-      color: #f9fafb;
-      transition: all 0.25s ease;
-      width: 240px;
-    }
+/* ===== CONNECT DROPDOWN ===== */
+.connect-wrapper {
+  position: relative;
+  display: inline-block;
+}
 
-    .nav-buttons a:hover {
-      background: #334155;
-      transform: translateY(-2px);
-    }
+.connect-btn {
+  background: #1f2937;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.25s ease;
+}
 
-    /* ===== CONNECT DROPDOWN ===== */
-    .connect-wrapper {
-      position: relative;
-      display: inline-block;
-    }
+.connect-btn:hover {
+  background: #334155;
+}
 
-    .connect-btn {
-      background: #1f2937;
-      padding: 12px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.25s ease;
-      user-select: none;
-    }
+.dropdown {
+  position: absolute;
+  top: 0;
+  left: 110%;
+  background: #111827;
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 260px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-10px);
+  transition: 0.25s ease;
+}
 
-    .connect-btn:hover {
-      background: #334155;
-    }
+.connect-wrapper.active .dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
 
-    .dropdown {
-      position: absolute;
-      top: 0;
-      left: 110%;
-      background: #111827;
-      border-radius: 8px;
-      padding: 16px;
-      min-width: 260px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-10px);
-      transition: all 0.25s ease;
-    }
+.dropdown div {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
 
-    .connect-wrapper.active .dropdown {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
+.dropdown div:last-child {
+  margin-bottom: 0;
+}
 
-    .dropdown div {
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-    }
+.dropdown a {
+  color: #93c5fd;
+  text-decoration: none;
+  word-break: break-word;
+}
 
-    .dropdown div:last-child {
-      margin-bottom: 0;
-    }
+.dropdown a:hover {
+  text-decoration: underline;
+}
 
-    .dropdown a {
-      color: #93c5fd;
-      text-decoration: none;
-      word-break: break-word;
-    }
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+  .main {
+    flex-direction: column;
+    text-align: center;
+  }
 
-    .dropdown a:hover {
-      text-decoration: underline;
-    }
+  .dropdown {
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -10px);
+  }
 
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      color: #94a3b8;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 900px) {
-      .container {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .dropdown {
-        left: 50%;
-        transform: translate(-50%, -10px);
-        top: 110%;
-      }
-
-      .connect-wrapper.active .dropdown {
-        transform: translate(-50%, 0);
-      }
-    }
-  </style>
+  .connect-wrapper.active .dropdown {
+    transform: translate(-50%, 0);
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div id="particles-js"></div>
+<div id="particles-js"></div>
 
-  <header>
-    <div class="container">
+<div class="main">
 
-      <div class="portrait">
-        <img src="portrait.jpg" alt="Joe Nissen">
-      </div>
+  <div class="portrait">
+    <img src="portrait.jpg" alt="Joe Nissen">
+  </div>
 
-      <div class="info">
-        <h1>Joe Nissen</h1>
-        <p>
-          Computer Science student focused on artificial intelligence,
-          machine learning, and systems design. Interested in building
-          intelligent tools that are technically rigorous and practically useful.
-        </p>
+  <div class="info">
+    <h1>Joe Nissen</h1>
+    <p>
+      Computer Science student focused on artificial intelligence,
+      machine learning, and systems design.
+    </p>
 
-        <div class="nav-buttons">
-          <a href="projects.html">Projects</a>
-          <a href="research.html">Research</a>
+    <div class="nav-buttons">
+      <a href="projects.html">Projects</a>
+      <a href="research.html">Research</a>
+    </div>
+
+    <div class="connect-wrapper" id="connect">
+      <div class="connect-btn">Connect</div>
+      <div class="dropdown">
+        <div>Email:
+          <a href="mailto:joenissen@example.com">
+            joenissen@example.com
+          </a>
         </div>
-
-        <div class="connect-wrapper" id="connect">
-          <div class="connect-btn">Connect</div>
-          <div class="dropdown">
-            <div>
-              Email: 
-              <a href="mailto:joenissen@example.com">
-                joenissen@example.com
-              </a>
-            </div>
-            <div>
-              LinkedIn: 
-              <a href="https://linkedin.com/in/joenissen" target="_blank">
-                linkedin.com/in/joenissen
-              </a>
-            </div>
-            <div>
-              GitHub: 
-              <a href="https://github.com/joenissen" target="_blank">
-                github.com/joenissen
-              </a>
-            </div>
-          </div>
+        <div>LinkedIn:
+          <a href="https://linkedin.com/in/joenissen" target="_blank">
+            linkedin.com/in/joenissen
+          </a>
         </div>
-
+        <div>GitHub:
+          <a href="https://github.com/joenissen" target="_blank">
+            github.com/joenissen
+          </a>
+        </div>
       </div>
     </div>
-  </header>
 
-  <footer>
-    © 2026 Joe Nissen
-  </footer>
+  </div>
+</div>
 
-  <script>
-    // Toggle dropdown
-    const connect = document.getElementById("connect");
-    connect.addEventListener("click", () => {
-      connect.classList.toggle("active");
-    });
+<script>
+// Dropdown toggle
+const connect = document.getElementById("connect");
 
-    // Close if clicking outside
-    document.addEventListener("click", (e) => {
-      if (!connect.contains(e.target)) {
-        connect.classList.remove("active");
-      }
-    });
+connect.addEventListener("click", () => {
+  connect.classList.toggle("active");
+});
 
-    // Particles config
-    particlesJS("particles-js", {
-      particles: {
-        number: { value: 70 },
-        color: { value: "#ffffff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.4 },
-        size: { value: 3 },
-        line_linked: {
-          enable: true,
-          distance: 150,
-          color: "#ffffff",
-          opacity: 0.2,
-          width: 1
-        },
-        move: {
-          enable: true,
-          speed: 1.2
-        }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: true, mode: "repulse" },
-          onclick: { enable: true, mode: "push" }
-        },
-        modes: {
-          repulse: { distance: 200, duration: 0.6 },
-          push: { particles_nb: 4 }
-        }
-      },
-      retina_detect: true
-    });
-  </script>
+document.addEventListener("click", (e) => {
+  if (!connect.contains(e.target)) {
+    connect.classList.remove("active");
+  }
+});
+
+// Particles
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 70 },
+    color: { value: "#ffffff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.35 },
+    size: { value: 3 },
+    line_linked: {
+      enable: true,
+      distance: 150,
+      color: "#ffffff",
+      opacity: 0.2,
+      width: 1
+    },
+    move: { enable: true, speed: 1.2 }
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: { enable: true, mode: "repulse" },
+      onclick: { enable: true, mode: "push" }
+    },
+    modes: {
+      repulse: { distance: 200, duration: 0.6 },
+      push: { particles_nb: 4 }
+    }
+  },
+  retina_detect: true
+});
+</script>
 
 </body>
 </html>
