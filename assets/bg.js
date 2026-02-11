@@ -10,7 +10,7 @@ resize();
 
 // --- Particles ---
 const particles = [];
-const numParticles = 60; // slightly denser, still subtle
+const numParticles = 60;
 
 for (let i = 0; i < numParticles; i++) {
   particles.push({
@@ -22,20 +22,10 @@ for (let i = 0; i < numParticles; i++) {
   });
 }
 
-// --- Gradient drift ---
-let gradientOffset = 0;
-
 // --- Animation loop ---
 function animate() {
+  // Clear canvas but keep transparency
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Gradient background
-  gradientOffset += 0.0005; // very slow
-  const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  grad.addColorStop(0, `hsla(${gradientOffset * 360}, 40%, 20%, 1)`);  // lighter than before
-  grad.addColorStop(1, `hsla(${(gradientOffset + 0.1) * 360}, 35%, 25%, 1)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Draw particles
   for (let i = 0; i < numParticles; i++) {
@@ -51,7 +41,7 @@ function animate() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.12)'; // slightly brighter
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
     ctx.fill();
   }
 
@@ -76,3 +66,4 @@ function animate() {
 }
 
 animate();
+
