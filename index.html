@@ -13,6 +13,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    
+    header, footer {
+      position: relative;
+      z-index: 1;
+    }
+
     :root {
       --bg: #0b0e14;
       --fg: #e6e6eb;
@@ -32,17 +38,17 @@
     }
 
     /* Particles background */
-    #particles-js {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: auto;
-      background: radial-gradient(
-        circle at 20% -10%,
-        rgba(40, 60, 120, 0.35),
-        transparent 60%
-      );
-    }
+#particles-js {
+  position: fixed;
+  inset: 0;
+  z-index: 0;            /* was -1 */
+  background: radial-gradient(
+    circle at 20% -10%,
+    rgba(40, 60, 120, 0.35),
+    transparent 60%
+  );
+}
+
 
     header {
       padding: 6rem 1.5rem 4rem;
