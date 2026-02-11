@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Joe Nissen | Computer Science</title>
 
-  <!-- Particles.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +30,6 @@
       overflow-x: hidden;
     }
 
-    /* Particles background */
     #particles-js {
       position: fixed;
       inset: 0;
@@ -70,7 +68,6 @@
       margin-top: 1.25rem;
     }
 
-    /* Navigation cards */
     .nav-cards {
       margin-top: 3rem;
       display: flex;
@@ -105,7 +102,8 @@
       color: var(--muted);
     }
 
-    /* Contact dropdown */
+    /* Contact */
+
     .contact {
       position: relative;
       display: inline-block;
@@ -126,33 +124,26 @@
       position: absolute;
       top: 50%;
       left: calc(100% + 0.75rem);
-      transform: translateY(-50%) translateX(-6px);
+      transform: translateY(-50%);
       background: #121826;
       border: 1px solid #1f2540;
       border-radius: 12px;
       padding: 1rem 1.25rem;
       min-width: 260px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.35);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-      user-select: text;
+      display: none;
       z-index: 10;
     }
 
-    .contact:hover .contact-menu,
-    .contact-menu:hover {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(-50%) translateX(0);
+    .contact-menu.active {
+      display: block;
     }
 
     .contact-row {
       display: flex;
       gap: 0.5rem;
       align-items: baseline;
-      white-space: nowrap;
-      margin: 0.25rem 0;
+      margin: 0.5rem 0;
       font-size: 0.95rem;
     }
 
@@ -163,9 +154,9 @@
     .contact-menu a {
       color: var(--accent);
       text-decoration: none;
+      word-break: break-word;
     }
 
-    /* Avatar */
     .avatar {
       width: 256px;
       height: 256px;
@@ -192,12 +183,7 @@
       .contact-menu {
         top: calc(100% + 0.75rem);
         left: 50%;
-        transform: translateX(-50%) translateY(-6px);
-      }
-
-      .contact:hover .contact-menu,
-      .contact-menu:hover {
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%);
       }
     }
   </style>
@@ -218,15 +204,17 @@
     </p>
 
     <div class="contact">
-      <button class="contact-btn">Connect</button>
-      <div class="contact-menu">
+      <button class="contact-btn" id="contactToggle">Connect</button>
+      <div class="contact-menu" id="contactMenu">
         <div class="contact-row">
           <span>Email:</span>
           <a href="mailto:jnissen@binghamton.edu">jnissen@binghamton.edu</a>
         </div>
         <div class="contact-row">
           <span>LinkedIn:</span>
-          <a href="mailto:https://www.linkedin.com/in/joenissen/">https://www.linkedin.com/in/joenissen/</a>
+          <a href="https://www.linkedin.com/in/joenissen/" target="_blank">
+            linkedin.com/in/joenissen
+          </a>
         </div>
       </div>
     </div>
@@ -260,12 +248,25 @@
 </footer>
 
 <script>
+const toggle = document.getElementById("contactToggle");
+const menu = document.getElementById("contactMenu");
+
+toggle.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.classList.toggle("active");
+});
+
+document.addEventListener("click", (e) => {
+  if (!menu.contains(e.target) && e.target !== toggle) {
+    menu.classList.remove("active");
+  }
+});
+</script>
+
+<script>
 particlesJS("particles-js", {
   particles: {
-    number: {
-      value: 60,
-      density: { enable: true, value_area: 900 }
-    },
+    number: { value: 60, density: { enable: true, value_area: 900 } },
     color: { value: "#7aa2f7" },
     shape: { type: "circle" },
     opacity: { value: 0.15 },
@@ -277,28 +278,12 @@ particlesJS("particles-js", {
       opacity: 0.08,
       width: 1
     },
-    move: {
-      enable: true,
-      speed: 0.4,
-      out_mode: "out"
-    }
+    move: { enable: true, speed: 0.4, out_mode: "out" }
   },
   interactivity: {
     detect_on: "canvas",
-    events: {
-      onhover: {
-        enable: true,
-        mode: "repulse"
-      },
-      onclick: { enable: false },
-      resize: true
-    },
-    modes: {
-      repulse: {
-        distance: 120,
-        duration: 0.4
-      }
-    }
+    events: { onhover: { enable: true, mode: "repulse" }, resize: true },
+    modes: { repulse: { distance: 120, duration: 0.4 } }
   },
   retina_detect: true
 });
