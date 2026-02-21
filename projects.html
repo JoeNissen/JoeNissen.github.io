@@ -3,235 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projects | Joe Nissen</title>
+  <title>Projects</title>
 
-  <!-- Particles.js CDN (same as index) -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Projects | Joe Nissen" />
+  <meta property="og:description" content="Machine learning, AI, and software engineering projects by Joe Nissen." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Projects | Joe Nissen" />
+  <meta name="twitter:description" content="Machine learning, AI, and software engineering projects by Joe Nissen." />
+
+  <script src="assets/particles.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #0b0e14;
-      --fg: #e6e6eb;
-      --muted: #9aa0b4;
-      --accent: #7aa2f7;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* SAME particles background as index.html */
-    #particles-js {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background: radial-gradient(
-        circle at 20% -10%,
-        rgba(40, 60, 120, 0.35),
-        transparent 60%
-      );
-    }
-
-    header {
-      padding: 6rem 1.5rem 4rem;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      margin: 0 0 1rem;
-    }
-
-    h1 span { color: var(--accent); }
-
-    p.lead {
-      font-size: 1.25rem;
-      color: var(--muted);
-      max-width: 700px;
-    }
-
-    .actions {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 0.75rem 1.25rem;
-      border-radius: 12px;
-      font-weight: 600;
-      border: 1px solid #2a2f45;
-      background: #0f1424;
-      color: var(--fg);
-      text-decoration: none;
-      transition: border-color 0.15s ease, transform 0.15s ease;
-    }
-
-    .btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    section {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 1.5rem 4rem;
-    }
-
-    .grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: linear-gradient(180deg, #121826, #0e1320);
-      border: 1px solid #1f2540;
-      border-radius: 18px;
-      padding: 2rem;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-    }
-
-    .card h3 {
-      margin: 0 0 0.75rem;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 1.5rem 4rem;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      header {
-        text-align: center;
-      }
-
-      .actions {
-        justify-content: center;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 
 <body>
 
 <div id="particles-js"></div>
 
-<header>
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
   <h1>Projects<span>.</span></h1>
 
   <p class="lead">
-    Engineering, machine learning, systems, and developer tooling.
+    Machine learning research, AI systems, and software engineering &mdash;
+    from fine-tuning LLMs to training CNNs and building games.
   </p>
-
-  <div class="actions">
-    <a class="btn" href="index.html">← Home</a>
-    <a class="btn" href="research.html">Research</a>
-  </div>
 </header>
 
 <section>
-  <div class="grid">
+  <div class="grid two-col">
 
     <div class="card">
-      <h3>Reinforcement Learning Agents</h3>
+      <h3>Synthetic Data for Model Evaluation</h3>
       <p>
-        Implementation of Q-learning and approximate Q-learning agents
-        for grid-based environments, focusing on convergence behavior
-        and generalization.
+        Investigated how synthetic test data generated by CTGAN and TVAE
+        can improve ML model evaluation under distributional shift.
+        Proposed the 3S-Testing framework and compared generative
+        approaches across MLP, Gradient-Boosted Trees, and Random Forest.
       </p>
+      <div class="tag-row">
+        <span class="tag">Python</span>
+        <span class="tag">CTGAN</span>
+        <span class="tag">TVAE</span>
+        <span class="tag">ML Evaluation</span>
+      </div>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <a class="card-link" href="ml-paper.html">Read Paper &rarr;</a>
+        <a class="card-link" href="https://github.com/JoeNissen/ml-final-project" target="_blank">GitHub &rarr;</a>
+      </div>
     </div>
 
     <div class="card">
-      <h3>Heuristic Learning for Path Planning</h3>
+      <h3>LuAI: LLMs that Teach Lua</h3>
       <p>
-        Supervised learning of heuristic functions to accelerate
-        classical search algorithms and improve sample efficiency.
+        Fine-tuned instruction-based LLMs (Qwen3-4B, CodeLlama-7B) to
+        teach Lua programming step-by-step. Used model distillation to
+        generate synthetic training data and prompt engineering to
+        produce structured, educational code explanations.
       </p>
+      <div class="tag-row">
+        <span class="tag">LLMs</span>
+        <span class="tag">Fine-Tuning</span>
+        <span class="tag">Distillation</span>
+        <span class="tag">Lua</span>
+      </div>
+      <a class="card-link" href="capstone-paper.html">Read Paper &rarr;</a>
     </div>
 
     <div class="card">
-      <h3>Systems & Backend Engineering</h3>
+      <h3>CIFAR-10 Image Classification</h3>
       <p>
-        Linux-based services, MongoDB-backed APIs, networking primitives,
-        and low-level tooling for scalable systems.
+        Built and trained multiple CNN architectures on CIFAR-10,
+        iterating on batch normalization, pooling strategies, and
+        optimizer tuning. Implemented Deep Dream visualizations to
+        explore what convolutional filters learn at each layer.
       </p>
+      <div class="tag-row">
+        <span class="tag">PyTorch</span>
+        <span class="tag">CNNs</span>
+        <span class="tag">Deep Dream</span>
+        <span class="tag">CIFAR-10</span>
+      </div>
     </div>
 
     <div class="card">
-      <h3>Developer Tooling & Automation</h3>
+      <h3>Digital Carcassonne</h3>
       <p>
-        Shell scripting, build automation, and workflow tooling designed
-        to improve developer productivity in real environments.
+        Desktop implementation of the board game Carcassonne in C++
+        with a 4-person team. Built modular game-state management,
+        tile placement logic, and a full UI using SFML libraries
+        with professional Git workflow.
       </p>
+      <div class="tag-row">
+        <span class="tag">C++</span>
+        <span class="tag">SFML</span>
+        <span class="tag">Game Dev</span>
+        <span class="tag">Team Project</span>
+      </div>
     </div>
 
   </div>
 </section>
 
 <footer>
-  © <script>document.write(new Date().getFullYear())</script> Joe Nissen
+  &copy; <span id="year"></span> Joe Nissen
 </footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 
 <script>
 particlesJS("particles-js", {
   particles: {
-    number: {
-      value: 60,
-      density: { enable: true, value_area: 900 }
-    },
+    number: { value: 70, density: { enable: true, value_area: 900 } },
     color: { value: "#7aa2f7" },
     shape: { type: "circle" },
-    opacity: { value: 0.15 },
-    size: { value: 3, random: true },
+    opacity: {
+      value: 0.18,
+      random: true,
+      anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false }
+    },
+    size: {
+      value: 3,
+      random: true,
+      anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
+    },
     line_linked: {
       enable: true,
-      distance: 130,
+      distance: 140,
       color: "#7aa2f7",
-      opacity: 0.08,
+      opacity: 0.15,
       width: 1
     },
     move: {
       enable: true,
-      speed: 0.4,
-      out_mode: "out"
+      speed: 0.5,
+      direction: "none",
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false
     }
   },
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: true, mode: "repulse" },
+      onhover: { enable: true, mode: ["grab", "repulse"] },
+      onclick: { enable: true, mode: "push" },
       resize: true
     },
     modes: {
-      repulse: { distance: 120, duration: 0.4 }
+      grab: { distance: 250, line_linked: { opacity: 0.5 } },
+      push: { particles_nb: 4 },
+      repulse: { distance: 100, duration: 0.4 }
     }
   },
   retina_detect: true

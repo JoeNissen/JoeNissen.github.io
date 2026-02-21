@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capstone Paper</title>
+
+  <meta property="og:title" content="LuAI: LLMs that Teach Lua | Joe Nissen" />
+  <meta property="og:description" content="Fine-tuning instruction-based LLMs to teach Lua programming step-by-step." />
+  <meta property="og:type" content="article" />
+
+  <script src="assets/particles.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <h1>Capstone Paper<span>.</span></h1>
+  <div class="actions">
+    <a class="btn" href="projects.html">&larr; Back to Projects</a>
+  </div>
+</header>
+
+<article class="paper-content">
+
+  <h2 style="font-size:1.75rem; border:none; padding:0; margin-bottom:0.5rem;">LuAI: Large Language Models that Teach the User how to Code in Lua</h2>
+
+  <div class="paper-meta">
+    <span><strong>Author:</strong> Joseph Nissen</span>
+    <span><strong>Institution:</strong> SUNY Polytechnic Institute</span>
+    <span><strong>Instructor:</strong> John Szwakob</span>
+    <span><strong>Date:</strong> May 8, 2025</span>
+  </div>
+
+  <h2>Introduction</h2>
+  <p>Over the past five years, artificial intelligence has experienced one of the biggest booms in advancement it has ever seen. Comparable to the birth of the internet, widespread use of AI is going to completely change the way the world works. There are countless use cases for AI that are too specific for larger models to handle effectively yet would still be useful for many people.</p>
+  <p>This concept was in my mind when thinking of an idea for my Capstone, and I wanted to solve this issue by fine-tuning my own model locally in hopes of making it exceptionally good at one specific task. Given my background as both a Computer Science student and a member of a family of teachers, I set out to create a large language model that would teach someone how to code in a lesser-known language that may not have a lot of support online.</p>
+  <p>After searching for a coding language that is obscure enough to not have overwhelming resources available while also being relevant enough to be useful, I ended up settling on <strong>Lua</strong>. Lua is a lightweight coding language, which meant it would be easier for my models to learn. This was extremely important given that the hardware I had to work with was relatively limited. Along with this, Lua is the coding language used to create games in the popular application Roblox, making it a good tool for someone wanting to introduce themselves to game design. Combine these reasons with the fact that there is no existing Lua-specific teaching model, and it was a clear choice.</p>
+
+  <h2>Background Info</h2>
+  <p>The AI model I created is classified as a <strong>large language model (LLM)</strong>&mdash;a type of artificial intelligence model trained to understand and generate words and conversations. An example of a widely popular LLM is OpenAI&rsquo;s ChatGPT. These models are trained using massive amounts of data, and creating one from scratch would be a monumental task for one person. For this reason, the models I used started with base models that were already trained on the fine details of human conversation.</p>
+  <p>These models are still too large to fit onto my graphics card&rsquo;s virtual RAM, so I had to use quantized (less computationally taxing) versions. To get these base models to output the desired responses, I used <strong>fine-tuning</strong>&mdash;taking a pre-trained AI model and training it further on a smaller, more specific dataset.</p>
+  <p>Since the goal was to get my model to learn how to break code down and explain it while also ensuring it could proficiently code in Lua, I decided to use <strong>model distillation</strong>&mdash;a technique that essentially makes a small AI model learn to mimic a much larger, more powerful one. Before fine-tuning, I needed to gather many prompts and responses from one of the better models available, using <strong>prompt engineering</strong> to ensure my dataset contained the correct style of prompt/response pairs. This generated a <strong>synthetic dataset</strong>.</p>
+
+  <h2>Project Overview</h2>
+  <p>The goal of this project is to create a large language model that teaches the user how to code in Lua by generating code based on a prompt given by the user. The model will break up the generated code and explain each section of it, and then explain how it all fits together. The intended use case is that the user would have some prior coding experience but no experience with Lua.</p>
+  <p>Along the course of this project, there were a few changes. I originally intended for the resulting models to not generate code at all, but rather use <strong>retrieval augmented generation (RAG)</strong> to store the Lua documentation along with the model. This would allow it to pull directly from the documentation to answer questions. However, this strategy had issues&mdash;it is very hard to get a model to not generate code, and the RAG structure proved difficult given the diverse information in the Lua documentation. I decided to alter my approach and utilize model distillation instead.</p>
+
+  <h2>Tools</h2>
+  <p>To create the synthetic dataset, I used <strong>OpenAI&rsquo;s ChatGPT 4o</strong> via the ChatGPT API to continuously prompt the model for every question in a coding problems dataset (over 850 questions from Hugging Face) and stored responses in a CSV file.</p>
+  <p>For base models, I used <strong>Hugging Face</strong> to find models fitting my criteria and limitations. When loading models, I used the <strong>BitsAndBytes</strong> library for 4-bit quantization to accommodate memory limitations. All training was done in <strong>Google Colab</strong>, which allowed me to utilize Google&rsquo;s hardware with better memory capacity and performance.</p>
+
+  <h2>Project Structure</h2>
+  <p>I broke the project into three main sections:</p>
+  <ol>
+    <li><strong>Prompt Engineering</strong> &mdash; Creating the prompt used to receive responses from ChatGPT 4o. This was mainly trial and error: creating a prompt, sending it to ChatGPT, evaluating the response, and tweaking aspects based on whether the output was satisfactory. The final prompt: <em>&ldquo;Act as a teacher whose main goal is to explain the material that is being generated. Assume the user has a basic knowledge of coding concepts, but nothing advanced. The topic you teach is the coding language Lua, which you are an expert on. Break down the code that is being generated into likewise chunks and explain each section individually and then explain how it all fits together after this.&rdquo;</em></li>
+    <li><strong>Synthetic Dataset Creation</strong> &mdash; Taking a dataset of 850+ coding problems from Hugging Face and feeding them all into the ChatGPT API, saving responses to a CSV file.</li>
+    <li><strong>Fine-Tuning</strong> &mdash; Converting the dataset to JSON, loading it into Google Colab, splitting into testing and training sections, tokenizing the data, loading the model with 4-bit quantization, setting up <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong>, configuring training arguments, and training.</li>
+  </ol>
+
+  <h2>Assessment</h2>
+  <p>Two different models were trained: a <strong>4-billion parameter Qwen3 model</strong> and a <strong>7-billion parameter CodeLlama model</strong>. Post training, the Qwen model had a loss of about 0.836 while the Llama model ended with a loss of 0.875.</p>
+  <p>To evaluate how well these models learned teaching Lua code, I compared them to the prompt-engineered ChatGPT 4o model that the original dataset was created on, using the same prompt for all three: <em>&ldquo;Make me a Fibonacci sequence generator. The user can input the length of the sequence they want.&rdquo;</em></p>
+
+  <h3>ChatGPT 4o (Baseline)</h3>
+  <p>The prompt-engineered response gives a step-by-step breakdown of the process, then provides the code with comments, then breaks the code down piece by piece with detailed explanations. This is the prime example of what the fine-tuned models should be doing.</p>
+
+  <h3>Qwen3 Fine-Tuned Model</h3>
+  <p>Instead of giving an initial explanation then generating code, the Qwen3 model generates sections of code along with a step-by-step breakdown simultaneously. Then it outputs the entire script and gives an explanation on key concepts. While the format differs, the overall teaching idea is preserved.</p>
+
+  <h3>CodeLlama Fine-Tuned Model</h3>
+  <p>This model followed the GPT format more closely&mdash;starting with an extremely in-depth plan, then giving the full Lua code, followed by another explanation and two external links. The links were a byproduct of the CodeLlama base model, as the training data never contained links. The Llama model gives its answer in a much larger response compared to Qwen3, likely a byproduct of their different parameter sizes.</p>
+
+  <p>Although both models complete the task, they still have some limitations. Short prompts tend to cause hallucinations, and they are only competent at solving full coding problems&mdash;more specialized questions cause poor responses.</p>
+
+  <h2>Challenges</h2>
+  <ul>
+    <li><strong>Dataset limitations</strong> &mdash; Finding a dataset for coding problems that was long enough and didn&rsquo;t specify Python as the answer language.</li>
+    <li><strong>Hardware limitations</strong> &mdash; Google Colab&rsquo;s GPU had only ~14.7 GB of VRAM, forcing the use of models with 7 billion parameters or less, model quantization, and reduced batch sizes.</li>
+    <li><strong>Runtime limitations</strong> &mdash; The free version of Google Colab limits daily GPU time, forcing training sessions under five hours.</li>
+    <li><strong>Accuracy trade-offs</strong> &mdash; All these limitations forced sacrificing model accuracy in exchange for being able to complete all necessary tasks.</li>
+  </ul>
+
+  <h2>Future Avenues</h2>
+  <ul>
+    <li>Access to better hardware would greatly improve fine-tuned model accuracy.</li>
+    <li>Implementation of RAG with the Lua documentation could improve accuracy and detail.</li>
+    <li>Models trained for other coding languages displayed in the same front end would increase usefulness.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>This capstone project demonstrates the feasibility of creating a fine-tuned, locally run language model designed to teach users how to program in Lua&mdash;an area underserved by most large language models. By leveraging prompt engineering, synthetic dataset generation with GPT-4o, and lightweight fine-tuning techniques, I trained distilled models that emulate GPT-style instructional behavior.</p>
+  <p>Despite hardware limitations and challenges with quantization, the resulting models show clear potential as educational tools, especially for users in low-resource environments or those focused on niche programming languages. This work highlights the growing accessibility of LLM development and points toward a future where domain-specific, fine-tuned models can offer high-quality instruction without reliance on powerful cloud infrastructure.</p>
+
+  <h2>References</h2>
+  <ol>
+    <li>Hugging Face. <em>Code Generation Lite &middot; LiveCodeBench</em>. <a href="https://huggingface.co/datasets/livecodebench/code_generation_lite" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
+    <li>Qwen Team. <em>Qwen3-4B</em>. <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
+    <li>Code Llama Team. <em>CodeLlama-7B-HF</em>. <a href="https://huggingface.co/codellama/CodeLlama-7b-hf" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
+    <li>Vaswani, A., et al. &ldquo;Attention Is All You Need.&rdquo; <em>arXiv</em>, 2017. <a href="https://arxiv.org/abs/1706.03762" target="_blank" style="color:var(--accent);">arxiv.org</a></li>
+    <li>Labelbox Guide: &ldquo;What is Model Distillation?&rdquo; <a href="https://labelbox.com/guides/model-distillation/" target="_blank" style="color:var(--accent);">Labelbox</a></li>
+  </ol>
+
+</article>
+
+<footer>
+  &copy; <span id="year"></span> Joe Nissen
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 70, density: { enable: true, value_area: 900 } },
+    color: { value: "#7aa2f7" },
+    shape: { type: "circle" },
+    opacity: { value: 0.18, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false } },
+    size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+    line_linked: { enable: true, distance: 140, color: "#7aa2f7", opacity: 0.15, width: 1 },
+    move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: { onhover: { enable: true, mode: ["grab", "repulse"] }, onclick: { enable: true, mode: "push" }, resize: true },
+    modes: { grab: { distance: 250, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 }, repulse: { distance: 100, duration: 0.4 } }
+  },
+  retina_detect: true
+});
+</script>
+
+</body>
+</html>

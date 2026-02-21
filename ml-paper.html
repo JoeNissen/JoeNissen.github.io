@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ML Paper</title>
+
+  <meta property="og:title" content="Can You Rely on Your Model Evaluation? | Joe Nissen" />
+  <meta property="og:description" content="Improving Model Evaluation with Synthetic Test Data using CTGAN and TVAE." />
+  <meta property="og:type" content="article" />
+
+  <script src="assets/particles.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <h1>ML Paper<span>.</span></h1>
+  <div class="actions">
+    <a class="btn" href="projects.html">&larr; Back to Projects</a>
+    <a class="btn" href="https://github.com/JoeNissen/ml-final-project" target="_blank">View Code on GitHub</a>
+  </div>
+</header>
+
+<article class="paper-content">
+
+  <h2 style="font-size:1.75rem; border:none; padding:0; margin-bottom:0.5rem;">Can You Rely on Your Model Evaluation?</h2>
+  <p style="font-size:1.2rem; color:var(--fg); margin-bottom:1.5rem;">Improving Model Evaluation with Synthetic Test Data</p>
+
+  <div class="paper-meta">
+    <span><strong>Authors:</strong> Param Nagpal, Joseph Nissen</span>
+    <span><strong>Institution:</strong> Binghamton University</span>
+    <span><strong>Course:</strong> Fall 2025 Intro to Machine Learning</span>
+  </div>
+
+  <div class="paper-abstract">
+    <span class="label">Abstract</span>
+    <p>Accurate model evaluation is essential for deploying reliable machine learning systems, yet traditional test sets often fail to represent real-world conditions such as subgroup imbalance, data sparsity, and distributional shifts. These limitations can cause models to appear accurate during evaluation while performing poorly in practice. To address this problem, the 3S-Testing framework uses synthetic data generation to create subgroup-targeted and distribution-shifted test samples that better approximate deployment scenarios. In this project, we reproduce the 3S approach and propose an improvement by replacing the original CTGAN generator with a Tabular Variational Autoencoder (TVAE), aiming to produce more stable and realistic shifted datasets. Using the Adult dataset, we compare CTGAN and TVAE synthetic test data against Oracle shifted test sets. Results show that CTGAN achieves lower error relative to the Oracle, indicating more accurate synthetic evaluation, while TVAE trains roughly three times faster and provides competitive performance. These findings demonstrate that generative models can significantly improve model evaluation quality, and that the choice of generator involves a trade-off between accuracy and computational efficiency.</p>
+  </div>
+
+  <h2>Introduction</h2>
+  <p>Model evaluation is one of the most critical aspects of machine learning. While model development often receives the most attention&mdash;hyperparameter tuning, feature engineering, and architectural design&mdash;the reliability of a model ultimately depends on the data used to evaluate it. Poorly constructed test sets can result in inflated performance scores that fail to generalize to real-world conditions.</p>
+  <p>Machine learning models deployed in practical settings frequently encounter shifts in data distributions, imbalanced subgroups, rare events, or entirely new patterns that were not present in the original test set. When this happens, models that were previously labeled &ldquo;accurate&rdquo; might perform poorly, leading to serious consequences in high-stakes domains such as finance and healthcare.</p>
+  <p>To address these issues, the research paper &ldquo;Can You Rely on Your Model Evaluation?&rdquo; proposes an approach called <strong>3S-Testing: Synthetic data for Subgroup and Shift Testing</strong>. The idea is to use synthetic data generation&mdash;specifically utilizing a CTGAN model&mdash;to construct more representative and flexible test sets. The synthetic data augments or replaces unstable sections of the test distribution, allowing practitioners to evaluate models under a broader and more realistic set of conditions. Our final project examines this method, explains its components, and evaluates an improvement to the generative model by replacing the CTGAN architecture with a TVAE (Tabular Variational Autoencoder) model.</p>
+
+  <h2>Paper Methodology</h2>
+  <p>In order to put 3S-Testing to use, the authors first had to begin by training predictive models so the testing can be evaluated. Three models were used for this task: a <strong>Multilayer Perceptron</strong>, a <strong>Gradient-Boosted Decision Tree</strong>, and a <strong>Random Forest</strong>. These three models were chosen because they have fundamentally different architectures, thus evaluating 3S-Testing more thoroughly.</p>
+  <p>Once this was complete, the authors then moved on to generating the synthetic testing data using a CTGAN model. After training the CTGAN, synthetic data was produced, and the performance of the predictive models was evaluated on four different test datasets: the unaltered real test set, a rejection-sampled version of the test set, the 3S-Testing synthetic test set, and the oracle (the true shifted dataset).</p>
+
+  <h2>Model</h2>
+  <p>The synthetic data generation was handled by a <strong>CTGAN</strong> model, otherwise known as a Conditional Tabular Generative Adversarial Network. This CTGAN model mostly operates like a typical GAN model, however with a few key differences. As the name suggests, it utilizes a conditional approach to better capture relationships and distributions between the data, as well as only accepting tabular data as input.</p>
+  <p>Starting at the beginning, the CTGAN model first chooses a random column and category from the true test dataset. This row is sent to the discriminator (or critic) to represent the true data. At the same time, this column and category is one-hot encoded and fed into the generator along with gaussian noise. The generator then takes these inputs and creates a fake version of the category in question. Finally, these two instances&mdash;one real and one fake&mdash;are fed into the discriminator which then attempts to determine which is the real piece of data. This process is repeated, and both the discriminator and generator improve as training continues.</p>
+
+  <h3>Use Cases</h3>
+  <p>The goal of 3S-Testing is to remove inconsistencies from the testing data and ensure testing can be as thorough as possible:</p>
+  <ul>
+    <li><strong>Underrepresented data</strong> &mdash; Synthetic generation can take underrepresented groups and generate more examples based on the few that exist as well as the overall trends in the dataset.</li>
+    <li><strong>Distributional shifts</strong> &mdash; Real-life shifts not accounted for in a test set can give entirely wrong results. Synthetic data can account for slight shifts in data over time.</li>
+    <li><strong>Noise reduction</strong> &mdash; Generating synthetic data can also reduce noise in a true testing dataset, increasing accuracy by decreasing randomness.</li>
+  </ul>
+
+  <h2>Paper Results</h2>
+  <p>The synthetically generated test data was put to the test by comparing four different testing datasets. All three predictive models were evaluated, and their results were combined using <strong>Mean Absolute Error (MAE)</strong>, a metric that computes the average magnitude of prediction error without considering direction.</p>
+  <p>Of the four testing datasets, the unaltered testing data performed the worst. Following it was the rejection-sampling version, and performing with the best accuracy (excluding the oracle) was 3S-Testing. Starting with only one feature, 3S-Testing started with and maintained the best accuracy, and after enough features were added even drew extremely close to the oracle&rsquo;s performance.</p>
+
+  <h2>Our Contribution</h2>
+  <p>To build on the results of the paper, we aimed to improve the quality and accuracy of the generated synthetic data. A gap we recognized was that the authors exclusively tested CTGAN-generated data against their oracle dataset. While effective, GANs have known limitations&mdash;primarily training instability and modal collapse. This motivated us to investigate whether another model could yield better results.</p>
+  <p>After research, we chose and implemented a <strong>Tabular Variational Autoencoder (TVAE)</strong>. Unlike CTGAN&rsquo;s generator-discriminator competition, this model uses a reconstruction-based training approach. TVAE consists of two jointly trained, densely connected neural networks:</p>
+  <ul>
+    <li><strong>Encoder (E):</strong> Takes some input vector x and maps it to a latent distribution characterized by the input&rsquo;s mean and variance. The encoding compresses the data into a smoother, lower-dimensional vector z.</li>
+    <li><strong>Decoder (D):</strong> Takes the sampled latent vector z and attempts to reconstruct the original x. The reconstruction error is propagated back through both D and E.</li>
+  </ul>
+  <p>Through this process, the model learns a structured and continuous latent space from which it can sample new z to pass through D and generate synthetic data. Because TVAE does not rely on adversarial training and only has one gradient update per input, it tends to converge faster and more reliably than CTGAN.</p>
+
+  <h2>Experimental Design</h2>
+  <p>The original paper used many modular Python notebooks to test the different use cases for CTGAN-generated data. The modularity allowed us to substitute TVAE for CTGAN without disrupting the original pipeline. The primary modification was replacing the CTGAN instantiation and training block with a <strong>TVAESynthesizer</strong> from the SDV library. We also had to make additional adjustments during pre-processing since TVAE outputs raw categorical values by default.</p>
+  <p>We chose to work on <code>marginal_shift_adult.py</code> and the Adult dataset because it was the most frequently referenced in the paper and the most readily available dataset.</p>
+
+  <h2>Results</h2>
+  <p>To measure the success of our TVAE method, we generated two adult datasets with a fair distribution of data points across the age range. One was generated with CTGAN and one with TVAE. We measured the MAE relative to the oracle at each quantile of age to see how well the models represented the skewed ends of the distribution.</p>
+  <p>Across all three quantiles, <strong>CTGAN achieved a lower MAE relative to the oracle than TVAE</strong>. However, it is also worth noting that <strong>TVAE trained significantly faster, converging in a third of the time</strong> it took CTGAN. TVAE also still performed well overall, producing more accurate results than the rejection-sampling method.</p>
+
+  <h2>Discussion</h2>
+  <p>Our results indicate that CTGAN outperforms TVAE in improving prediction accuracy under marginal shifts. Although TVAE is a more efficient and stable model, it may have been inherently limited by its design. While TVAE&rsquo;s smooth latent distribution may make it less susceptible to noise, it may also dampen sharp relationships in the data and fail to capture them properly.</p>
+  <p>Another key limitation stems from the Adult dataset itself. Many important predictors&mdash;such as occupation, country, and marital status&mdash;are high-cardinality categorical values. TVAE generally does not handle these well. Before training, categorical variables must be one-hot encoded, which dramatically increases dimensionality and removes potential relationships between categories.</p>
+  <p>However, performance may have been better on a dataset with predominantly numerical data and more linear relationships. Considering the efficiency and stability of TVAE compared to CTGAN, it may be worthwhile to further investigate TVAE accuracy on such datasets in cases where efficiency is important.</p>
+
+  <h2>Conclusion</h2>
+  <p>Reliable model evaluation relies on sufficient and well-distributed test data, and real datasets often have underrepresented subgroups or don&rsquo;t properly cover distributional shifts. The 3S-Testing framework addressed this problem by using CTGAN to approximate model performance under controlled shifts.</p>
+  <p>In our project, we extended the 3S-Testing framework by replacing CTGAN with TVAE to evaluate whether a non-adversarial model could produce more realistic synthetic data under distributional shifts. TVAE had practical advantages like faster training and reduced susceptibility to noise, but CTGAN ultimately performed better in reproducing the oracle data. However, the structure of our dataset may have inhibited some of TVAE&rsquo;s strengths.</p>
+  <p>Overall, our findings reinforced the effectiveness of synthetic data in evaluating models, but highlighted that different models may perform better or worse depending on the context. While CTGAN remains well-suited for complex, high-cardinality datasets, TVAE offers a promising alternative for smoother, more numerical datasets. Future work exploring additional datasets and generator architectures may offer more insight into which method is most appropriate in each scenario.</p>
+
+  <h2>References</h2>
+  <ol>
+    <li>&ldquo;Generating synthetic tabular data,&rdquo; <em>Towards Data Science</em>.</li>
+    <li>&ldquo;SDV (Synthetic Data Vault),&rdquo; GitHub repository. <a href="https://github.com/sdv-dev/SDV" target="_blank" style="color:var(--accent);">github.com/sdv-dev/SDV</a></li>
+    <li>&ldquo;Why synthetic tabular data beats sampling &mdash; SDV Hackathon Talk,&rdquo; YouTube.</li>
+    <li>&ldquo;Variational Autoencoder Structure,&rdquo; <em>ResearchGate</em>.</li>
+    <li>&ldquo;Adult Data Set,&rdquo; UCI Machine Learning Repository. <a href="https://archive.ics.uci.edu/dataset/2/adult" target="_blank" style="color:var(--accent);">archive.ics.uci.edu</a></li>
+  </ol>
+
+</article>
+
+<footer>
+  &copy; <span id="year"></span> Joe Nissen
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 70, density: { enable: true, value_area: 900 } },
+    color: { value: "#7aa2f7" },
+    shape: { type: "circle" },
+    opacity: { value: 0.18, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false } },
+    size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+    line_linked: { enable: true, distance: 140, color: "#7aa2f7", opacity: 0.15, width: 1 },
+    move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: { onhover: { enable: true, mode: ["grab", "repulse"] }, onclick: { enable: true, mode: "push" }, resize: true },
+    modes: { grab: { distance: 250, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 }, repulse: { distance: 100, duration: 0.4 } }
+  },
+  retina_detect: true
+});
+</script>
+
+</body>
+</html>
