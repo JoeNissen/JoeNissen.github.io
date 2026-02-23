@@ -118,6 +118,17 @@ body::before {
   to { opacity: 1; }
 }
 
+/* ── Hidden resume link ── */
+.dot-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: default;
+}
+
+.dot-link:hover span {
+  cursor: pointer;
+}
+
 /* ── Navbar ── */
 .navbar {
   position: fixed;
