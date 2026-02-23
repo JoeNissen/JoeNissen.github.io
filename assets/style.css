@@ -118,17 +118,6 @@ body::before {
   to { opacity: 1; }
 }
 
-/* ── Hidden resume link ── */
-.dot-link {
-  text-decoration: none;
-  color: inherit;
-  cursor: default;
-}
-
-.dot-link:hover span {
-  cursor: pointer;
-}
-
 /* ── Navbar ── */
 .navbar {
   position: fixed;
@@ -257,7 +246,15 @@ p.lead {
   filter: blur(4px);
 }
 
+.avatar-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .avatar {
+  display: block;
   width: 256px;
   height: 256px;
   border-radius: 50%;
@@ -270,9 +267,41 @@ p.lead {
   filter: grayscale(10%);
 }
 
-.avatar:hover {
+.avatar-link:hover .avatar {
   transform: scale(1.05);
   filter: grayscale(0%);
+}
+
+/* Avatar column: text + picture stacked */
+.avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Curved "Resume" text sitting above the avatar */
+.resume-arc {
+  width: 320px;
+  height: 65px;
+  pointer-events: none;
+  overflow: visible;
+  margin-bottom: -4px;
+}
+
+.resume-arc-text {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  fill: var(--accent-bright);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.avatar-col:hover .resume-arc-text {
+  opacity: 1;
 }
 
 /* ── Buttons ── */
@@ -786,6 +815,11 @@ footer a {
   .avatar {
     width: 180px;
     height: 180px;
+  }
+
+  .resume-arc {
+    width: 200px;
+    height: 45px;
   }
 
   .contact-menu {

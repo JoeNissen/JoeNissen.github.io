@@ -38,7 +38,7 @@
 
 <header class="page-header hero">
   <div>
-    <h1>Joe Nissen<a href="resume.html" class="dot-link" title=""><span>.</span></a></h1>
+    <h1>Joe Nissen<span>.</span></h1>
 
     <p class="lead">
       Computer Science master's student focused on artificial intelligence,
@@ -81,10 +81,22 @@
     </div>
   </div>
 
-  <div class="avatar-wrapper">
-    <img src="assets/headshot_final.png"
-         alt="Photo of Joe Nissen"
-         class="avatar">
+  <div class="avatar-col" id="avatarCol">
+    <svg class="resume-arc" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="textCurve" d="M 5,75 A 170,170 0 0,1 315,75" fill="none" />
+      </defs>
+      <text class="resume-arc-text">
+        <textPath href="#textCurve" startOffset="50%" text-anchor="middle">Resume</textPath>
+      </text>
+    </svg>
+    <div class="avatar-wrapper">
+      <a href="resume.html" class="avatar-link">
+        <img src="assets/headshot_final.png"
+             alt="Photo of Joe Nissen"
+             class="avatar">
+      </a>
+    </div>
   </div>
 </header>
 
