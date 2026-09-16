@@ -405,6 +405,14 @@ section {
   font-weight: 500;
 }
 
+.card-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
 .card-link {
   display: inline-block;
   margin-top: 1rem;
