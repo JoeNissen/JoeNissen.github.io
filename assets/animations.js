@@ -86,7 +86,7 @@
       if (charIndex < fullText.length) {
         textNode.textContent += fullText[charIndex];
         charIndex++;
-        setTimeout(typeNext, 35 + Math.random() * 25);
+        setTimeout(typeNext, 50 + Math.random() * 30);
       } else {
         // Done typing, show the dot and remove cursor
         if (dotSpan) {
