@@ -5,14 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home | Joe Nissen</title>
 
+  <meta name="description" content="CS master's student at Binghamton University focused on AI, machine learning, and quantum computing." />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="canonical" href="https://joenissen.github.io/" />
+
   <!-- Open Graph -->
   <meta property="og:title" content="Joe Nissen | Computer Science" />
   <meta property="og:description" content="CS master's student at Binghamton University focused on AI, machine learning, and quantum computing." />
   <meta property="og:image" content="assets/headshot_final.png" />
+  <meta property="og:url" content="https://joenissen.github.io/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Joe Nissen | Computer Science" />
   <meta name="twitter:description" content="CS master's student at Binghamton University focused on AI, machine learning, and quantum computing." />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Joe Nissen",
+    "url": "https://joenissen.github.io",
+    "jobTitle": "CS Master's Student",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Binghamton University"
+    },
+    "knowsAbout": ["Artificial Intelligence", "Machine Learning", "Quantum Computing"],
+    "sameAs": [
+      "https://www.linkedin.com/in/joenissen/"
+    ]
+  }
+  </script>
 
   <script src="assets/particles.min.js"></script>
 
@@ -26,16 +50,19 @@
 
 <div id="particles-js"></div>
 
-<nav class="navbar">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
   <a class="navbar-brand" href="index.html">JN<span>.</span></a>
   <ul class="navbar-links">
-    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="index.html" class="active" aria-current="page">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
+    <li><a href="resume.html">Resume</a></li>
   </ul>
 </nav>
 
-<header class="page-header hero">
+<header class="page-header hero" id="main">
   <div>
     <h1>Joe Nissen<span>.</span></h1>
 
@@ -46,12 +73,12 @@
     </p>
 
     <div class="contact">
-      <button class="contact-btn" id="contactToggle">Connect</button>
+      <button class="contact-btn" id="contactToggle" aria-expanded="false" aria-controls="contactMenu">Connect</button>
       <a class="btn" href="resume.html">Resume</a>
       <div class="contact-menu" id="contactMenu">
         <div class="contact-row">
           <span>Email</span>
-          <a href="mailto:jnissen@binghamton.edu">jnissen@binghamton.edu</a>
+          <a id="emailLink" href="#">Loading...</a>
         </div>
         <div class="contact-row">
           <span>LinkedIn</span>
@@ -93,7 +120,7 @@
 </header>
 
 <footer>
-  &copy; <span id="year"></span> Joe Nissen &middot; Built with GitHub Pages
+  &copy; <span id="year"></span> Joe Nissen
 </footer>
 
 <script>
@@ -104,64 +131,27 @@ const menu = document.getElementById("contactMenu");
 
 toggle.addEventListener("click", (e) => {
   e.stopPropagation();
-  menu.classList.toggle("active");
+  const isOpen = menu.classList.toggle("active");
+  toggle.setAttribute("aria-expanded", isOpen);
 });
 
 document.addEventListener("click", (e) => {
   if (!menu.contains(e.target) && e.target !== toggle) {
     menu.classList.remove("active");
+    toggle.setAttribute("aria-expanded", "false");
   }
 });
+
+// Email obfuscation
+(function() {
+  var u = "jnissen", d = "binghamton.edu";
+  var el = document.getElementById("emailLink");
+  el.href = "mailto:" + u + "@" + d;
+  el.textContent = u + "@" + d;
+})();
 </script>
 
-<script>
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 70, density: { enable: true, value_area: 900 } },
-    color: { value: "#7aa2f7" },
-    shape: { type: "circle" },
-    opacity: {
-      value: 0.18,
-      random: true,
-      anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false }
-    },
-    size: {
-      value: 3,
-      random: true,
-      anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
-    },
-    line_linked: {
-      enable: true,
-      distance: 140,
-      color: "#7aa2f7",
-      opacity: 0.15,
-      width: 1
-    },
-    move: {
-      enable: true,
-      speed: 0.5,
-      direction: "none",
-      random: true,
-      straight: false,
-      out_mode: "out",
-      bounce: false
-    }
-  },
-  interactivity: {
-    detect_on: "window",
-    events: {
-      onhover: { enable: true, mode: "repulse" },
-      onclick: { enable: true, mode: "push" },
-      resize: true
-    },
-    modes: {
-      push: { particles_nb: 4 },
-      repulse: { distance: 100, duration: 0.4 }
-    }
-  },
-  retina_detect: true
-});
-</script>
+<script src="assets/particles-config.js"></script>
 
 </body>
 </html>

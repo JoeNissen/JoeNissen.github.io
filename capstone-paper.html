@@ -3,11 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capstone Paper</title>
+  <title>LuAI: LLMs that Teach Lua | Joe Nissen</title>
+  <meta name="description" content="Fine-tuning instruction-based LLMs to teach Lua programming step-by-step." />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="canonical" href="https://joenissen.github.io/capstone-paper.html" />
 
   <meta property="og:title" content="LuAI: LLMs that Teach Lua | Joe Nissen" />
   <meta property="og:description" content="Fine-tuning instruction-based LLMs to teach Lua programming step-by-step." />
+  <meta property="og:url" content="https://joenissen.github.io/capstone-paper.html" />
   <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="LuAI: LLMs that Teach Lua | Joe Nissen" />
+  <meta name="twitter:description" content="Fine-tuning instruction-based LLMs to teach Lua programming step-by-step." />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "LuAI: Large Language Models that Teach the User how to Code in Lua",
+    "author": { "@type": "Person", "name": "Joseph Nissen" },
+    "datePublished": "2025-05-08",
+    "publisher": { "@type": "Organization", "name": "SUNY Polytechnic Institute" }
+  }
+  </script>
 
   <script src="assets/particles.min.js"></script>
 
@@ -21,16 +40,19 @@
 
 <div id="particles-js"></div>
 
-<nav class="navbar">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
   <a class="navbar-brand" href="index.html">JN<span>.</span></a>
   <ul class="navbar-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
+    <li><a href="resume.html">Resume</a></li>
   </ul>
 </nav>
 
-<header class="page-header">
+<header class="page-header" id="main">
   <h1>Capstone Paper<span>.</span></h1>
   <div class="actions">
     <a class="btn" href="projects.html">&larr; Back to Projects</a>
@@ -39,7 +61,7 @@
 
 <article class="paper-content">
 
-  <h2 style="font-size:1.75rem; border:none; padding:0; margin-bottom:0.5rem;">LuAI: Large Language Models that Teach the User how to Code in Lua</h2>
+  <h2 class="paper-title">LuAI: Large Language Models that Teach the User how to Code in Lua</h2>
 
   <div class="paper-meta">
     <span><strong>Author:</strong> Joseph Nissen</span>
@@ -110,14 +132,16 @@
 
   <h2>References</h2>
   <ol>
-    <li>Hugging Face. <em>Code Generation Lite &middot; LiveCodeBench</em>. <a href="https://huggingface.co/datasets/livecodebench/code_generation_lite" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
-    <li>Qwen Team. <em>Qwen3-4B</em>. <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
-    <li>Code Llama Team. <em>CodeLlama-7B-HF</em>. <a href="https://huggingface.co/codellama/CodeLlama-7b-hf" target="_blank" style="color:var(--accent);">Hugging Face</a></li>
-    <li>Vaswani, A., et al. &ldquo;Attention Is All You Need.&rdquo; <em>arXiv</em>, 2017. <a href="https://arxiv.org/abs/1706.03762" target="_blank" style="color:var(--accent);">arxiv.org</a></li>
-    <li>Labelbox Guide: &ldquo;What is Model Distillation?&rdquo; <a href="https://labelbox.com/guides/model-distillation/" target="_blank" style="color:var(--accent);">Labelbox</a></li>
+    <li>Hugging Face. <em>Code Generation Lite &middot; LiveCodeBench</em>. <a href="https://huggingface.co/datasets/livecodebench/code_generation_lite" target="_blank">Hugging Face</a></li>
+    <li>Qwen Team. <em>Qwen3-4B</em>. <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank">Hugging Face</a></li>
+    <li>Code Llama Team. <em>CodeLlama-7B-HF</em>. <a href="https://huggingface.co/codellama/CodeLlama-7b-hf" target="_blank">Hugging Face</a></li>
+    <li>Vaswani, A., et al. &ldquo;Attention Is All You Need.&rdquo; <em>arXiv</em>, 2017. <a href="https://arxiv.org/abs/1706.03762" target="_blank">arxiv.org</a></li>
+    <li>Labelbox Guide: &ldquo;What is Model Distillation?&rdquo; <a href="https://labelbox.com/guides/model-distillation/" target="_blank">Labelbox</a></li>
   </ol>
 
 </article>
+
+<a href="#main" class="back-to-top">&uarr; Back to top</a>
 
 <footer>
   &copy; <span id="year"></span> Joe Nissen
@@ -127,25 +151,7 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
-<script>
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 70, density: { enable: true, value_area: 900 } },
-    color: { value: "#7aa2f7" },
-    shape: { type: "circle" },
-    opacity: { value: 0.18, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false } },
-    size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
-    line_linked: { enable: true, distance: 140, color: "#7aa2f7", opacity: 0.15, width: 1 },
-    move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
-  },
-  interactivity: {
-    detect_on: "window",
-    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-    modes: { push: { particles_nb: 4 }, repulse: { distance: 100, duration: 0.4 } }
-  },
-  retina_detect: true
-});
-</script>
+<script src="assets/particles-config.js"></script>
 
 </body>
 </html>

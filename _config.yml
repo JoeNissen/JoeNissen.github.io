@@ -1,51 +1,15 @@
 # Site
-title: Joe's Epic Site
+title: Joe Nissen | Computer Science
 description: >-
-  A short description of your GitHub Pages site.
+  CS master's student at Binghamton University focused on AI, machine learning, and quantum computing.
 url: "https://joenissen.github.io"
-baseurl: "" 
+baseurl: ""
 
 # Author
 author:
   name: Joe Nissen
   email: jnissen@binghamton.edu
 
-# Theme (GitHub Pages supported)
-theme: minima
-
-# Markdown
-markdown: kramdown
-highlighter: rouge
-
-# Plugins (GitHub Pages–whitelisted only)
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-sitemap
-
-# Permalinks
-permalink: pretty
-
-# Defaults
-defaults:
-  -
-    scope:
-      path: ""
-      type: posts
-    values:
-      layout: post
-  -
-    scope:
-      path: ""
-      type: pages
-    values:
-      layout: page
-
 # Files to exclude
 exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
   - README.md
-

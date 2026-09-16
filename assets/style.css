@@ -246,13 +246,6 @@ p.lead {
   filter: blur(4px);
 }
 
-.avatar-link {
-  display: block;
-  position: relative;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .avatar {
   display: block;
   width: 256px;
@@ -831,5 +824,125 @@ footer a {
 
   .resume-skill-label {
     min-width: 100%;
+  }
+}
+
+/* ── Skip link (a11y) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  z-index: 200;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Focus indicators (a11y) ── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.contact-btn:focus-visible,
+.navbar-links a:focus-visible,
+.nav-card:focus-visible,
+.card-link:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+/* ── Paper title (replaces inline styles) ── */
+.paper-title {
+  font-size: 1.75rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.paper-subtitle {
+  font-size: 1.2rem;
+  color: var(--fg);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Reference links (replaces inline styles) ── */
+.paper-content a {
+  color: var(--accent);
+}
+
+/* ── Back to top ── */
+.back-to-top {
+  display: block;
+  text-align: center;
+  margin: 2rem auto 0;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-to-top:hover {
+  color: var(--accent);
+}
+
+/* ── Print styles ── */
+@media print {
+  *, *::before, *::after {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body::before,
+  #particles-js,
+  .navbar,
+  .skip-link,
+  .back-to-top,
+  .actions,
+  .contact {
+    display: none !important;
+  }
+
+  .page-header {
+    padding-top: 1rem;
+    opacity: 1;
+    animation: none;
+  }
+
+  .card, .nav-card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+
+  footer {
+    opacity: 1;
+    animation: none;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  .navbar-brand::after,
+  .card-link::after,
+  .paper-content a::after {
+    content: " (" attr(href) ")";
   }
 }

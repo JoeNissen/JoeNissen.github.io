@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Research</title>
+  <title>Research | Joe Nissen</title>
+  <meta name="description" content="AI research, knowledge management systems, and machine learning at SUNY Polytechnic and Binghamton University." />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="canonical" href="https://joenissen.github.io/research.html" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Research | Joe Nissen" />
   <meta property="og:description" content="AI research, knowledge management systems, and machine learning at SUNY Polytechnic and Binghamton University." />
+  <meta property="og:url" content="https://joenissen.github.io/research.html" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Research | Joe Nissen" />
@@ -25,16 +29,19 @@
 
 <div id="particles-js"></div>
 
-<nav class="navbar">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
   <a class="navbar-brand" href="index.html">JN<span>.</span></a>
   <ul class="navbar-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
-    <li><a href="research.html" class="active">Research</a></li>
+    <li><a href="research.html" class="active" aria-current="page">Research</a></li>
+    <li><a href="resume.html">Resume</a></li>
   </ul>
 </nav>
 
-<header class="page-header">
+<header class="page-header" id="main">
   <h1>Research<span>.</span></h1>
   <p class="lead">
     Research in quantum computing, artificial intelligence, and machine
@@ -133,54 +140,7 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
-<script>
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 70, density: { enable: true, value_area: 900 } },
-    color: { value: "#7aa2f7" },
-    shape: { type: "circle" },
-    opacity: {
-      value: 0.18,
-      random: true,
-      anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false }
-    },
-    size: {
-      value: 3,
-      random: true,
-      anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
-    },
-    line_linked: {
-      enable: true,
-      distance: 140,
-      color: "#7aa2f7",
-      opacity: 0.15,
-      width: 1
-    },
-    move: {
-      enable: true,
-      speed: 0.5,
-      direction: "none",
-      random: true,
-      straight: false,
-      out_mode: "out",
-      bounce: false
-    }
-  },
-  interactivity: {
-    detect_on: "window",
-    events: {
-      onhover: { enable: true, mode: "repulse" },
-      onclick: { enable: true, mode: "push" },
-      resize: true
-    },
-    modes: {
-      push: { particles_nb: 4 },
-      repulse: { distance: 100, duration: 0.4 }
-    }
-  },
-  retina_detect: true
-});
-</script>
+<script src="assets/particles-config.js"></script>
 
 </body>
 </html>

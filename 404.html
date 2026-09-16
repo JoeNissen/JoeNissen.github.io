@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 | Joe Nissen</title>
+  <meta name="description" content="Page not found." />
+  <link rel="icon" href="favicon.ico" />
+
+  <script src="assets/particles.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<header class="page-header" id="main">
+  <h1>404<span>.</span></h1>
+  <p class="lead">
+    This page doesn't exist. It may have been moved or removed.
+  </p>
+  <div class="actions">
+    <a class="btn" href="index.html">&larr; Back to Home</a>
+  </div>
+</header>
+
+<footer>
+  &copy; <span id="year"></span> Joe Nissen
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script src="assets/particles-config.js"></script>
+
+</body>
+</html>
