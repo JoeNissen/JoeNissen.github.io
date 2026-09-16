@@ -31,7 +31,6 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="projects.html" class="active">Projects</a></li>
     <li><a href="research.html">Research</a></li>
-    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
   </ul>
 </nav>
 
@@ -39,7 +38,7 @@
   <h1>Projects<span>.</span></h1>
 
   <p class="lead">
-    Machine learning research, AI systems, and software engineering &mdash;
+    Machine learning research, AI systems, and software engineering,
     from fine-tuning LLMs to training CNNs and building games.
   </p>
 </header>
@@ -61,10 +60,7 @@
         <span class="tag">TVAE</span>
         <span class="tag">ML Evaluation</span>
       </div>
-      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-        <a class="card-link" href="ml-paper.html">Read Paper &rarr;</a>
-        <a class="card-link" href="https://github.com/JoeNissen/ml-final-project" target="_blank">GitHub &rarr;</a>
-      </div>
+      <a class="card-link" href="ml-paper.html">Read Paper &rarr;</a>
     </div>
 
     <div class="card">
@@ -163,14 +159,13 @@ particlesJS("particles-js", {
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: true, mode: ["grab", "repulse"] },
+      onhover: { enable: true, mode: "repulse" },
       onclick: { enable: true, mode: "push" },
       resize: true
     },
     modes: {
-      grab: { distance: 250, line_linked: { opacity: 0.5 } },
       push: { particles_nb: 4 },
-      repulse: { distance: 100, duration: 0.4 }
+      repulse: { distance: 150, duration: 0.4 }
     }
   },
   retina_detect: true

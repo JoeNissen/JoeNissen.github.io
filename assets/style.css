@@ -267,41 +267,12 @@ p.lead {
   filter: grayscale(10%);
 }
 
-.avatar-link:hover .avatar {
-  transform: scale(1.05);
-  filter: grayscale(0%);
-}
-
 /* Avatar column: text + picture stacked */
 .avatar-col {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-}
-
-/* Curved "Resume" text sitting above the avatar */
-.resume-arc {
-  width: 320px;
-  height: 65px;
-  pointer-events: none;
-  overflow: visible;
-  margin-bottom: -4px;
-}
-
-.resume-arc-text {
-  font-family: Inter, system-ui, sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  fill: var(--accent-bright);
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-
-.avatar-col:hover .resume-arc-text {
-  opacity: 1;
 }
 
 /* ── Buttons ── */
@@ -496,7 +467,9 @@ section {
 /* ── Contact menu ── */
 .contact {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-top: 2rem;
 }
 
@@ -823,11 +796,6 @@ footer a {
   .avatar {
     width: 180px;
     height: 180px;
-  }
-
-  .resume-arc {
-    width: 200px;
-    height: 45px;
   }
 
   .contact-menu {

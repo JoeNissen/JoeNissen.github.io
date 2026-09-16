@@ -27,7 +27,6 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
-    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
   </ul>
 </nav>
 
@@ -55,13 +54,13 @@
   <p>After searching for a coding language that is obscure enough to not have overwhelming resources available while also being relevant enough to be useful, I ended up settling on <strong>Lua</strong>. Lua is a lightweight coding language, which meant it would be easier for my models to learn. This was extremely important given that the hardware I had to work with was relatively limited. Along with this, Lua is the coding language used to create games in the popular application Roblox, making it a good tool for someone wanting to introduce themselves to game design. Combine these reasons with the fact that there is no existing Lua-specific teaching model, and it was a clear choice.</p>
 
   <h2>Background Info</h2>
-  <p>The AI model I created is classified as a <strong>large language model (LLM)</strong>&mdash;a type of artificial intelligence model trained to understand and generate words and conversations. An example of a widely popular LLM is OpenAI&rsquo;s ChatGPT. These models are trained using massive amounts of data, and creating one from scratch would be a monumental task for one person. For this reason, the models I used started with base models that were already trained on the fine details of human conversation.</p>
-  <p>These models are still too large to fit onto my graphics card&rsquo;s virtual RAM, so I had to use quantized (less computationally taxing) versions. To get these base models to output the desired responses, I used <strong>fine-tuning</strong>&mdash;taking a pre-trained AI model and training it further on a smaller, more specific dataset.</p>
-  <p>Since the goal was to get my model to learn how to break code down and explain it while also ensuring it could proficiently code in Lua, I decided to use <strong>model distillation</strong>&mdash;a technique that essentially makes a small AI model learn to mimic a much larger, more powerful one. Before fine-tuning, I needed to gather many prompts and responses from one of the better models available, using <strong>prompt engineering</strong> to ensure my dataset contained the correct style of prompt/response pairs. This generated a <strong>synthetic dataset</strong>.</p>
+  <p>The AI model I created is classified as a <strong>large language model (LLM)</strong>, a type of artificial intelligence model trained to understand and generate words and conversations. An example of a widely popular LLM is OpenAI&rsquo;s ChatGPT. These models are trained using massive amounts of data, and creating one from scratch would be a monumental task for one person. For this reason, the models I used started with base models that were already trained on the fine details of human conversation.</p>
+  <p>These models are still too large to fit onto my graphics card&rsquo;s virtual RAM, so I had to use quantized (less computationally taxing) versions. To get these base models to output the desired responses, I used <strong>fine-tuning</strong>: taking a pre-trained AI model and training it further on a smaller, more specific dataset.</p>
+  <p>Since the goal was to get my model to learn how to break code down and explain it while also ensuring it could proficiently code in Lua, I decided to use <strong>model distillation</strong>, a technique that essentially makes a small AI model learn to mimic a much larger, more powerful one. Before fine-tuning, I needed to gather many prompts and responses from one of the better models available, using <strong>prompt engineering</strong> to ensure my dataset contained the correct style of prompt/response pairs. This generated a <strong>synthetic dataset</strong>.</p>
 
   <h2>Project Overview</h2>
   <p>The goal of this project is to create a large language model that teaches the user how to code in Lua by generating code based on a prompt given by the user. The model will break up the generated code and explain each section of it, and then explain how it all fits together. The intended use case is that the user would have some prior coding experience but no experience with Lua.</p>
-  <p>Along the course of this project, there were a few changes. I originally intended for the resulting models to not generate code at all, but rather use <strong>retrieval augmented generation (RAG)</strong> to store the Lua documentation along with the model. This would allow it to pull directly from the documentation to answer questions. However, this strategy had issues&mdash;it is very hard to get a model to not generate code, and the RAG structure proved difficult given the diverse information in the Lua documentation. I decided to alter my approach and utilize model distillation instead.</p>
+  <p>Along the course of this project, there were a few changes. I originally intended for the resulting models to not generate code at all, but rather use <strong>retrieval augmented generation (RAG)</strong> to store the Lua documentation along with the model. This would allow it to pull directly from the documentation to answer questions. However, this strategy had issues. It is very hard to get a model to not generate code, and the RAG structure proved difficult given the diverse information in the Lua documentation. I decided to alter my approach and utilize model distillation instead.</p>
 
   <h2>Tools</h2>
   <p>To create the synthetic dataset, I used <strong>OpenAI&rsquo;s ChatGPT 4o</strong> via the ChatGPT API to continuously prompt the model for every question in a coding problems dataset (over 850 questions from Hugging Face) and stored responses in a CSV file.</p>
@@ -70,9 +69,9 @@
   <h2>Project Structure</h2>
   <p>I broke the project into three main sections:</p>
   <ol>
-    <li><strong>Prompt Engineering</strong> &mdash; Creating the prompt used to receive responses from ChatGPT 4o. This was mainly trial and error: creating a prompt, sending it to ChatGPT, evaluating the response, and tweaking aspects based on whether the output was satisfactory. The final prompt: <em>&ldquo;Act as a teacher whose main goal is to explain the material that is being generated. Assume the user has a basic knowledge of coding concepts, but nothing advanced. The topic you teach is the coding language Lua, which you are an expert on. Break down the code that is being generated into likewise chunks and explain each section individually and then explain how it all fits together after this.&rdquo;</em></li>
-    <li><strong>Synthetic Dataset Creation</strong> &mdash; Taking a dataset of 850+ coding problems from Hugging Face and feeding them all into the ChatGPT API, saving responses to a CSV file.</li>
-    <li><strong>Fine-Tuning</strong> &mdash; Converting the dataset to JSON, loading it into Google Colab, splitting into testing and training sections, tokenizing the data, loading the model with 4-bit quantization, setting up <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong>, configuring training arguments, and training.</li>
+    <li><strong>Prompt Engineering:</strong> Creating the prompt used to receive responses from ChatGPT 4o. This was mainly trial and error: creating a prompt, sending it to ChatGPT, evaluating the response, and tweaking aspects based on whether the output was satisfactory. The final prompt: <em>&ldquo;Act as a teacher whose main goal is to explain the material that is being generated. Assume the user has a basic knowledge of coding concepts, but nothing advanced. The topic you teach is the coding language Lua, which you are an expert on. Break down the code that is being generated into likewise chunks and explain each section individually and then explain how it all fits together after this.&rdquo;</em></li>
+    <li><strong>Synthetic Dataset Creation:</strong> Taking a dataset of 850+ coding problems from Hugging Face and feeding them all into the ChatGPT API, saving responses to a CSV file.</li>
+    <li><strong>Fine-Tuning:</strong> Converting the dataset to JSON, loading it into Google Colab, splitting into testing and training sections, tokenizing the data, loading the model with 4-bit quantization, setting up <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong>, configuring training arguments, and training.</li>
   </ol>
 
   <h2>Assessment</h2>
@@ -86,16 +85,16 @@
   <p>Instead of giving an initial explanation then generating code, the Qwen3 model generates sections of code along with a step-by-step breakdown simultaneously. Then it outputs the entire script and gives an explanation on key concepts. While the format differs, the overall teaching idea is preserved.</p>
 
   <h3>CodeLlama Fine-Tuned Model</h3>
-  <p>This model followed the GPT format more closely&mdash;starting with an extremely in-depth plan, then giving the full Lua code, followed by another explanation and two external links. The links were a byproduct of the CodeLlama base model, as the training data never contained links. The Llama model gives its answer in a much larger response compared to Qwen3, likely a byproduct of their different parameter sizes.</p>
+  <p>This model followed the GPT format more closely, starting with an extremely in-depth plan, then giving the full Lua code, followed by another explanation and two external links. The links were a byproduct of the CodeLlama base model, as the training data never contained links. The Llama model gives its answer in a much larger response compared to Qwen3, likely a byproduct of their different parameter sizes.</p>
 
-  <p>Although both models complete the task, they still have some limitations. Short prompts tend to cause hallucinations, and they are only competent at solving full coding problems&mdash;more specialized questions cause poor responses.</p>
+  <p>Although both models complete the task, they still have some limitations. Short prompts tend to cause hallucinations, and they are only competent at solving full coding problems. More specialized questions cause poor responses.</p>
 
   <h2>Challenges</h2>
   <ul>
-    <li><strong>Dataset limitations</strong> &mdash; Finding a dataset for coding problems that was long enough and didn&rsquo;t specify Python as the answer language.</li>
-    <li><strong>Hardware limitations</strong> &mdash; Google Colab&rsquo;s GPU had only ~14.7 GB of VRAM, forcing the use of models with 7 billion parameters or less, model quantization, and reduced batch sizes.</li>
-    <li><strong>Runtime limitations</strong> &mdash; The free version of Google Colab limits daily GPU time, forcing training sessions under five hours.</li>
-    <li><strong>Accuracy trade-offs</strong> &mdash; All these limitations forced sacrificing model accuracy in exchange for being able to complete all necessary tasks.</li>
+    <li><strong>Dataset limitations:</strong> Finding a dataset for coding problems that was long enough and didn&rsquo;t specify Python as the answer language.</li>
+    <li><strong>Hardware limitations:</strong> Google Colab&rsquo;s GPU had only ~14.7 GB of VRAM, forcing the use of models with 7 billion parameters or less, model quantization, and reduced batch sizes.</li>
+    <li><strong>Runtime limitations:</strong> The free version of Google Colab limits daily GPU time, forcing training sessions under five hours.</li>
+    <li><strong>Accuracy trade-offs:</strong> All these limitations forced sacrificing model accuracy in exchange for being able to complete all necessary tasks.</li>
   </ul>
 
   <h2>Future Avenues</h2>
@@ -106,7 +105,7 @@
   </ul>
 
   <h2>Conclusion</h2>
-  <p>This capstone project demonstrates the feasibility of creating a fine-tuned, locally run language model designed to teach users how to program in Lua&mdash;an area underserved by most large language models. By leveraging prompt engineering, synthetic dataset generation with GPT-4o, and lightweight fine-tuning techniques, I trained distilled models that emulate GPT-style instructional behavior.</p>
+  <p>This capstone project demonstrates the feasibility of creating a fine-tuned, locally run language model designed to teach users how to program in Lua, an area underserved by most large language models. By leveraging prompt engineering, synthetic dataset generation with GPT-4o, and lightweight fine-tuning techniques, I trained distilled models that emulate GPT-style instructional behavior.</p>
   <p>Despite hardware limitations and challenges with quantization, the resulting models show clear potential as educational tools, especially for users in low-resource environments or those focused on niche programming languages. This work highlights the growing accessibility of LLM development and points toward a future where domain-specific, fine-tuned models can offer high-quality instruction without reliance on powerful cloud infrastructure.</p>
 
   <h2>References</h2>
@@ -141,8 +140,8 @@ particlesJS("particles-js", {
   },
   interactivity: {
     detect_on: "canvas",
-    events: { onhover: { enable: true, mode: ["grab", "repulse"] }, onclick: { enable: true, mode: "push" }, resize: true },
-    modes: { grab: { distance: 250, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 }, repulse: { distance: 100, duration: 0.4 } }
+    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+    modes: { push: { particles_nb: 4 }, repulse: { distance: 150, duration: 0.4 } }
   },
   retina_detect: true
 });

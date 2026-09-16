@@ -27,7 +27,6 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
-    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
   </ul>
 </nav>
 
@@ -35,7 +34,6 @@
   <h1>ML Paper<span>.</span></h1>
   <div class="actions">
     <a class="btn" href="projects.html">&larr; Back to Projects</a>
-    <a class="btn" href="https://github.com/JoeNissen/ml-final-project" target="_blank">View Code on GitHub</a>
   </div>
 </header>
 
@@ -56,9 +54,9 @@
   </div>
 
   <h2>Introduction</h2>
-  <p>Model evaluation is one of the most critical aspects of machine learning. While model development often receives the most attention&mdash;hyperparameter tuning, feature engineering, and architectural design&mdash;the reliability of a model ultimately depends on the data used to evaluate it. Poorly constructed test sets can result in inflated performance scores that fail to generalize to real-world conditions.</p>
+  <p>Model evaluation is one of the most critical aspects of machine learning. While model development often receives the most attention (hyperparameter tuning, feature engineering, and architectural design), the reliability of a model ultimately depends on the data used to evaluate it. Poorly constructed test sets can result in inflated performance scores that fail to generalize to real-world conditions.</p>
   <p>Machine learning models deployed in practical settings frequently encounter shifts in data distributions, imbalanced subgroups, rare events, or entirely new patterns that were not present in the original test set. When this happens, models that were previously labeled &ldquo;accurate&rdquo; might perform poorly, leading to serious consequences in high-stakes domains such as finance and healthcare.</p>
-  <p>To address these issues, the research paper &ldquo;Can You Rely on Your Model Evaluation?&rdquo; proposes an approach called <strong>3S-Testing: Synthetic data for Subgroup and Shift Testing</strong>. The idea is to use synthetic data generation&mdash;specifically utilizing a CTGAN model&mdash;to construct more representative and flexible test sets. The synthetic data augments or replaces unstable sections of the test distribution, allowing practitioners to evaluate models under a broader and more realistic set of conditions. Our final project examines this method, explains its components, and evaluates an improvement to the generative model by replacing the CTGAN architecture with a TVAE (Tabular Variational Autoencoder) model.</p>
+  <p>To address these issues, the research paper &ldquo;Can You Rely on Your Model Evaluation?&rdquo; proposes an approach called <strong>3S-Testing: Synthetic data for Subgroup and Shift Testing</strong>. The idea is to use synthetic data generation, specifically utilizing a CTGAN model, to construct more representative and flexible test sets. The synthetic data augments or replaces unstable sections of the test distribution, allowing practitioners to evaluate models under a broader and more realistic set of conditions. Our final project examines this method, explains its components, and evaluates an improvement to the generative model by replacing the CTGAN architecture with a TVAE (Tabular Variational Autoencoder) model.</p>
 
   <h2>Paper Methodology</h2>
   <p>In order to put 3S-Testing to use, the authors first had to begin by training predictive models so the testing can be evaluated. Three models were used for this task: a <strong>Multilayer Perceptron</strong>, a <strong>Gradient-Boosted Decision Tree</strong>, and a <strong>Random Forest</strong>. These three models were chosen because they have fundamentally different architectures, thus evaluating 3S-Testing more thoroughly.</p>
@@ -66,14 +64,14 @@
 
   <h2>Model</h2>
   <p>The synthetic data generation was handled by a <strong>CTGAN</strong> model, otherwise known as a Conditional Tabular Generative Adversarial Network. This CTGAN model mostly operates like a typical GAN model, however with a few key differences. As the name suggests, it utilizes a conditional approach to better capture relationships and distributions between the data, as well as only accepting tabular data as input.</p>
-  <p>Starting at the beginning, the CTGAN model first chooses a random column and category from the true test dataset. This row is sent to the discriminator (or critic) to represent the true data. At the same time, this column and category is one-hot encoded and fed into the generator along with gaussian noise. The generator then takes these inputs and creates a fake version of the category in question. Finally, these two instances&mdash;one real and one fake&mdash;are fed into the discriminator which then attempts to determine which is the real piece of data. This process is repeated, and both the discriminator and generator improve as training continues.</p>
+  <p>Starting at the beginning, the CTGAN model first chooses a random column and category from the true test dataset. This row is sent to the discriminator (or critic) to represent the true data. At the same time, this column and category is one-hot encoded and fed into the generator along with gaussian noise. The generator then takes these inputs and creates a fake version of the category in question. Finally, these two instances (one real and one fake) are fed into the discriminator which then attempts to determine which is the real piece of data. This process is repeated, and both the discriminator and generator improve as training continues.</p>
 
   <h3>Use Cases</h3>
   <p>The goal of 3S-Testing is to remove inconsistencies from the testing data and ensure testing can be as thorough as possible:</p>
   <ul>
-    <li><strong>Underrepresented data</strong> &mdash; Synthetic generation can take underrepresented groups and generate more examples based on the few that exist as well as the overall trends in the dataset.</li>
-    <li><strong>Distributional shifts</strong> &mdash; Real-life shifts not accounted for in a test set can give entirely wrong results. Synthetic data can account for slight shifts in data over time.</li>
-    <li><strong>Noise reduction</strong> &mdash; Generating synthetic data can also reduce noise in a true testing dataset, increasing accuracy by decreasing randomness.</li>
+    <li><strong>Underrepresented data:</strong> Synthetic generation can take underrepresented groups and generate more examples based on the few that exist as well as the overall trends in the dataset.</li>
+    <li><strong>Distributional shifts:</strong> Real-life shifts not accounted for in a test set can give entirely wrong results. Synthetic data can account for slight shifts in data over time.</li>
+    <li><strong>Noise reduction:</strong> Generating synthetic data can also reduce noise in a true testing dataset, increasing accuracy by decreasing randomness.</li>
   </ul>
 
   <h2>Paper Results</h2>
@@ -81,7 +79,7 @@
   <p>Of the four testing datasets, the unaltered testing data performed the worst. Following it was the rejection-sampling version, and performing with the best accuracy (excluding the oracle) was 3S-Testing. Starting with only one feature, 3S-Testing started with and maintained the best accuracy, and after enough features were added even drew extremely close to the oracle&rsquo;s performance.</p>
 
   <h2>Our Contribution</h2>
-  <p>To build on the results of the paper, we aimed to improve the quality and accuracy of the generated synthetic data. A gap we recognized was that the authors exclusively tested CTGAN-generated data against their oracle dataset. While effective, GANs have known limitations&mdash;primarily training instability and modal collapse. This motivated us to investigate whether another model could yield better results.</p>
+  <p>To build on the results of the paper, we aimed to improve the quality and accuracy of the generated synthetic data. A gap we recognized was that the authors exclusively tested CTGAN-generated data against their oracle dataset. While effective, GANs have known limitations, primarily training instability and modal collapse. This motivated us to investigate whether another model could yield better results.</p>
   <p>After research, we chose and implemented a <strong>Tabular Variational Autoencoder (TVAE)</strong>. Unlike CTGAN&rsquo;s generator-discriminator competition, this model uses a reconstruction-based training approach. TVAE consists of two jointly trained, densely connected neural networks:</p>
   <ul>
     <li><strong>Encoder (E):</strong> Takes some input vector x and maps it to a latent distribution characterized by the input&rsquo;s mean and variance. The encoding compresses the data into a smoother, lower-dimensional vector z.</li>
@@ -99,7 +97,7 @@
 
   <h2>Discussion</h2>
   <p>Our results indicate that CTGAN outperforms TVAE in improving prediction accuracy under marginal shifts. Although TVAE is a more efficient and stable model, it may have been inherently limited by its design. While TVAE&rsquo;s smooth latent distribution may make it less susceptible to noise, it may also dampen sharp relationships in the data and fail to capture them properly.</p>
-  <p>Another key limitation stems from the Adult dataset itself. Many important predictors&mdash;such as occupation, country, and marital status&mdash;are high-cardinality categorical values. TVAE generally does not handle these well. Before training, categorical variables must be one-hot encoded, which dramatically increases dimensionality and removes potential relationships between categories.</p>
+  <p>Another key limitation stems from the Adult dataset itself. Many important predictors (such as occupation, country, and marital status) are high-cardinality categorical values. TVAE generally does not handle these well. Before training, categorical variables must be one-hot encoded, which dramatically increases dimensionality and removes potential relationships between categories.</p>
   <p>However, performance may have been better on a dataset with predominantly numerical data and more linear relationships. Considering the efficiency and stability of TVAE compared to CTGAN, it may be worthwhile to further investigate TVAE accuracy on such datasets in cases where efficiency is important.</p>
 
   <h2>Conclusion</h2>
@@ -111,7 +109,7 @@
   <ol>
     <li>&ldquo;Generating synthetic tabular data,&rdquo; <em>Towards Data Science</em>.</li>
     <li>&ldquo;SDV (Synthetic Data Vault),&rdquo; GitHub repository. <a href="https://github.com/sdv-dev/SDV" target="_blank" style="color:var(--accent);">github.com/sdv-dev/SDV</a></li>
-    <li>&ldquo;Why synthetic tabular data beats sampling &mdash; SDV Hackathon Talk,&rdquo; YouTube.</li>
+    <li>&ldquo;Why synthetic tabular data beats sampling: SDV Hackathon Talk,&rdquo; YouTube.</li>
     <li>&ldquo;Variational Autoencoder Structure,&rdquo; <em>ResearchGate</em>.</li>
     <li>&ldquo;Adult Data Set,&rdquo; UCI Machine Learning Repository. <a href="https://archive.ics.uci.edu/dataset/2/adult" target="_blank" style="color:var(--accent);">archive.ics.uci.edu</a></li>
   </ol>
@@ -139,8 +137,8 @@ particlesJS("particles-js", {
   },
   interactivity: {
     detect_on: "canvas",
-    events: { onhover: { enable: true, mode: ["grab", "repulse"] }, onclick: { enable: true, mode: "push" }, resize: true },
-    modes: { grab: { distance: 250, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 }, repulse: { distance: 100, duration: 0.4 } }
+    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+    modes: { push: { particles_nb: 4 }, repulse: { distance: 150, duration: 0.4 } }
   },
   retina_detect: true
 });

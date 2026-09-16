@@ -32,7 +32,6 @@
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
-    <li><a href="https://github.com/JoeNissen" target="_blank">GitHub</a></li>
   </ul>
 </nav>
 
@@ -48,6 +47,7 @@
 
     <div class="contact">
       <button class="contact-btn" id="contactToggle">Connect</button>
+      <a class="btn" href="resume.html">Resume</a>
       <div class="contact-menu" id="contactMenu">
         <div class="contact-row">
           <span>Email</span>
@@ -82,20 +82,12 @@
   </div>
 
   <div class="avatar-col" id="avatarCol">
-    <svg class="resume-arc" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <path id="textCurve" d="M 5,75 A 170,170 0 0,1 315,75" fill="none" />
-      </defs>
-      <text class="resume-arc-text">
-        <textPath href="#textCurve" startOffset="50%" text-anchor="middle">Resume</textPath>
-      </text>
-    </svg>
     <div class="avatar-wrapper">
-      <a href="resume.html" class="avatar-link">
+      <div>
         <img src="assets/headshot_final.png"
              alt="Photo of Joe Nissen"
              class="avatar">
-      </a>
+      </div>
     </div>
   </div>
 </header>
@@ -158,14 +150,13 @@ particlesJS("particles-js", {
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: true, mode: ["grab", "repulse"] },
+      onhover: { enable: true, mode: "repulse" },
       onclick: { enable: true, mode: "push" },
       resize: true
     },
     modes: {
-      grab: { distance: 250, line_linked: { opacity: 0.5 } },
       push: { particles_nb: 4 },
-      repulse: { distance: 100, duration: 0.4 }
+      repulse: { distance: 150, duration: 0.4 }
     }
   },
   retina_detect: true
