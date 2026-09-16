@@ -58,17 +58,17 @@
     });
   });
 
-  /* 4. Typewriter effect on hero h1 (index page only) */
-  var heroHeader = document.querySelector(".page-header.hero h1");
-  if (heroHeader) {
-    var fullText = heroHeader.textContent.replace(".", "");
-    var dotSpan = heroHeader.querySelector("span");
+  /* 4. Typewriter effect on all page header h1 elements */
+  var pageHeader = document.querySelector(".page-header h1");
+  if (pageHeader) {
+    var fullText = pageHeader.textContent.replace(".", "");
+    var dotSpan = pageHeader.querySelector("span");
 
     // Hide the dot span during typing
     if (dotSpan) dotSpan.style.display = "none";
 
-    // Clear original text and create a typing target
-    heroHeader.childNodes.forEach(function(node) {
+    // Clear original text
+    pageHeader.childNodes.forEach(function(node) {
       if (node.nodeType === 3) node.textContent = "";
     });
 
@@ -76,31 +76,30 @@
     var cursor = document.createElement("span");
     cursor.className = "typewriter-cursor";
     cursor.innerHTML = "&nbsp;";
-    heroHeader.appendChild(cursor);
+    pageHeader.appendChild(cursor);
 
     var charIndex = 0;
     var textNode = document.createTextNode("");
-    heroHeader.insertBefore(textNode, cursor);
+    pageHeader.insertBefore(textNode, cursor);
 
     function typeNext() {
       if (charIndex < fullText.length) {
         textNode.textContent += fullText[charIndex];
         charIndex++;
-        setTimeout(typeNext, 60 + Math.random() * 40);
+        setTimeout(typeNext, 35 + Math.random() * 25);
       } else {
         // Done typing, show the dot and remove cursor
         if (dotSpan) {
           dotSpan.style.display = "";
-          heroHeader.insertBefore(dotSpan, cursor);
+          pageHeader.insertBefore(dotSpan, cursor);
         }
         setTimeout(function() {
           cursor.remove();
-        }, 1500);
+        }, 1200);
       }
     }
 
-    // Start after a short delay
-    setTimeout(typeNext, 400);
+    setTimeout(typeNext, 300);
   }
 
 })();
