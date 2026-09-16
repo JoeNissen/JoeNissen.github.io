@@ -370,11 +370,32 @@ section {
 }
 
 .card-status {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-bright);
   margin-bottom: 0.75rem;
-  font-style: italic;
+  padding: 0.3rem 0.75rem;
+  background: rgba(122, 162, 247, 0.1);
+  border: 1px solid rgba(122, 162, 247, 0.2);
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.card-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(168, 200, 255, 0.4); }
+  50% { opacity: 0.5; box-shadow: 0 0 0 4px rgba(168, 200, 255, 0); }
 }
 
 .card-link {
