@@ -292,7 +292,7 @@
       cell.classList.add('revealed');
       if (board[r][c] === -1) {
         cell.classList.add('mine');
-        cell.textContent = '\u2739';
+        cell.textContent = '\u25CF';
         return;
       }
       if (board[r][c] > 0) {
@@ -354,7 +354,11 @@
       flagged[r][c] = !flagged[r][c];
       var cell = getCell(r, c);
       cell.classList.toggle('flagged');
-      cell.textContent = flagged[r][c] ? '\u2691' : '';
+      if (flagged[r][c]) {
+        cell.innerHTML = '<span class="flag-icon"></span>';
+      } else {
+        cell.innerHTML = '';
+      }
       flagCount += flagged[r][c] ? 1 : -1;
       statusEl.textContent = 'Mines: ' + mineCount + ' | Flags: ' + flagCount;
     }

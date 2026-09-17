@@ -1168,92 +1168,112 @@ section {
 /* Minesweeper grid */
 .minesweeper-grid {
   display: inline-grid;
-  gap: 1px;
-  background: var(--card-border);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
+  gap: 0;
+  background: #808080;
+  border: 3px solid;
+  border-color: #808080 #fff #fff #808080;
+  border-radius: 0;
   overflow: hidden;
   user-select: none;
 }
 
 .mine-cell {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  background: #3a4a6b;
-  border: none;
+  background: #bdbdbd;
   color: var(--fg);
   padding: 0;
-  transition: background 0.1s ease;
-  border-top: 2px solid #4d5f85;
-  border-left: 2px solid #4d5f85;
-  border-right: 2px solid #283550;
-  border-bottom: 2px solid #283550;
+  transition: none;
+  border: 3px solid;
+  border-color: #f5f5f5 #7a7a7a #7a7a7a #f5f5f5;
 }
 
-.mine-cell:hover {
-  background: #4a5c80;
+.mine-cell:active:not(.revealed):not(.flagged) {
+  border-color: #999 #999 #999 #999;
+  border-width: 1px;
+  padding: 2px;
+  background: #b0b0b0;
 }
 
 .mine-cell.revealed {
-  background: var(--card-bg-solid);
+  background: #d0d0d0;
   cursor: default;
-  border: 1px solid rgba(122, 162, 247, 0.1);
+  border: 1px solid #a0a0a0;
 }
 
 .mine-cell.flagged {
-  background: #4a3a6b;
-  border-top: 2px solid #5d4a85;
-  border-left: 2px solid #5d4a85;
-  border-right: 2px solid #382850;
-  border-bottom: 2px solid #382850;
+  background: #bdbdbd;
+  border-color: #f5f5f5 #7a7a7a #7a7a7a #f5f5f5;
+}
+
+.mine-cell .flag-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 8px solid #e74c3c;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  position: relative;
+  margin-left: 2px;
+}
+
+.mine-cell .flag-icon::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 4px;
+  width: 2px;
+  height: 8px;
+  background: #333;
+}
+
+.mine-cell .flag-icon::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 12px;
+  width: 10px;
+  height: 2px;
+  background: #333;
 }
 
 .mine-cell.mine {
-  background: #e74c3c;
-  color: white;
-  border: 1px solid #c0392b;
+  background: #ff4444;
+  border: 1px solid #cc3333;
 }
 
-.mine-cell[data-count="1"] { color: #60a5fa; }
-.mine-cell[data-count="2"] { color: #4ade80; }
-.mine-cell[data-count="3"] { color: #f87171; }
-.mine-cell[data-count="4"] { color: #a78bfa; }
-.mine-cell[data-count="5"] { color: #fbbf24; }
-.mine-cell[data-count="6"] { color: #2dd4bf; }
-.mine-cell[data-count="7"] { color: #f472b6; }
-.mine-cell[data-count="8"] { color: #94a3b8; }
-
-[data-theme="light"] .mine-cell {
-  background: #8ba0c4;
-  border-top: 2px solid #a0b5d5;
-  border-left: 2px solid #a0b5d5;
-  border-right: 2px solid #6b85aa;
-  border-bottom: 2px solid #6b85aa;
+.mine-cell.mine-icon::before {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 14px;
+  background: #333;
+  border-radius: 50%;
+  position: relative;
 }
 
-[data-theme="light"] .mine-cell:hover {
-  background: #9bb0d0;
-}
+/* Classic minesweeper number colors */
+.mine-cell[data-count="1"] { color: #0000ff; }
+.mine-cell[data-count="2"] { color: #008000; }
+.mine-cell[data-count="3"] { color: #ff0000; }
+.mine-cell[data-count="4"] { color: #000080; }
+.mine-cell[data-count="5"] { color: #800000; }
+.mine-cell[data-count="6"] { color: #008080; }
+.mine-cell[data-count="7"] { color: #000000; }
+.mine-cell[data-count="8"] { color: #808080; }
 
-[data-theme="light"] .mine-cell.flagged {
-  background: #a08bc4;
-  border-top: 2px solid #b5a0d5;
-  border-left: 2px solid #b5a0d5;
-  border-right: 2px solid #856baa;
-  border-bottom: 2px solid #856baa;
-}
-
-[data-theme="light"] .mine-cell[data-count="1"] { color: #2563eb; }
-[data-theme="light"] .mine-cell[data-count="2"] { color: #16a34a; }
-[data-theme="light"] .mine-cell[data-count="3"] { color: #dc2626; }
-[data-theme="light"] .mine-cell[data-count="4"] { color: #7c3aed; }
-[data-theme="light"] .mine-cell[data-count="5"] { color: #d97706; }
+/* Light theme - same classic look */
+[data-theme="light"] .mine-cell[data-count="1"] { color: #0000ff; }
+[data-theme="light"] .mine-cell[data-count="2"] { color: #008000; }
+[data-theme="light"] .mine-cell[data-count="3"] { color: #ff0000; }
+[data-theme="light"] .mine-cell[data-count="4"] { color: #000080; }
+[data-theme="light"] .mine-cell[data-count="5"] { color: #800000; }
 
 /* 2048 grid */
 .grid-2048 {
@@ -1501,9 +1521,28 @@ footer a {
   }
 
   .mine-cell {
-    width: 26px;
-    height: 26px;
-    font-size: 0.65rem;
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    border-width: 2px;
+  }
+
+  .mine-cell .flag-icon {
+    border-left-width: 6px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+  }
+
+  .mine-cell .flag-icon::after {
+    height: 6px;
+    left: -6px;
+    top: 3px;
+  }
+
+  .mine-cell .flag-icon::before {
+    width: 8px;
+    left: -8px;
+    top: 9px;
   }
 }
 
