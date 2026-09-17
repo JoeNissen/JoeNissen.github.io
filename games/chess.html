@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game of Life | Joe Nissen</title>
-  <meta name="description" content="Conway's Game of Life cellular automaton." />
+  <title>Chess | Joe Nissen</title>
+  <meta name="description" content="Play chess against Joe Bot, a chatty ~1000 Elo AI that comments on the game." />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
@@ -42,30 +42,26 @@
 </nav>
 
 <header class="page-header" id="main">
-  <h1>Game of Life<span>.</span></h1>
-  <p class="lead">
-    A zero-player simulation invented by mathematician John Conway.
-    Each cell is either alive or dead. On each tick, cells evolve by three rules:
-    a live cell with 2 or 3 neighbors survives, a dead cell with exactly 3 neighbors is born,
-    and all other cells die. Click cells to draw a pattern (or hit Random), then press Play to watch it evolve.
-  </p>
+  <h1>Chess<span>.</span></h1>
+  <p class="lead">Play against Joe Bot (~1000 Elo). Click a piece to select it, then click the destination to move.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
+  <div class="game-card visible chess-game-card" style="max-width:820px;margin:0 auto;opacity:1;transform:none;">
     <div class="game-controls">
-      <button id="life-play">Play</button>
-      <button id="life-clear">Clear</button>
-      <button id="life-random">Random</button>
-      <input type="range" id="life-speed" min="50" max="500" value="150" title="Speed">
+      <button id="chess-restart">New Game</button>
+      <span id="chess-status" class="game-score">White to move</span>
     </div>
-    <div class="game-canvas-wrapper">
-      <canvas id="life-canvas" width="400" height="400"></canvas>
+    <div class="chess-container">
+      <div id="chess-board" class="chess-board" style="touch-action:none;"></div>
+      <div class="chess-chat">
+        <div class="chess-chat-header">Joe Bot</div>
+        <div id="chess-chat-log" class="chess-chat-log"></div>
+      </div>
     </div>
-    <div class="game-score">Generation: <strong id="life-gen">0</strong></div>
   </div>
 </section>
 
