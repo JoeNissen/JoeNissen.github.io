@@ -1203,6 +1203,17 @@ section {
   border-radius: 8px;
   max-width: 100%;
   display: block;
+  touch-action: none;
+}
+
+/* Flag/Dig toggle for mobile minesweeper */
+.flag-toggle-btn {
+  min-width: 3.5rem;
+}
+.flag-toggle-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
 }
 
 .game-score {
@@ -1311,6 +1322,7 @@ section {
   max-width: 340px;
   margin: 0 auto;
   position: relative;
+  touch-action: none;
 }
 
 .tile-2048 {

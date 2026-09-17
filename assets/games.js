@@ -188,13 +188,18 @@
       if (e.key === 'ArrowRight' && dir.x !== -1) nextDir = {x:1, y:0};
     });
 
-    // Touch swipe for mobile
+    // Touch swipe for mobile — prevent page scrolling while swiping on canvas
     var touchStart = null;
     canvas.addEventListener('touchstart', function(e) {
+      if (!started || gameOver) return;
       touchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
     }, {passive: true});
+    canvas.addEventListener('touchmove', function(e) {
+      if (!started || gameOver || !touchStart) return;
+      e.preventDefault();
+    }, {passive: false});
     canvas.addEventListener('touchend', function(e) {
-      if (!touchStart || !started) return;
+      if (!touchStart || !started || gameOver) return;
       var dx = e.changedTouches[0].clientX - touchStart.x;
       var dy = e.changedTouches[0].clientY - touchStart.y;
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -452,12 +457,49 @@
       statusEl.textContent = 'Mines: ' + totalMines + ' | Flags: ' + flagCount;
     }
 
+    // Mobile flag mode toggle
+    var flagMode = false;
+    var flagToggleBtn = document.getElementById('mine-flag-toggle');
+    if (flagToggleBtn) {
+      flagToggleBtn.addEventListener('click', function() {
+        flagMode = !flagMode;
+        flagToggleBtn.textContent = flagMode ? 'Flag' : 'Dig';
+        flagToggleBtn.classList.toggle('active', flagMode);
+      });
+    }
+
+    function handleTap(e) {
+      if (!gameActive) return;
+      var target = e.target.closest('.mine-cell');
+      if (!target) return;
+      if (flagMode) {
+        // Simulate right-click for flagging
+        handleRightClick({preventDefault: function(){}, target: target});
+      } else {
+        handleClick({target: target});
+      }
+    }
+
     // Event delegation — one listener on the grid, not per-cell
-    gridEl.addEventListener('click', handleClick);
+    gridEl.addEventListener('click', handleTap);
     gridEl.addEventListener('contextmenu', handleRightClick);
 
-    document.getElementById('mine-restart').addEventListener('click', init);
-    document.getElementById('mine-difficulty').addEventListener('change', init);
+    document.getElementById('mine-restart').addEventListener('click', function() {
+      flagMode = false;
+      if (flagToggleBtn) {
+        flagToggleBtn.textContent = 'Dig';
+        flagToggleBtn.classList.remove('active');
+      }
+      init();
+    });
+    document.getElementById('mine-difficulty').addEventListener('change', function() {
+      flagMode = false;
+      if (flagToggleBtn) {
+        flagToggleBtn.textContent = 'Dig';
+        flagToggleBtn.classList.remove('active');
+      }
+      init();
+    });
     init();
   })();
 
@@ -613,14 +655,18 @@
       }
     });
 
-    // Touch swipe
+    // Touch swipe — prevent page scrolling while swiping on grid
     var ts = null;
     gridEl.addEventListener('touchstart', function(e) {
-      if (!started) return;
+      if (!started || gameOver) return;
       ts = {x: e.touches[0].clientX, y: e.touches[0].clientY};
     }, {passive: true});
+    gridEl.addEventListener('touchmove', function(e) {
+      if (!started || gameOver || !ts) return;
+      e.preventDefault();
+    }, {passive: false});
     gridEl.addEventListener('touchend', function(e) {
-      if (!ts || !started) return;
+      if (!ts || !started || gameOver) return;
       var dx = e.changedTouches[0].clientX - ts.x;
       var dy = e.changedTouches[0].clientY - ts.y;
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -895,6 +941,41 @@
       }
     });
 
+    // Touch controls for mobile — swipe left/right/down, tap to rotate
+    var tetTouchStart = null;
+    var tetTouchMoved = false;
+    canvas.addEventListener('touchstart', function(e) {
+      if (!started || gameOver || !piece) return;
+      tetTouchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+      tetTouchMoved = false;
+    }, {passive: true});
+    canvas.addEventListener('touchmove', function(e) {
+      if (!started || gameOver || !tetTouchStart) return;
+      e.preventDefault();
+      var dx = e.touches[0].clientX - tetTouchStart.x;
+      var dy = e.touches[0].clientY - tetTouchStart.y;
+      if (Math.abs(dx) > 30) {
+        tetTouchMoved = true;
+        if (dx > 0 && valid(piece.shape, piece.x + 1, piece.y)) piece.x++;
+        else if (dx < 0 && valid(piece.shape, piece.x - 1, piece.y)) piece.x--;
+        tetTouchStart.x = e.touches[0].clientX;
+      }
+      if (dy > 30) {
+        tetTouchMoved = true;
+        if (valid(piece.shape, piece.x, piece.y + 1)) { piece.y++; lastDrop = Date.now(); }
+        tetTouchStart.y = e.touches[0].clientY;
+      }
+    }, {passive: false});
+    canvas.addEventListener('touchend', function(e) {
+      if (!started || gameOver || !piece || !tetTouchStart) return;
+      if (!tetTouchMoved) {
+        // Tap = rotate
+        var rot = rotate(piece.shape);
+        if (valid(rot, piece.x, piece.y)) piece.shape = rot;
+      }
+      tetTouchStart = null;
+    }, {passive: true});
+
     restartBtn.addEventListener('click', function() {
       if (!started || gameOver) {
         startGame();
@@ -1031,6 +1112,39 @@
     document.addEventListener('mouseup', function() {
       isDrawing = false;
     });
+
+    // Touch support for mobile drawing
+    canvas.addEventListener('touchstart', function(e) {
+      if (running) return;
+      e.preventDefault();
+      var touch = e.touches[0];
+      var rect = canvas.getBoundingClientRect();
+      var c = Math.floor((touch.clientX - rect.left) / CELL);
+      var r = Math.floor((touch.clientY - rect.top) / CELL);
+      if (r >= 0 && r < rows && c >= 0 && c < cols) {
+        drawValue = grid[r][c] ? 0 : 1;
+        grid[r][c] = drawValue;
+        isDrawing = true;
+        draw();
+      }
+    }, {passive: false});
+
+    canvas.addEventListener('touchmove', function(e) {
+      if (!isDrawing || running) return;
+      e.preventDefault();
+      var touch = e.touches[0];
+      var rect = canvas.getBoundingClientRect();
+      var c = Math.floor((touch.clientX - rect.left) / CELL);
+      var r = Math.floor((touch.clientY - rect.top) / CELL);
+      if (r >= 0 && r < rows && c >= 0 && c < cols) {
+        grid[r][c] = drawValue;
+        draw();
+      }
+    }, {passive: false});
+
+    canvas.addEventListener('touchend', function() {
+      isDrawing = false;
+    }, {passive: true});
 
     document.getElementById('life-play').addEventListener('click', function() {
       running = !running;
