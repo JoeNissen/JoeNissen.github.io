@@ -31,7 +31,7 @@
     var size = 15;
     var cols = canvas.width / size;
     var rows = canvas.height / size;
-    var snake, dir, nextDir, food, score, gameOver, interval, started;
+    var snake, dir, nextDir, food, score, gameOver, won, interval, started;
     var baseSpeed = 100;
     var restartBtn = document.getElementById('snake-restart');
 
@@ -64,6 +64,7 @@
       nextDir = {x: 1, y: 0};
       score = 0;
       gameOver = false;
+      won = false;
       started = false;
       document.getElementById('snake-score').textContent = '0';
       if (interval) clearInterval(interval);
@@ -79,6 +80,7 @@
       nextDir = {x: 1, y: 0};
       score = 0;
       gameOver = false;
+      won = false;
       started = true;
       document.getElementById('snake-score').textContent = '0';
       placeFood();
@@ -89,9 +91,25 @@
     }
 
     function placeFood() {
-      do {
-        food = {x: Math.floor(Math.random()*cols), y: Math.floor(Math.random()*rows)};
-      } while (snake.some(function(s) { return s.x === food.x && s.y === food.y; }));
+      // Build list of empty cells to avoid infinite loop if snake fills board
+      var empty = [];
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          if (!snake.some(function(s) { return s.x === c && s.y === r; })) {
+            empty.push({x: c, y: r});
+          }
+        }
+      }
+      if (empty.length === 0) {
+        // Snake filled the board — player wins
+        gameOver = true;
+        won = true;
+        clearInterval(interval);
+        restartBtn.textContent = 'Restart';
+        draw();
+        return;
+      }
+      food = empty[Math.floor(Math.random() * empty.length)];
     }
 
     function tick() {
@@ -154,14 +172,14 @@
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 20px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
+        ctx.fillText(won ? 'You Win!' : 'Game Over', canvas.width/2, canvas.height/2);
         ctx.font = '14px Inter, sans-serif';
         ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 25);
       }
     }
 
     document.addEventListener('keydown', function(e) {
-      if (!started || !isInViewport(canvas)) return;
+      if (!started || gameOver || !isInViewport(canvas)) return;
       if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.key) === -1) return;
       e.preventDefault();
       if (e.key === 'ArrowUp' && dir.y !== 1) nextDir = {x:0, y:-1};
@@ -389,6 +407,7 @@
             if (board[mr][mc] === -1 && !revealed[mr][mc]) {
               revealed[mr][mc] = true;
               var mineCell = getCell(mr, mc);
+              mineCell.classList.remove('flagged');
               mineCell.classList.add('revealed', 'mine');
               mineCell.innerHTML = '\u{1F4A3}';
             }
