@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 | Joe Nissen</title>
-  <meta name="description" content="Page not found." />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="favicon.ico" sizes="any" />
+  <title>2048 | Joe Nissen</title>
+  <meta name="description" content="Slide and merge tiles to reach 2048." />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../favicon.ico" sizes="any" />
 
-  <script src="assets/particles.min.js"></script>
+  <script src="../assets/particles.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="../assets/style.css">
 </head>
 
 <body>
@@ -25,15 +25,15 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <nav class="navbar" role="navigation" aria-label="Main navigation">
-  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <a class="navbar-brand" href="../index.html">JN<span>.</span></a>
   <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   <ul class="navbar-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="projects.html">Projects</a></li>
-    <li><a href="research.html">Research</a></li>
-    <li><a href="games.html">Games</a></li>
-    <li><a href="resume.html">Resume</a></li>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../research.html">Research</a></li>
+    <li><a href="../games.html">Games</a></li>
+    <li><a href="../resume.html">Resume</a></li>
   </ul>
   <button class="theme-toggle" aria-label="Toggle theme">
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -42,21 +42,30 @@
 </nav>
 
 <header class="page-header" id="main">
-  <h1>404<span>.</span></h1>
-  <p class="lead">
-    This page doesn't exist. It may have been moved or removed.
-  </p>
+  <h1>2048<span>.</span></h1>
+  <p class="lead">Use arrow keys or swipe to slide tiles. Merge matching numbers to reach 2048.</p>
   <div class="actions">
-    <a class="btn" href="index.html">&larr; Back to Home</a>
+    <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
+
+<section>
+  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
+    <div class="game-controls">
+      <button id="game-2048-restart">New Game</button>
+    </div>
+    <div id="grid-2048" class="grid-2048"></div>
+    <div class="game-score" style="margin-top:0.75rem;">Score: <strong id="game-2048-score">0</strong></div>
+  </div>
+</section>
 
 <footer>
   &copy; 2026 Joe Nissen &middot; Last updated Sep 2026
 </footer>
 
-<script src="assets/particles-config.js"></script>
-<script src="assets/animations.js?v=4"></script>
+<script src="../assets/particles-config.js"></script>
+<script src="../assets/animations.js?v=4"></script>
+<script src="../assets/games.js?v=2"></script>
 
 </body>
 </html>

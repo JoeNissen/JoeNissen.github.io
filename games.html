@@ -41,8 +41,8 @@
     <li><a href="about.html">About</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
-    <li><a href="resume.html">Resume</a></li>
     <li><a href="games.html" class="active" aria-current="page">Games</a></li>
+    <li><a href="resume.html">Resume</a></li>
   </ul>
   <button class="theme-toggle" aria-label="Toggle theme">
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -54,92 +54,41 @@
   <h1>Games<span>.</span></h1>
   <p class="lead">
     A collection of classic mini-games, playable right in the browser.
-    Use arrow keys or swipe on mobile.
   </p>
 </header>
 
 <section>
-  <div class="grid three-col">
+  <div class="grid two-col">
 
-    <!-- Snake -->
-    <div class="game-card" id="snake-card">
+    <a class="nav-card" href="games/snake.html">
       <h3>Snake</h3>
-      <div class="game-controls">
-        <button id="snake-restart">New Game</button>
-      </div>
-      <div class="game-canvas-wrapper">
-        <canvas id="snake-canvas" width="300" height="300"></canvas>
-      </div>
-      <div class="game-score">Score: <strong id="snake-score">0</strong></div>
-    </div>
+      <p>Classic snake game. Use arrow keys or swipe to control, eat food to grow, and avoid the walls.</p>
+    </a>
 
-    <!-- Minesweeper -->
-    <div class="game-card" id="minesweeper-card">
+    <a class="nav-card" href="games/minesweeper.html">
       <h3>Minesweeper</h3>
-      <div class="game-controls">
-        <select id="mine-difficulty">
-          <option value="easy">Easy (9x9)</option>
-          <option value="medium">Medium (16x16)</option>
-          <option value="hard">Hard (16x30)</option>
-        </select>
-        <button id="mine-restart">New Game</button>
-      </div>
-      <div class="game-canvas-wrapper">
-        <div id="minesweeper-grid" class="minesweeper-grid"></div>
-      </div>
-      <div class="game-score" id="mine-status">Click to start</div>
-    </div>
+      <p>Uncover cells without hitting a mine. Right-click to flag. Three difficulty levels available.</p>
+    </a>
 
-    <!-- 2048 -->
-    <div class="game-card" id="game-2048-card">
+    <a class="nav-card" href="games/2048.html">
       <h3>2048</h3>
-      <div class="game-controls">
-        <button id="game-2048-restart">New Game</button>
-      </div>
-      <div id="grid-2048" class="grid-2048"></div>
-      <div class="game-score">Score: <strong id="game-2048-score">0</strong></div>
-    </div>
+      <p>Slide numbered tiles on a 4&times;4 grid, merging matching pairs to reach 2048.</p>
+    </a>
 
-    <!-- Tetris -->
-    <div class="game-card" id="tetris-card">
+    <a class="nav-card" href="games/tetris.html">
       <h3>Tetris</h3>
-      <div class="game-controls">
-        <button id="tetris-restart">New Game</button>
-      </div>
-      <div class="game-canvas-wrapper">
-        <canvas id="tetris-canvas" width="200" height="400"></canvas>
-      </div>
-      <div class="game-score">Score: <strong id="tetris-score">0</strong> &nbsp; Level: <strong id="tetris-level">1</strong></div>
-    </div>
+      <p>Stack and rotate falling tetrominoes to clear lines. Speed increases with each level.</p>
+    </a>
 
-    <!-- Conway's Game of Life -->
-    <div class="game-card" id="life-card">
+    <a class="nav-card" href="games/life.html">
       <h3>Game of Life</h3>
-      <div class="game-controls">
-        <button id="life-play">Play</button>
-        <button id="life-clear">Clear</button>
-        <button id="life-random">Random</button>
-        <input type="range" id="life-speed" min="50" max="500" value="150" title="Speed">
-      </div>
-      <div class="game-canvas-wrapper">
-        <canvas id="life-canvas" width="300" height="300"></canvas>
-      </div>
-      <div class="game-score">Generation: <strong id="life-gen">0</strong></div>
-    </div>
+      <p>Conway's cellular automaton. Click cells to toggle, hit play, and watch patterns evolve.</p>
+    </a>
 
-    <!-- Typing Speed Test -->
-    <div class="game-card" id="typing-card">
+    <a class="nav-card" href="games/typing.html">
       <h3>Typing Speed Test</h3>
-      <div class="game-controls">
-        <button id="typing-restart">New Test</button>
-      </div>
-      <div class="typing-area" id="typing-display"></div>
-      <input class="typing-input" id="typing-input" placeholder="Start typing here..." autocomplete="off" />
-      <div class="typing-stats">
-        <span>WPM: <strong id="typing-wpm">0</strong></span>
-        <span>Accuracy: <strong id="typing-acc">100%</strong></span>
-      </div>
-    </div>
+      <p>Test your typing speed and accuracy with programming-themed sentences in monospace.</p>
+    </a>
 
   </div>
 </section>
@@ -150,7 +99,6 @@
 
 <script src="assets/particles-config.js"></script>
 <script src="assets/animations.js?v=4"></script>
-<script src="assets/games.js?v=1"></script>
 
 </body>
 </html>
