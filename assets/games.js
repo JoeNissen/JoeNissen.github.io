@@ -232,7 +232,7 @@
       statusEl.textContent = 'Mines: ' + mineCount + ' | Flags: 0';
 
       gridEl.innerHTML = '';
-      gridEl.style.gridTemplateColumns = 'repeat(' + cfg.cols + ', 1fr)';
+      gridEl.style.gridTemplateColumns = 'repeat(' + cfg.cols + ', 28px)';
 
       for (var r = 0; r < cfg.rows; r++) {
         board[r] = [];
@@ -319,8 +319,10 @@
 
     function onCellClick(e) {
       if (!gameActive) return;
-      var r = parseInt(e.target.dataset.r);
-      var c = parseInt(e.target.dataset.c);
+      var target = e.target.closest('.mine-cell');
+      if (!target) return;
+      var r = parseInt(target.dataset.r);
+      var c = parseInt(target.dataset.c);
       if (flagged[r][c]) return;
 
       if (firstClick) {
@@ -330,6 +332,11 @@
 
       if (board[r][c] === -1) {
         gameActive = false;
+        // Mark the clicked mine as the trigger
+        var triggerCell = getCell(r, c);
+        reveal(r, c);
+        triggerCell.classList.add('mine-trigger');
+        // Reveal remaining mines
         mineSet.forEach(function(key) {
           var parts = key.split(',');
           reveal(parseInt(parts[0]), parseInt(parts[1]));
@@ -348,8 +355,10 @@
     function onCellRightClick(e) {
       e.preventDefault();
       if (!gameActive) return;
-      var r = parseInt(e.target.dataset.r);
-      var c = parseInt(e.target.dataset.c);
+      var target = e.target.closest('.mine-cell');
+      if (!target) return;
+      var r = parseInt(target.dataset.r);
+      var c = parseInt(target.dataset.c);
       if (revealed[r][c]) return;
       flagged[r][c] = !flagged[r][c];
       var cell = getCell(r, c);
@@ -978,21 +987,21 @@
     var accEl = document.getElementById('typing-acc');
 
     var sentences = [
-      "The quick brown fox jumps over the lazy dog.",
-      "To be or not to be, that is the question.",
-      "All that glitters is not gold.",
-      "A journey of a thousand miles begins with a single step.",
-      "In the middle of difficulty lies opportunity.",
-      "The only way to do great work is to love what you do.",
-      "Code is like humor. When you have to explain it, it is bad.",
-      "First, solve the problem. Then, write the code.",
-      "Experience is the name everyone gives to their mistakes.",
-      "Simplicity is the soul of efficiency.",
-      "Programs must be written for people to read.",
-      "Any fool can write code that a computer can understand.",
-      "Talk is cheap. Show me the code.",
-      "The best error message is the one that never shows up.",
-      "Make it work, make it right, make it fast."
+      "Computer Science master's student focused on artificial intelligence, machine learning, and software systems.",
+      "Currently conducting research in quantum computing at Binghamton University.",
+      "Can You Rely on Your Model Evaluation? Improving Model Evaluation with Synthetic Test Data.",
+      "Fine-tuned instruction-based large language models to teach programming in Lua.",
+      "Verified Connection Establishment for End-to-End Entanglement in Quantum Networks.",
+      "Advanced Business Analytics Intern at NYCM Insurance.",
+      "Automated data extraction from third-party sources using Python and pandas.",
+      "Built models to support underwriter decision-making and delivered results through Tableau.",
+      "Built a personal knowledge management system for analyzing AI chatbot conversations.",
+      "Managed two-week Agile sprints and led code reviews across a three-person research team.",
+      "Generated synthetic records from the UCI Adult census dataset comparing GAN-based and VAE-based synthesizers.",
+      "Master of Science in Computer Science with a Focus in Artificial Intelligence.",
+      "Bachelor of Engineering in Computer Science with a Minor in Information Systems.",
+      "First Place at the UtiCode Coding Competition and Second Place at the SUNY Polytechnic Coding Competition.",
+      "Desktop implementation of the board game Carcassonne in C++ with SFML libraries."
     ];
 
     var currentText, startTime, finished;
