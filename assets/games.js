@@ -292,7 +292,7 @@
       cell.classList.add('revealed');
       if (board[r][c] === -1) {
         cell.classList.add('mine');
-        cell.textContent = '\u25CF';
+        cell.innerHTML = '<span class="bomb-icon"></span>';
         return;
       }
       if (board[r][c] > 0) {
@@ -1031,7 +1031,6 @@
       if (ch === '<') return '&lt;';
       if (ch === '>') return '&gt;';
       if (ch === '&') return '&amp;';
-      if (ch === ' ') return '&nbsp;';
       return ch;
     }
 
