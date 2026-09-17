@@ -1223,7 +1223,7 @@ section {
   border: 3px solid;
   border-color: #808080 #fff #fff #808080;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible;
   user-select: none;
 }
 
@@ -1242,6 +1242,7 @@ section {
   transition: none;
   border: 3px solid;
   border-color: #f5f5f5 #7a7a7a #7a7a7a #f5f5f5;
+  overflow: hidden;
 }
 
 .mine-cell:active:not(.revealed):not(.flagged) {
@@ -1260,42 +1261,15 @@ section {
 .mine-cell.flagged {
   background: #bdbdbd;
   border-color: #f5f5f5 #7a7a7a #7a7a7a #f5f5f5;
-}
-
-.mine-cell .flag-icon {
-  display: block;
-  width: 12px;
-  height: 16px;
-  position: relative;
-  image-rendering: pixelated;
-}
-
-/* Pole */
-.mine-cell .flag-icon::before {
-  content: '';
-  position: absolute;
-  left: 3px;
-  top: 0;
-  width: 2px;
-  height: 16px;
-  background: #111;
-}
-
-/* Red flag */
-.mine-cell .flag-icon::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 8px;
-  height: 6px;
-  background: #e60000;
-  box-shadow: -2px 6px 0 0 #111, 0px 6px 0 0 #111, 2px 6px 0 0 #111;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .mine-cell.mine {
   background: #d0d0d0;
   border: 1px solid #a0a0a0;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .mine-cell.mine-trigger {
@@ -1303,43 +1277,9 @@ section {
   border: 1px solid #cc3333;
 }
 
-.mine-cell .bomb-icon {
-  display: block;
-  width: 16px;
-  height: 16px;
-  position: relative;
-}
-
-/* Center body */
-.mine-cell .bomb-icon::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 10px;
-  height: 10px;
-  background: #222;
-  border-radius: 50%;
-}
-
-/* Spikes + shine */
-.mine-cell .bomb-icon::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 7px;
-  width: 2px;
-  height: 16px;
-  background: #222;
-  box-shadow:
-    /* horizontal spike */
-    -7px 5px 0 0 #222, -7px 6px 0 0 #222, -7px 7px 0 0 #222,
-    5px 5px 0 0 #222, 5px 6px 0 0 #222, 5px 7px 0 0 #222,
-    /* diagonal spikes */
-    -5px -2px 0 0 #222, 5px -2px 0 0 #222,
-    -5px 14px 0 0 #222, 5px 14px 0 0 #222,
-    /* shine */
-    -2px 1px 0 0 #fff, -1px 1px 0 0 #fff, -2px 2px 0 0 #fff;
+.mine-cell.wrong-flag {
+  color: #ff0000;
+  text-decoration: line-through;
 }
 
 /* Classic minesweeper number colors */
@@ -1614,23 +1554,9 @@ footer a {
     border-width: 2px;
   }
 
-  .mine-cell .flag-icon {
-    width: 10px;
-    height: 13px;
-  }
-
-  .mine-cell .flag-icon::before {
-    height: 13px;
-  }
-
-  .mine-cell .flag-icon::after {
-    width: 6px;
-    height: 5px;
-  }
-
-  .mine-cell .bomb-icon {
-    width: 10px;
-    height: 10px;
+  .mine-cell.flagged,
+  .mine-cell.mine {
+    font-size: 0.75rem;
   }
 }
 

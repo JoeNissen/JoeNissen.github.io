@@ -214,22 +214,29 @@
       expert:        {rows: 16, cols: 30, mines: 99},
       custom:        {rows: 20, cols: 30, mines: 145}
     };
-    var board, revealed, flagged, mineSet, gameActive, firstClick;
+    var board;       // 2D array: -1 = mine, 0-8 = neighbor count
+    var revealed;    // 2D bool
+    var flagged;     // 2D bool
+    var gameActive;
+    var firstClick;
     var cfg;
-    var mineCount, flagCount;
+    var totalMines, flagCount;
 
     function init() {
       var diff = document.getElementById('mine-difficulty').value;
       cfg = configs[diff];
+      var totalCells = cfg.rows * cfg.cols;
+
+      // Clamp mines so there's always room for the safe zone
+      totalMines = Math.min(cfg.mines, totalCells - 9);
+
       board = [];
       revealed = [];
       flagged = [];
-      mineSet = new Set();
       gameActive = true;
       firstClick = true;
       flagCount = 0;
-      mineCount = cfg.mines;
-      statusEl.textContent = 'Mines: ' + mineCount + ' | Flags: 0';
+      statusEl.textContent = 'Mines: ' + totalMines + ' | Flags: 0';
 
       gridEl.innerHTML = '';
       gridEl.style.gridTemplateColumns = 'repeat(' + cfg.cols + ', 28px)';
@@ -246,33 +253,48 @@
           cell.className = 'mine-cell';
           cell.dataset.r = r;
           cell.dataset.c = c;
-          cell.addEventListener('click', onCellClick);
-          cell.addEventListener('contextmenu', onCellRightClick);
           gridEl.appendChild(cell);
         }
       }
+
+      // Use event delegation on the grid instead of per-cell listeners
     }
 
     function placeMines(safeR, safeC) {
-      var placed = 0;
-      while (placed < cfg.mines) {
-        var r = Math.floor(Math.random() * cfg.rows);
-        var c = Math.floor(Math.random() * cfg.cols);
-        var key = r + ',' + c;
-        if (!mineSet.has(key) && !(Math.abs(r-safeR) <= 1 && Math.abs(c-safeC) <= 1)) {
-          mineSet.add(key);
-          board[r][c] = -1;
-          placed++;
+      // Build list of all valid positions (excluding 3x3 safe zone)
+      var candidates = [];
+      for (var r = 0; r < cfg.rows; r++) {
+        for (var c = 0; c < cfg.cols; c++) {
+          if (Math.abs(r - safeR) <= 1 && Math.abs(c - safeC) <= 1) continue;
+          candidates.push({r: r, c: c});
         }
       }
+
+      // Fisher-Yates shuffle then take first N
+      for (var i = candidates.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = candidates[i];
+        candidates[i] = candidates[j];
+        candidates[j] = tmp;
+      }
+
+      var toPlace = Math.min(totalMines, candidates.length);
+      for (var i = 0; i < toPlace; i++) {
+        board[candidates[i].r][candidates[i].c] = -1;
+      }
+
+      // Calculate neighbor counts
       for (var r = 0; r < cfg.rows; r++) {
         for (var c = 0; c < cfg.cols; c++) {
           if (board[r][c] === -1) continue;
           var count = 0;
           for (var dr = -1; dr <= 1; dr++) {
             for (var dc = -1; dc <= 1; dc++) {
-              var nr = r+dr, nc = c+dc;
-              if (nr >= 0 && nr < cfg.rows && nc >= 0 && nc < cfg.cols && board[nr][nc] === -1) count++;
+              if (dr === 0 && dc === 0) continue;
+              var nr = r + dr, nc = c + dc;
+              if (nr >= 0 && nr < cfg.rows && nc >= 0 && nc < cfg.cols && board[nr][nc] === -1) {
+                count++;
+              }
             }
           }
           board[r][c] = count;
@@ -284,27 +306,50 @@
       return gridEl.children[r * cfg.cols + c];
     }
 
+    // Iterative reveal to avoid stack overflow on large boards
     function reveal(r, c) {
-      if (r < 0 || r >= cfg.rows || c < 0 || c >= cfg.cols) return;
-      if (revealed[r][c] || flagged[r][c]) return;
-      revealed[r][c] = true;
-      var cell = getCell(r, c);
-      cell.classList.add('revealed');
-      if (board[r][c] === -1) {
-        cell.classList.add('mine');
-        cell.innerHTML = '<span class="bomb-icon"></span>';
-        return;
-      }
-      if (board[r][c] > 0) {
-        cell.textContent = board[r][c];
-        cell.dataset.count = board[r][c];
-      } else {
-        for (var dr = -1; dr <= 1; dr++) {
-          for (var dc = -1; dc <= 1; dc++) {
-            reveal(r+dr, c+dc);
+      var stack = [{r: r, c: c}];
+
+      while (stack.length > 0) {
+        var pos = stack.pop();
+        var pr = pos.r, pc = pos.c;
+
+        if (pr < 0 || pr >= cfg.rows || pc < 0 || pc >= cfg.cols) continue;
+        if (revealed[pr][pc] || flagged[pr][pc]) continue;
+
+        revealed[pr][pc] = true;
+        var cell = getCell(pr, pc);
+        cell.classList.add('revealed');
+
+        if (board[pr][pc] === -1) {
+          cell.classList.add('mine');
+          cell.innerHTML = '\u{1F4A3}';
+          continue;
+        }
+
+        if (board[pr][pc] > 0) {
+          cell.textContent = board[pr][pc];
+          cell.dataset.count = board[pr][pc];
+        } else {
+          // Empty cell — push all 8 neighbors
+          for (var dr = -1; dr <= 1; dr++) {
+            for (var dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              stack.push({r: pr + dr, c: pc + dc});
+            }
           }
         }
       }
+    }
+
+    function countMines() {
+      var count = 0;
+      for (var r = 0; r < cfg.rows; r++) {
+        for (var c = 0; c < cfg.cols; c++) {
+          if (board[r][c] === -1) count++;
+        }
+      }
+      return count;
     }
 
     function checkWin() {
@@ -314,16 +359,17 @@
           if (!revealed[r][c]) unrevealed++;
         }
       }
-      return unrevealed === cfg.mines;
+      return unrevealed === totalMines;
     }
 
-    function onCellClick(e) {
+    function handleClick(e) {
       if (!gameActive) return;
       var target = e.target.closest('.mine-cell');
       if (!target) return;
       var r = parseInt(target.dataset.r);
       var c = parseInt(target.dataset.c);
-      if (flagged[r][c]) return;
+      if (isNaN(r) || isNaN(c)) return;
+      if (flagged[r][c] || revealed[r][c]) return;
 
       if (firstClick) {
         firstClick = false;
@@ -332,15 +378,27 @@
 
       if (board[r][c] === -1) {
         gameActive = false;
-        // Mark the clicked mine as the trigger
+        // Reveal the clicked mine and mark it as the trigger
+        revealed[r][c] = true;
         var triggerCell = getCell(r, c);
-        reveal(r, c);
-        triggerCell.classList.add('mine-trigger');
-        // Reveal remaining mines
-        mineSet.forEach(function(key) {
-          var parts = key.split(',');
-          reveal(parseInt(parts[0]), parseInt(parts[1]));
-        });
+        triggerCell.classList.add('revealed', 'mine', 'mine-trigger');
+        triggerCell.innerHTML = '\u{1F4A3}';
+        // Reveal all other mines
+        for (var mr = 0; mr < cfg.rows; mr++) {
+          for (var mc = 0; mc < cfg.cols; mc++) {
+            if (board[mr][mc] === -1 && !revealed[mr][mc]) {
+              revealed[mr][mc] = true;
+              var mineCell = getCell(mr, mc);
+              mineCell.classList.add('revealed', 'mine');
+              mineCell.innerHTML = '\u{1F4A3}';
+            }
+            // Show incorrectly flagged cells
+            if (flagged[mr][mc] && board[mr][mc] !== -1) {
+              var wrongCell = getCell(mr, mc);
+              wrongCell.classList.add('wrong-flag');
+            }
+          }
+        }
         statusEl.textContent = 'Game Over! Click New Game to retry.';
         return;
       }
@@ -352,28 +410,32 @@
       }
     }
 
-    function onCellRightClick(e) {
+    function handleRightClick(e) {
       e.preventDefault();
       if (!gameActive) return;
       var target = e.target.closest('.mine-cell');
       if (!target) return;
       var r = parseInt(target.dataset.r);
       var c = parseInt(target.dataset.c);
+      if (isNaN(r) || isNaN(c)) return;
       if (revealed[r][c]) return;
+
       flagged[r][c] = !flagged[r][c];
       var cell = getCell(r, c);
       cell.classList.toggle('flagged');
       if (flagged[r][c]) {
-        cell.innerHTML = '<span class="flag-icon"></span>';
+        cell.innerHTML = '\u{1F6A9}';
+        flagCount++;
       } else {
         cell.innerHTML = '';
+        flagCount--;
       }
-      flagCount += flagged[r][c] ? 1 : -1;
-      statusEl.textContent = 'Mines: ' + mineCount + ' | Flags: ' + flagCount;
+      statusEl.textContent = 'Mines: ' + totalMines + ' | Flags: ' + flagCount;
     }
 
-    // Prevent scrolling when right-clicking on the grid
-    gridEl.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    // Event delegation — one listener on the grid, not per-cell
+    gridEl.addEventListener('click', handleClick);
+    gridEl.addEventListener('contextmenu', handleRightClick);
 
     document.getElementById('mine-restart').addEventListener('click', init);
     document.getElementById('mine-difficulty').addEventListener('change', init);
