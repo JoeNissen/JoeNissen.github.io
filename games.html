@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Games | Joe Nissen</title>
+  <meta name="description" content="Mini games: Snake, Minesweeper, 2048, Tetris, Conway's Game of Life, and Typing Speed Test." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="canonical" href="https://joenissen.github.io/games.html" />
+
+  <meta property="og:title" content="Games | Joe Nissen" />
+  <meta property="og:description" content="Mini games: Snake, Minesweeper, 2048, Tetris, Conway's Game of Life, and Typing Speed Test." />
+  <meta property="og:url" content="https://joenissen.github.io/games.html" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Games | Joe Nissen" />
+  <meta name="twitter:description" content="Mini games playable in the browser." />
+
+  <script src="assets/particles.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+
+<div class="loader"><span class="loader-text">JN<span>.</span></span></div>
+
+<div id="particles-js"></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="games.html" class="active" aria-current="page">Games</a></li>
+  </ul>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</nav>
+
+<header class="page-header" id="main">
+  <h1>Games<span>.</span></h1>
+  <p class="lead">
+    A collection of classic mini-games, playable right in the browser.
+    Use arrow keys or swipe on mobile.
+  </p>
+</header>
+
+<section>
+  <div class="grid three-col">
+
+    <!-- Snake -->
+    <div class="game-card" id="snake-card">
+      <h3>Snake</h3>
+      <div class="game-controls">
+        <button id="snake-restart">New Game</button>
+      </div>
+      <div class="game-canvas-wrapper">
+        <canvas id="snake-canvas" width="300" height="300"></canvas>
+      </div>
+      <div class="game-score">Score: <strong id="snake-score">0</strong></div>
+    </div>
+
+    <!-- Minesweeper -->
+    <div class="game-card" id="minesweeper-card">
+      <h3>Minesweeper</h3>
+      <div class="game-controls">
+        <select id="mine-difficulty">
+          <option value="easy">Easy (9x9)</option>
+          <option value="medium">Medium (16x16)</option>
+          <option value="hard">Hard (16x30)</option>
+        </select>
+        <button id="mine-restart">New Game</button>
+      </div>
+      <div class="game-canvas-wrapper">
+        <div id="minesweeper-grid" class="minesweeper-grid"></div>
+      </div>
+      <div class="game-score" id="mine-status">Click to start</div>
+    </div>
+
+    <!-- 2048 -->
+    <div class="game-card" id="game-2048-card">
+      <h3>2048</h3>
+      <div class="game-controls">
+        <button id="game-2048-restart">New Game</button>
+      </div>
+      <div id="grid-2048" class="grid-2048"></div>
+      <div class="game-score">Score: <strong id="game-2048-score">0</strong></div>
+    </div>
+
+    <!-- Tetris -->
+    <div class="game-card" id="tetris-card">
+      <h3>Tetris</h3>
+      <div class="game-controls">
+        <button id="tetris-restart">New Game</button>
+      </div>
+      <div class="game-canvas-wrapper">
+        <canvas id="tetris-canvas" width="200" height="400"></canvas>
+      </div>
+      <div class="game-score">Score: <strong id="tetris-score">0</strong> &nbsp; Level: <strong id="tetris-level">1</strong></div>
+    </div>
+
+    <!-- Conway's Game of Life -->
+    <div class="game-card" id="life-card">
+      <h3>Game of Life</h3>
+      <div class="game-controls">
+        <button id="life-play">Play</button>
+        <button id="life-clear">Clear</button>
+        <button id="life-random">Random</button>
+        <input type="range" id="life-speed" min="50" max="500" value="150" title="Speed">
+      </div>
+      <div class="game-canvas-wrapper">
+        <canvas id="life-canvas" width="300" height="300"></canvas>
+      </div>
+      <div class="game-score">Generation: <strong id="life-gen">0</strong></div>
+    </div>
+
+    <!-- Typing Speed Test -->
+    <div class="game-card" id="typing-card">
+      <h3>Typing Speed Test</h3>
+      <div class="game-controls">
+        <button id="typing-restart">New Test</button>
+      </div>
+      <div class="typing-area" id="typing-display"></div>
+      <input class="typing-input" id="typing-input" placeholder="Start typing here..." autocomplete="off" />
+      <div class="typing-stats">
+        <span>WPM: <strong id="typing-wpm">0</strong></span>
+        <span>Accuracy: <strong id="typing-acc">100%</strong></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 Joe Nissen &middot; Last updated Sep 2026
+</footer>
+
+<script src="assets/particles-config.js"></script>
+<script src="assets/animations.js?v=4"></script>
+<script src="assets/games.js?v=1"></script>
+
+</body>
+</html>

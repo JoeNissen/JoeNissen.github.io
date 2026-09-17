@@ -42,18 +42,27 @@
 
 <body>
 
+<div class="loader"><span class="loader-text">JN<span>.</span></span></div>
+
 <div id="particles-js"></div>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <a class="navbar-brand" href="index.html">JN<span>.</span></a>
+  <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   <ul class="navbar-links">
     <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
     <li><a href="projects.html">Projects</a></li>
     <li><a href="research.html">Research</a></li>
     <li><a href="resume.html">Resume</a></li>
+    <li><a href="games.html">Games</a></li>
   </ul>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
 </nav>
 
 <header class="page-header" id="main">
@@ -145,15 +154,11 @@
 <a href="#main" class="back-to-top">&uarr; Back to top</a>
 
 <footer>
-  &copy; <span id="year"></span> Joe Nissen
+  &copy; 2026 Joe Nissen &middot; Last updated Sep 2026
 </footer>
 
-<script>
-document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
 <script src="assets/particles-config.js"></script>
-<script src="assets/animations.js?v=3"></script>
+<script src="assets/animations.js?v=4"></script>
 
 </body>
 </html>

@@ -2,6 +2,17 @@
 
 (function() {
 
+  /* 0. Loading screen */
+  var loader = document.querySelector(".loader");
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+    if (loader) {
+      setTimeout(function() {
+        loader.classList.add("hidden");
+      }, 200);
+    }
+  });
+
   /* 1. Navbar solidify on scroll */
   var navbar = document.querySelector(".navbar");
   if (navbar) {
@@ -15,12 +26,11 @@
   }
 
   /* 2. Scroll-triggered card reveals (IntersectionObserver) */
-  var cards = document.querySelectorAll(".card");
+  var cards = document.querySelectorAll(".card, .game-card, .timeline-item");
   if (cards.length > 0 && "IntersectionObserver" in window) {
     var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry, i) {
+      entries.forEach(function(entry) {
         if (entry.isIntersecting) {
-          // Stagger delay based on visible order
           var delay = Array.prototype.indexOf.call(cards, entry.target) * 150;
           setTimeout(function() {
             entry.target.classList.add("visible");
@@ -34,12 +44,11 @@
       observer.observe(card);
     });
   } else {
-    // Fallback: show all cards immediately
     cards.forEach(function(card) { card.classList.add("visible"); });
   }
 
   /* 3. Card tilt on hover (3D parallax) */
-  cards.forEach(function(card) {
+  document.querySelectorAll(".card").forEach(function(card) {
     card.addEventListener("mousemove", function(e) {
       var rect = card.getBoundingClientRect();
       var x = e.clientX - rect.left;
@@ -101,5 +110,86 @@
 
     setTimeout(typeNext, 300);
   }
+
+  /* 5. Scroll progress bar */
+  var progressBar = document.createElement("div");
+  progressBar.className = "scroll-progress";
+  document.body.appendChild(progressBar);
+
+  window.addEventListener("scroll", function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight > 0) {
+      progressBar.style.transform = "scaleX(" + (scrollTop / docHeight) + ")";
+    }
+  }, { passive: true });
+
+  /* 6. Dark/light mode toggle */
+  function getPreferredTheme() {
+    var saved = localStorage.getItem("theme");
+    if (saved) return saved;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+
+  function applyTheme(theme) {
+    if (theme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    localStorage.setItem("theme", theme);
+  }
+
+  applyTheme(getPreferredTheme());
+
+  document.querySelectorAll(".theme-toggle").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var current = document.documentElement.getAttribute("data-theme");
+      applyTheme(current === "light" ? "dark" : "light");
+    });
+  });
+
+  /* 7. Mobile hamburger menu */
+  var hamburger = document.querySelector(".hamburger");
+  var navLinks = document.querySelector(".navbar-links");
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", function(e) {
+      e.stopPropagation();
+      hamburger.classList.toggle("active");
+      navLinks.classList.toggle("open");
+    });
+
+    document.addEventListener("click", function(e) {
+      if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+        hamburger.classList.remove("active");
+        navLinks.classList.remove("open");
+      }
+    });
+
+    navLinks.querySelectorAll("a").forEach(function(link) {
+      link.addEventListener("click", function() {
+        hamburger.classList.remove("active");
+        navLinks.classList.remove("open");
+      });
+    });
+  }
+
+  /* 8. Page transition animations */
+  document.addEventListener("click", function(e) {
+    var link = e.target.closest("a");
+    if (!link) return;
+    var href = link.getAttribute("href");
+    if (!href) return;
+    // Only intercept internal navigation links
+    if (href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("#") ||
+        link.hasAttribute("download") || link.getAttribute("target") === "_blank") {
+      return;
+    }
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(function() {
+      window.location.href = href;
+    }, 200);
+  });
 
 })();
