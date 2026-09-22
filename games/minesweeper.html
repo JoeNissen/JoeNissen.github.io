@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/minesweeper.css?v=1">
 </head>
 
 <body>
@@ -43,28 +44,53 @@
 
 <header class="page-header" id="main">
   <h1>Minesweeper<span>.</span></h1>
-  <p class="lead">Left-click to reveal, right-click to flag. Clear all safe cells to win.</p>
+  <p class="lead">Left-click to reveal, right-click or long-press to flag. Clear every safe cell to win.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:fit-content;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <select id="mine-difficulty">
-        <option value="beginner">Beginner (9&times;9)</option>
-        <option value="intermediate">Intermediate (16&times;16)</option>
-        <option value="expert" selected>Expert (16&times;30)</option>
-        <option value="custom">Custom (20&times;30)</option>
+  <div class="game-card visible ms-card ms-game" id="ms-game">
+    <div class="game-controls ms-controls">
+      <select id="ms-difficulty" aria-label="Difficulty">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="expert" selected>Expert</option>
+        <option value="custom">Custom</option>
       </select>
-      <button id="mine-restart">New Game</button>
-      <button id="mine-flag-toggle" class="flag-toggle-btn">Dig</button>
+      <form class="ms-custom" id="ms-custom" novalidate>
+        <fieldset id="ms-custom-fields">
+          <legend class="ms-sr-only">Board size</legend>
+          <label>Rows <input id="ms-rows" type="number" inputmode="numeric" min="5" max="30" step="1" aria-describedby="ms-custom-error"></label>
+          <label>Cols <input id="ms-cols" type="number" inputmode="numeric" min="5" max="50" step="1" aria-describedby="ms-custom-error"></label>
+          <label>Mines <input id="ms-mines" type="number" inputmode="numeric" min="1" step="1" aria-describedby="ms-custom-error"></label>
+          <button type="submit">Apply</button>
+        </fieldset>
+      </form>
+      <button type="button" id="ms-mode" class="ms-mode" aria-pressed="false" title="Tap action on touch screens">Dig</button>
     </div>
-    <div class="game-canvas-wrapper" style="overflow-x:auto;">
-      <div id="minesweeper-grid" class="minesweeper-grid"></div>
+    <p class="ms-error" id="ms-custom-error" aria-live="polite"></p>
+
+    <div class="ms-stage">
+      <div class="ms-frame">
+        <div class="ms-hud">
+          <div class="ms-readout ms-readout-mines"><span class="ms-sr-only">Mines left: </span><span class="ms-num" id="ms-mines-left">099</span></div>
+          <button type="button" class="ms-reset" id="ms-reset" aria-label="New game" title="New game (R)">&#x1F642;</button>
+          <div class="ms-readout ms-readout-time"><span class="ms-sr-only">Seconds: </span><span class="ms-num" id="ms-time">000</span></div>
+        </div>
+        <div class="ms-scroller">
+          <div class="ms-board" id="ms-board" role="grid" aria-describedby="ms-help"></div>
+        </div>
+        <div class="ms-meta">
+          <span id="ms-best">Best &mdash;</span>
+          <button type="button" class="ms-link" id="ms-best-clear" hidden>Clear</button>
+        </div>
+      </div>
     </div>
-    <div class="game-score" id="mine-status">Click to start</div>
+
+    <p class="game-score ms-status" id="ms-status" aria-live="polite"></p>
+    <p class="ms-help" id="ms-help">Click a number whose mines are all flagged to open its neighbors (or press both buttons). On touch, long-press flags. Keyboard: arrows move, Space reveals, F flags, R restarts.</p>
   </div>
 </section>
 
@@ -74,7 +100,7 @@
 
 <script src="../assets/particles-config.js"></script>
 <script src="../assets/animations.js?v=4"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/minesweeper.js?v=1"></script>
 
 </body>
 </html>

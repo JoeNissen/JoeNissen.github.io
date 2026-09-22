@@ -1,0 +1,479 @@
+/* ── Minesweeper ──
+   All board sizing derives from --cell on .ms-stage. Grid lines are the board
+   background showing through 1px gaps; cell state changes only swap background
+   and inset shadow, never geometry. */
+
+/* Keep the nav from shifting sideways if the page's scrollbar comes and goes */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* ── Palette (dark is the site default) ── */
+.ms-game {
+  --ms-line: #070a10;
+  --ms-hidden: #29334d;
+  --ms-hidden-hover: #313c5a;
+  --ms-hi: rgba(255, 255, 255, 0.1);
+  --ms-lo: rgba(0, 0, 0, 0.45);
+  --ms-open: #121826;
+  --ms-flag: #ff6b6b;
+  --ms-mine: #e6e6eb;
+  --ms-boom: #b3261e;
+  --ms-boom-fg: #ffffff;
+  --ms-wrong-flag: #9aa0b4;
+  --ms-wrong-x: #ff6b6b;
+  --ms-error: #ff8a8a;
+  --ms-readout: var(--accent);
+  /* Canonical 1–8 hues, lightened to clear 4.5:1 on --ms-open */
+  --ms-n1: #7aa2f7;
+  --ms-n2: #73d98b;
+  --ms-n3: #ff7a7a;
+  --ms-n4: #b4a7ff;
+  --ms-n5: #f0a070;
+  --ms-n6: #5fd4d4;
+  --ms-n7: #e6e6eb;
+  --ms-n8: #9aa0b4;
+}
+
+[data-theme="light"] .ms-game {
+  --ms-line: #a9a498;
+  --ms-hidden: #faf9f6;
+  --ms-hidden-hover: #ffffff;
+  --ms-hi: rgba(255, 255, 255, 0.95);
+  --ms-lo: rgba(0, 0, 0, 0.16);
+  --ms-open: #dcd8cf;
+  --ms-flag: #b0202a;
+  --ms-mine: #1d1d22;
+  --ms-boom: #d93a3a;
+  --ms-boom-fg: #ffffff;
+  --ms-wrong-flag: #5e5e6a;
+  --ms-wrong-x: #b0202a;
+  --ms-error: #b3261e;
+  --ms-readout: var(--accent-bright);
+  /* Canonical 1–8 hues, darkened to clear 4.5:1 on --ms-open */
+  --ms-n1: #1f4fc2;
+  --ms-n2: #146b34;
+  --ms-n3: #b0202a;
+  --ms-n4: #3b2f9a;
+  --ms-n5: #8a2b0e;
+  --ms-n6: #09625f;
+  --ms-n7: #1d1d22;
+  --ms-n8: #55555f;
+}
+
+/* ── Card and controls ── */
+.game-card.ms-card {
+  width: 100%;
+  max-width: 62rem;
+  margin: 0 auto;
+  opacity: 1;
+  transform: none;
+}
+
+.ms-controls {
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.ms-custom fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.ms-custom label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.ms-custom input {
+  width: 4.25rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+}
+
+[data-theme="light"] .ms-custom input {
+  border-color: var(--btn-border);
+}
+
+.ms-custom input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.ms-custom input[aria-invalid="true"] {
+  border-color: var(--ms-error);
+}
+
+.ms-custom fieldset:disabled label {
+  opacity: 0.6;
+}
+
+.ms-custom fieldset:disabled input,
+.ms-custom fieldset:disabled button {
+  cursor: not-allowed;
+}
+
+.ms-mode {
+  min-width: 3.5rem;
+}
+
+.game-controls .ms-mode[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+/* Reserved line so an error appearing doesn't push the board down */
+.ms-error {
+  min-height: 1.3em;
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--ms-error);
+  text-align: center;
+}
+
+/* ── Stage: HUD + board + best time ──
+   Reserves the height of a 16-row board, plus room for a horizontal
+   scrollbar, so switching between the presets (9 or 16 rows, scrolling or
+   not) never moves anything below it. */
+.ms-stage {
+  --cell: 30px;
+  --ms-gap: 1px;
+  --ms-hud-h: 2.75rem;
+  --ms-meta-h: 1.75rem;
+  --ms-stack-gap: 0.5rem;
+  --ms-scrollbar-allowance: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(16 * (var(--cell) + var(--ms-gap)) + var(--ms-gap)
+                   + var(--ms-hud-h) + var(--ms-meta-h) + 2 * var(--ms-stack-gap)
+                   + var(--ms-scrollbar-allowance));
+}
+
+/* Width = the board's width (HUD and meta stretch to it), capped at the card */
+.ms-frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-stack-gap);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ms-hud {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  height: var(--ms-hud-h);
+}
+
+.ms-readout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--ms-readout);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+[data-theme="light"] .ms-readout {
+  border-color: var(--btn-border);
+}
+
+.ms-readout-mines { justify-self: start; }
+.ms-readout-time  { justify-self: end; }
+
+.ms-num {
+  display: inline-block;
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-readout::before {
+  content: "";
+  flex: none;
+  width: 0.95em;
+  height: 0.95em;
+  background-color: currentColor;
+  -webkit-mask: var(--ms-icon) center / contain no-repeat;
+  mask: var(--ms-icon) center / contain no-repeat;
+}
+
+.ms-readout-mines { --ms-icon: var(--ms-icon-mine); }
+.ms-readout-time  { --ms-icon: var(--ms-icon-clock); }
+
+.ms-reset {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  cursor: pointer;
+}
+
+[data-theme="light"] .ms-reset {
+  border-color: var(--btn-border);
+}
+
+.ms-reset:hover {
+  border-color: var(--accent);
+}
+
+.ms-reset:focus-visible,
+.ms-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Backstop for boards wider than the screen: scroll here, never the page */
+.ms-scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  max-width: 100%;
+}
+
+.ms-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  height: var(--ms-meta-h);
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-link {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0.15rem 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Board ── */
+.ms-board {
+  display: grid;
+  gap: var(--ms-gap);
+  padding: var(--ms-gap);
+  width: max-content;
+  margin-inline: auto;
+  background: var(--ms-line);
+  border-radius: 4px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.ms-row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--cell));
+  gap: var(--ms-gap);
+}
+
+.ms-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--cell);
+  aspect-ratio: 1;
+  font-size: calc(var(--cell) * 0.55);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  background: var(--ms-hidden);
+  box-shadow: inset 2px 2px 0 var(--ms-hi), inset -2px -2px 0 var(--ms-lo);
+  cursor: pointer;
+}
+
+.ms-cell:focus {
+  outline: none;
+}
+
+.ms-cell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .ms-board:not([data-status="won"]):not([data-status="lost"]) .ms-cell[data-state="hidden"]:hover {
+    background: var(--ms-hidden-hover);
+  }
+}
+
+/* Revealed / depressed: flat and sunk, same box */
+.ms-cell[data-state="open"],
+.ms-cell[data-state="mine"],
+.ms-cell[data-state="boom"],
+.ms-cell[data-pressed],
+.ms-board:not([data-status="won"]):not([data-status="lost"]) .ms-cell[data-pressed]:hover {
+  background: var(--ms-open);
+  box-shadow: none;
+}
+
+.ms-cell[data-state="open"],
+.ms-cell[data-state="mine"],
+.ms-cell[data-state="boom"],
+.ms-board[data-status="won"] .ms-cell,
+.ms-board[data-status="lost"] .ms-cell {
+  cursor: default;
+}
+
+/* Icons are masks filled with currentColor so they follow the theme */
+.ms-cell[data-state="flag"]::before,
+.ms-cell[data-state="wrong"]::before,
+.ms-cell[data-state="mine"]::before,
+.ms-cell[data-state="boom"]::before {
+  content: "";
+  width: 62%;
+  height: 62%;
+  background-color: currentColor;
+  -webkit-mask: var(--ms-icon) center / contain no-repeat;
+  mask: var(--ms-icon) center / contain no-repeat;
+}
+
+.ms-cell[data-state="flag"] {
+  color: var(--ms-flag);
+  --ms-icon: var(--ms-icon-flag);
+}
+
+.ms-cell[data-state="mine"] {
+  color: var(--ms-mine);
+  --ms-icon: var(--ms-icon-mine);
+}
+
+/* Detonated: red fill plus an inner ring, so it isn't signalled by color alone */
+.ms-cell[data-state="boom"] {
+  color: var(--ms-boom-fg);
+  background: var(--ms-boom);
+  box-shadow: inset 0 0 0 2px var(--ms-boom-fg);
+  --ms-icon: var(--ms-icon-mine);
+}
+
+/* Incorrect flag: the flag, dimmed, with an X over it */
+.ms-cell[data-state="wrong"] {
+  color: var(--ms-wrong-flag);
+  --ms-icon: var(--ms-icon-flag);
+}
+
+.ms-cell[data-state="wrong"]::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  background-color: var(--ms-wrong-x);
+  -webkit-mask: var(--ms-icon-x) center / contain no-repeat;
+  mask: var(--ms-icon-x) center / contain no-repeat;
+}
+
+.ms-cell[data-count="1"] { color: var(--ms-n1); }
+.ms-cell[data-count="2"] { color: var(--ms-n2); }
+.ms-cell[data-count="3"] { color: var(--ms-n3); }
+.ms-cell[data-count="4"] { color: var(--ms-n4); }
+.ms-cell[data-count="5"] { color: var(--ms-n5); }
+.ms-cell[data-count="6"] { color: var(--ms-n6); }
+.ms-cell[data-count="7"] { color: var(--ms-n7); }
+.ms-cell[data-count="8"] { color: var(--ms-n8); }
+
+/* ── Status and help ── */
+.ms-status {
+  min-height: 1.6em;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.ms-help {
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+}
+
+.ms-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Icons ── */
+.ms-game {
+  --ms-icon-flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 1h1.6v11.4H4zM5.6 1.4 13 4.6 5.6 7.8zM2 12.4h7.6V15H2z'/%3E%3C/svg%3E");
+  --ms-icon-mine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4.6'/%3E%3Cpath d='M7.2.8h1.6v14.4H7.2zM.8 7.2h14.4v1.6H.8zM2.6 3.7l1.1-1.1 9.7 9.7-1.1 1.1zM12.3 2.6l1.1 1.1-9.7 9.7-1.1-1.1z'/%3E%3C/svg%3E");
+  --ms-icon-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 4.4 4.4 3 8 6.6 11.6 3 13 4.4 9.4 8 13 11.6 11.6 13 8 9.4 4.4 13 3 11.6 6.6 8z'/%3E%3C/svg%3E");
+  --ms-icon-clock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6.2'/%3E%3Cpath d='M8 4.6V8l2.4 1.5'/%3E%3C/svg%3E");
+}
+
+/* ── Motion (opt-in only) ── */
+@media (prefers-reduced-motion: no-preference) {
+  .ms-cell {
+    transition: background-color 0.08s ease, box-shadow 0.08s ease;
+  }
+
+  .ms-reset:active {
+    transform: translateY(1px);
+  }
+}
+
+/* ── Responsive ──
+   Below ~1060px Expert no longer fits at 30px, so every board steps down.
+   At 320px, Beginner (9 × 27px + 1px) still fits; wider boards scroll inside
+   .ms-scroller. */
+@media (max-width: 1060px) {
+  .ms-stage {
+    --cell: 26px;
+  }
+}
+
+@media (max-width: 600px) {
+  .game-card.ms-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .ms-status {
+    min-height: 3.2em;
+  }
+}
