@@ -4,9 +4,9 @@ particlesJS("particles-js", {
     color: { value: "#7aa2f7" },
     shape: { type: "circle" },
     opacity: {
-      value: 0.18,
+      value: 0.25,
       random: true,
-      anim: { enable: true, speed: 0.5, opacity_min: 0.05, sync: false }
+      anim: { enable: true, speed: 0.5, opacity_min: 0.08, sync: false }
     },
     size: {
       value: 3,
