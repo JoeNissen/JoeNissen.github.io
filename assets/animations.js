@@ -125,9 +125,14 @@
   }, { passive: true });
 
   /* 6. Dark/light mode toggle */
-  function getPreferredTheme() {
-    var saved = localStorage.getItem("theme");
-    return saved || "dark";
+  // Follow the system setting until the visitor picks a theme with the
+  // toggle; only an explicit pick is saved. (The key was "theme" when every
+  // page load saved it, so old values aren't real choices and are ignored.)
+  var THEME_KEY = "theme-choice";
+  var systemLight = window.matchMedia("(prefers-color-scheme: light)");
+
+  function getSavedTheme() {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
   }
 
   function applyTheme(theme) {
@@ -136,15 +141,20 @@
     } else {
       document.documentElement.removeAttribute("data-theme");
     }
-    localStorage.setItem("theme", theme);
   }
 
-  applyTheme(getPreferredTheme());
+  applyTheme(getSavedTheme() || (systemLight.matches ? "light" : "dark"));
+
+  systemLight.addEventListener("change", function(e) {
+    if (!getSavedTheme()) applyTheme(e.matches ? "light" : "dark");
+  });
 
   document.querySelectorAll(".theme-toggle").forEach(function(btn) {
     btn.addEventListener("click", function() {
       var current = document.documentElement.getAttribute("data-theme");
-      applyTheme(current === "light" ? "dark" : "light");
+      var next = current === "light" ? "dark" : "light";
+      applyTheme(next);
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
     });
   });
 
