@@ -115,12 +115,16 @@ particlesJS("particles-js", {
       var p = ps[i];
       p.avoidHidden = !!zoneAt(p.x, p.y);
       if (p.avoidHidden) continue;
-      // About to enter a zone: reflect off the side it would cross
+      // About to enter a zone: reflect off the side it would cross. The
+      // resting velocity (vx_i/vy_i) is reflected too, because once the page
+      // has been clicked the repulse mode resets vx/vy to it every frame,
+      // which would undo the bounce and leave the particle skidding along
+      // the edge.
       var z = zoneAt(p.x + p.vx * step, p.y + p.vy * step);
       if (!z) continue;
       var overX = p.x > z.l && p.x < z.r, overY = p.y > z.t && p.y < z.b;
-      if (overX || !overY) p.vy = -p.vy;
-      if (overY || !overX) p.vx = -p.vx;
+      if (overX || !overY) { p.vy = -p.vy; p.vy_i = -p.vy_i; }
+      if (overY || !overX) { p.vx = -p.vx; p.vx_i = -p.vx_i; }
     }
     update.apply(this, arguments);
   };
