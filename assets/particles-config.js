@@ -17,7 +17,7 @@ particlesJS("particles-js", {
       enable: true,
       distance: 140,
       color: "#7aa2f7",
-      opacity: 0.15,
+      opacity: 0.25,
       width: 1
     },
     move: {
@@ -34,12 +34,11 @@ particlesJS("particles-js", {
     detect_on: "window",
     events: {
       onhover: { enable: true, mode: "bubble" },
-      onclick: { enable: true, mode: "repulse" },
+      onclick: { enable: false },
       resize: true
     },
     modes: {
-      bubble: { distance: 150, size: 5, duration: 2, opacity: 0.9 },
-      repulse: { distance: 200, duration: 0.6 }
+      bubble: { distance: 150, size: 5, duration: 2, opacity: 0.9 }
     }
   },
   retina_detect: true
@@ -48,7 +47,10 @@ particlesJS("particles-js", {
 /* Keep particles off the page's text. Particles bounce off anything matching
    AVOID (plus a margin), links that would cross it aren't drawn, and a particle
    that ends up underneath (the page scrolled over it, or it spawned there) is
-   hidden until it drifts back out. */
+   hidden until it drifts back out. Clicking pushes nearby particles away with a
+   kick that fades out; it replaces particles.js's own click repulse, which
+   overwrites velocities every frame (undoing bounces) and flings particles
+   near the click off the screen. */
 (function () {
   var dom = window.pJSDom && window.pJSDom[0];
   if (!dom) return;
@@ -59,6 +61,9 @@ particlesJS("particles-js", {
               ".timeline-item, .resume-entry, .navbar-brand, .navbar-links a, " +
               ".theme-toggle, footer";
   var MARGIN = 16; // CSS px of clear space around each element
+  var PUSH_RADIUS = 200; // CSS px around a click that gets pushed
+  var PUSH_SPEED = 6;    // CSS px/frame for a particle right at the click
+  var PUSH_DECAY = 0.94; // per frame; a full kick travels about 100px
   var REFRESH_MS = 300;
 
   var zones = [];
@@ -113,18 +118,33 @@ particlesJS("particles-js", {
     var ps = pJS.particles.array;
     for (var i = 0; i < ps.length; i++) {
       var p = ps[i];
+      var kx = p.kickX || 0, ky = p.kickY || 0;
       p.avoidHidden = !!zoneAt(p.x, p.y);
-      if (p.avoidHidden) continue;
-      // About to enter a zone: reflect off the side it would cross. The
-      // resting velocity (vx_i/vy_i) is reflected too, because once the page
-      // has been clicked the repulse mode resets vx/vy to it every frame,
-      // which would undo the bounce and leave the particle skidding along
-      // the edge.
-      var z = zoneAt(p.x + p.vx * step, p.y + p.vy * step);
-      if (!z) continue;
-      var overX = p.x > z.l && p.x < z.r, overY = p.y > z.t && p.y < z.b;
-      if (overX || !overY) { p.vy = -p.vy; p.vy_i = -p.vy_i; }
-      if (overY || !overX) { p.vx = -p.vx; p.vx_i = -p.vx_i; }
+      if (!p.avoidHidden) {
+        // About to enter a zone: reflect off the side it would cross. If that
+        // still lands in a zone (an inside corner where two meet), go back
+        // the way it came, which is clear because that's where it just was.
+        var z = zoneAt(p.x + p.vx * step + kx, p.y + p.vy * step + ky);
+        if (z) {
+          var overX = p.x > z.l && p.x < z.r, overY = p.y > z.t && p.y < z.b;
+          var flipY = overX || !overY, flipX = overY || !overX;
+          if (flipY) { p.vy = -p.vy; ky = -ky; }
+          if (flipX) { p.vx = -p.vx; kx = -kx; }
+          if (zoneAt(p.x + p.vx * step + kx, p.y + p.vy * step + ky)) {
+            if (!flipY) { p.vy = -p.vy; ky = -ky; }
+            if (!flipX) { p.vx = -p.vx; kx = -kx; }
+          }
+        }
+      }
+      if (kx || ky) {
+        p.x += kx;
+        p.y += ky;
+        kx *= PUSH_DECAY;
+        ky *= PUSH_DECAY;
+        if (Math.abs(kx) + Math.abs(ky) < 0.01) kx = ky = 0;
+        p.kickX = kx;
+        p.kickY = ky;
+      }
     }
     update.apply(this, arguments);
   };
@@ -144,6 +164,19 @@ particlesJS("particles-js", {
     }
     link.apply(this, arguments);
   };
+
+  window.addEventListener("click", function (e) {
+    var r = pJS.canvas.pxratio;
+    var cx = e.clientX * r, cy = e.clientY * r, R = PUSH_RADIUS * r;
+    var ps = pJS.particles.array;
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i], dx = p.x - cx, dy = p.y - cy, d = Math.sqrt(dx * dx + dy * dy);
+      if (d >= R || d === 0) continue;
+      var speed = PUSH_SPEED * r * (1 - d / R);
+      p.kickX = (p.kickX || 0) + dx / d * speed;
+      p.kickY = (p.kickY || 0) + dy / d * speed;
+    }
+  });
 
   function markDirty() { dirty = true; }
   window.addEventListener("scroll", markDirty, { passive: true });
