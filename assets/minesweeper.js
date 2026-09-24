@@ -645,12 +645,21 @@
     var p = press;
     if (!p || e.pointerId !== p.id) return;
 
+    var cur = cellIndexAt(e.clientX, e.clientY);
+
     if (p.touch) {
       if (Math.abs(e.clientX - p.x) > TOUCH_SLOP_PX || Math.abs(e.clientY - p.y) > TOUCH_SLOP_PX) {
         endPress();
         return;
       }
+      p.over = cur === p.i;
     } else {
+      // As in classic Minesweeper, a held mouse button drags the press along
+      // with the cursor: the cell under the pointer is the one that acts on
+      // release, not the one the button went down on.
+      if (cur >= 0) p.i = cur;
+      p.over = cur >= 0;
+
       // Left+right held together (or middle) is a chord. Releasing either
       // button of a two-button chord fires it, as in classic Minesweeper.
       if ((e.buttons & 3) === 3) {
@@ -658,23 +667,26 @@
         p.both = true;
       } else if (p.both) {
         p.both = false;
-        if (!p.done && cellIndexAt(e.clientX, e.clientY) === p.i) doChord(p.i);
+        if (!p.done && p.over) doChord(p.i);
         p.done = true;
       }
     }
 
-    p.over = cellIndexAt(e.clientX, e.clientY) === p.i;
     renderPress();
   }
 
   function onPointerUp(e) {
     var p = press;
     if (!p || e.pointerId !== p.id) return;
-    var over = cellIndexAt(e.clientX, e.clientY) === p.i;
+    // The mouse can move between the last pointermove and the release, so
+    // resolve the target cell from the release point.
+    var cur = cellIndexAt(e.clientX, e.clientY);
+    var i = p.touch ? p.i : cur;
+    var over = p.touch ? cur === p.i : cur >= 0;
     endPress();
     if (p.done || !over || !isLive()) return;
-    if (p.chord) doChord(p.i);
-    else if (p.left || p.touch) primary(p.i);
+    if (p.chord) doChord(i);
+    else if (p.left || p.touch) primary(i);
   }
 
   function onLongPress() {
