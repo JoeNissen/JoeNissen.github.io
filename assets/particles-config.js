@@ -1,6 +1,6 @@
 particlesJS("particles-js", {
   particles: {
-    number: { value: 90, density: { enable: true, value_area: 900 } },
+    number: { value: 110, density: { enable: true, value_area: 900 } },
     color: { value: "#7aa2f7" },
     shape: { type: "circle" },
     opacity: {
@@ -38,7 +38,7 @@ particlesJS("particles-js", {
       resize: true
     },
     modes: {
-      bubble: { distance: 150, size: 5, duration: 2, opacity: 0.4 },
+      bubble: { distance: 150, size: 5, duration: 2, opacity: 0.75 },
       repulse: { distance: 200, duration: 0.6 }
     }
   },
