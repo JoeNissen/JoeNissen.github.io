@@ -445,10 +445,11 @@ p.lead {
 }
 
 .page-header.hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4rem;
+  text-align: center;
+}
+
+.hero p.lead {
+  margin-inline: auto;
 }
 
 /* ── Buttons ── */
@@ -728,6 +729,21 @@ section {
   color: var(--muted);
 }
 
+/* Home page: the three cards sit in a centered row */
+.hero .nav-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: none;
+}
+
+.hero .nav-card h3 {
+  justify-content: center;
+}
+
+.hero .nav-card:hover {
+  transform: translateY(-6px);
+}
+
 /* ── Contact menu ── */
 .contact {
   position: relative;
@@ -778,6 +794,17 @@ section {
   opacity: 1;
   pointer-events: all;
   transform: translateY(-50%) scale(1);
+}
+
+/* Centered hero: open below the buttons rather than off to the side */
+.hero .contact-menu {
+  top: calc(100% + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+}
+
+.hero .contact-menu.active {
+  transform: translateX(-50%) scale(1);
 }
 
 .contact-row {
@@ -1341,12 +1368,6 @@ footer a {
     display: none;
   }
 
-  .page-header.hero {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-  }
-
   .page-header {
     text-align: center;
   }
@@ -1371,6 +1392,10 @@ footer a {
 
   .nav-cards {
     max-width: 100%;
+  }
+
+  .hero .nav-cards {
+    grid-template-columns: 1fr;
   }
 
   .grid.two-col {
