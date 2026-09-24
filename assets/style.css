@@ -56,7 +56,7 @@
 }
 
 [data-theme="light"] .avatar {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
 /* Light mode game overrides */
@@ -471,7 +471,7 @@ p.lead {
 .avatar-wrapper::before {
   content: '';
   position: absolute;
-  inset: -8px;
+  inset: -3px;
   background: conic-gradient(
     from 0deg,
     var(--accent),
@@ -482,29 +482,28 @@ p.lead {
   border-radius: 50%;
   animation: rotateGlow 8s linear infinite;
   z-index: -1;
-  filter: blur(4px);
+  filter: blur(3px);
+}
+
+/* Name and avatar share a line */
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .avatar {
   display: block;
-  width: 256px;
-  height: 256px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    inset 0 0 60px rgba(122, 162, 247, 0.1);
-  border: 4px solid var(--bg);
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 0 24px rgba(122, 162, 247, 0.1);
+  border: 3px solid var(--bg);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   filter: grayscale(10%);
-}
-
-/* Avatar column: text + picture stacked */
-.avatar-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
 }
 
 /* ── Buttons ── */
@@ -1398,9 +1397,14 @@ footer a {
   }
 
   .page-header.hero {
-    flex-direction: column-reverse;
+    flex-direction: column;
     text-align: center;
     gap: 2rem;
+  }
+
+  .name-row {
+    justify-content: center;
+    gap: 1rem;
   }
 
   .page-header {
@@ -1408,8 +1412,8 @@ footer a {
   }
 
   .avatar {
-    width: 180px;
-    height: 180px;
+    width: 72px;
+    height: 72px;
   }
 
   .contact-menu {
