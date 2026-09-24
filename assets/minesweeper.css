@@ -1,6 +1,6 @@
 /* ── Minesweeper ──
-   All board sizing derives from --cell on .ms-stage. Grid lines are the board
-   background showing through 1px gaps; cell state changes only swap background
+   All board sizing derives from --cell on .ms-stage. Cells butt together with
+   no gaps; --ms-line only frames the board. Cell state changes only swap background
    and inset shadow, never geometry. */
 
 /* Keep the nav from shifting sideways if the page's scrollbar comes and goes */
@@ -36,12 +36,12 @@ html {
 }
 
 [data-theme="light"] .ms-game {
-  --ms-line: #a9a498;
+  --ms-line: #9da2ab;
   --ms-hidden: #29334d;
   --ms-hidden-hover: #313c5a;
   --ms-hi: rgba(255, 255, 255, 0.1);
   --ms-lo: rgba(0, 0, 0, 0.45);
-  --ms-open: #dcd8cf;
+  --ms-open: #d3d6da;
   --ms-flag: #ff6b6b;
   --ms-mine: #1d1d22;
   --ms-boom: #d93a3a;
@@ -163,7 +163,7 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(16 * (var(--cell) + var(--ms-gap)) + var(--ms-gap)
+  min-height: calc(16 * var(--cell) + 2 * var(--ms-gap)
                    + var(--ms-hud-h) + var(--ms-meta-h) + 2 * var(--ms-stack-gap)
                    + var(--ms-scrollbar-allowance));
 }
@@ -288,7 +288,6 @@ html {
 /* ── Board ── */
 .ms-board {
   display: grid;
-  gap: var(--ms-gap);
   padding: var(--ms-gap);
   width: max-content;
   margin-inline: auto;
@@ -305,7 +304,6 @@ html {
 .ms-row {
   display: grid;
   grid-template-columns: repeat(var(--cols), var(--cell));
-  gap: var(--ms-gap);
 }
 
 .ms-cell {

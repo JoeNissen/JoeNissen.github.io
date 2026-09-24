@@ -127,8 +127,7 @@
   /* 6. Dark/light mode toggle */
   function getPreferredTheme() {
     var saved = localStorage.getItem("theme");
-    if (saved) return saved;
-    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    return saved || "dark";
   }
 
   function applyTheme(theme) {

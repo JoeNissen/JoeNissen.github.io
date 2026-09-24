@@ -18,21 +18,21 @@
 
 /* ── Light theme ── */
 [data-theme="light"] {
-  --bg: #e8e6e1;
+  --bg: #d9dbdf;
   --fg: #2c2c34;
   --muted: #5e5e6a;
-  --accent: #4a7dd4;
-  --accent-bright: #3968b8;
+  --accent: #3b6cc2;
+  --accent-bright: #2f5ca8;
   --card-border: rgba(74, 125, 212, 0.18);
   --glow: rgba(74, 125, 212, 0.25);
-  --card-bg: linear-gradient(180deg, #f0eeea, #e8e6e1);
-  --card-bg-solid: #f0eeea;
-  --navbar-bg: rgba(232, 230, 225, 0.7);
-  --navbar-bg-scrolled: rgba(232, 230, 225, 0.95);
+  --card-bg: linear-gradient(180deg, #e3e5e8, #d9dbdf);
+  --card-bg-solid: #e3e5e8;
+  --navbar-bg: rgba(217, 219, 223, 0.7);
+  --navbar-bg-scrolled: rgba(217, 219, 223, 0.95);
   --navbar-border: rgba(0, 0, 0, 0.06);
   --navbar-border-scrolled: rgba(0, 0, 0, 0.1);
-  --btn-bg: #f0eeea;
-  --btn-border: #c8c5be;
+  --btn-bg: #e3e5e8;
+  --btn-border: #b4b8c0;
 }
 
 [data-theme="light"] #particles-js {
