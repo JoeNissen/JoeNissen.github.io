@@ -55,10 +55,6 @@
   background: var(--card-bg);
 }
 
-[data-theme="light"] .avatar {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-}
-
 /* Light mode game overrides */
 [data-theme="light"] .game-card {
   background: var(--card-bg);
@@ -260,11 +256,6 @@ body::before {
   to { width: 100%; }
 }
 
-@keyframes rotateGlow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 @keyframes fadeIn {
   to { opacity: 1; }
 }
@@ -458,52 +449,6 @@ p.lead {
   align-items: center;
   justify-content: space-between;
   gap: 4rem;
-}
-
-/* ── Avatar with rotating glow blob ── */
-.avatar-wrapper {
-  position: relative;
-  flex-shrink: 0;
-  opacity: 0;
-  animation: fadeInRight 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
-}
-
-.avatar-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  background: conic-gradient(
-    from 0deg,
-    var(--accent),
-    var(--accent-bright),
-    transparent,
-    var(--accent)
-  );
-  border-radius: 50%;
-  animation: rotateGlow 8s linear infinite;
-  z-index: -1;
-  filter: blur(3px);
-}
-
-/* Name and avatar share a line */
-.name-row {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.avatar {
-  display: block;
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.35),
-    inset 0 0 24px rgba(122, 162, 247, 0.1);
-  border: 3px solid var(--bg);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  filter: grayscale(10%);
 }
 
 /* ── Buttons ── */
@@ -1402,18 +1347,8 @@ footer a {
     gap: 2rem;
   }
 
-  .name-row {
-    justify-content: center;
-    gap: 1rem;
-  }
-
   .page-header {
     text-align: center;
-  }
-
-  .avatar {
-    width: 72px;
-    height: 72px;
   }
 
   .contact-menu {
