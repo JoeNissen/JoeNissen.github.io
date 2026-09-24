@@ -11,10 +11,10 @@ html {
 /* ── Palette (dark is the site default) ── */
 .ms-game {
   --ms-line: #070a10;
-  --ms-hidden: #faf9f6;
-  --ms-hidden-hover: #ffffff;
-  --ms-hi: rgba(255, 255, 255, 0.95);
-  --ms-lo: rgba(0, 0, 0, 0.16);
+  --ms-hidden: #c4c8d0;
+  --ms-hidden-hover: #d0d4db;
+  --ms-hi: rgba(255, 255, 255, 0.5);
+  --ms-lo: rgba(0, 0, 0, 0.28);
   --ms-open: #121826;
   --ms-flag: #b0202a;
   --ms-mine: #e6e6eb;
