@@ -11,12 +11,12 @@ html {
 /* ── Palette (dark is the site default) ── */
 .ms-game {
   --ms-line: #070a10;
-  --ms-hidden: #29334d;
-  --ms-hidden-hover: #313c5a;
-  --ms-hi: rgba(255, 255, 255, 0.1);
-  --ms-lo: rgba(0, 0, 0, 0.45);
+  --ms-hidden: #faf9f6;
+  --ms-hidden-hover: #ffffff;
+  --ms-hi: rgba(255, 255, 255, 0.95);
+  --ms-lo: rgba(0, 0, 0, 0.16);
   --ms-open: #121826;
-  --ms-flag: #ff6b6b;
+  --ms-flag: #b0202a;
   --ms-mine: #e6e6eb;
   --ms-boom: #b3261e;
   --ms-boom-fg: #ffffff;
@@ -37,12 +37,12 @@ html {
 
 [data-theme="light"] .ms-game {
   --ms-line: #a9a498;
-  --ms-hidden: #faf9f6;
-  --ms-hidden-hover: #ffffff;
-  --ms-hi: rgba(255, 255, 255, 0.95);
-  --ms-lo: rgba(0, 0, 0, 0.16);
+  --ms-hidden: #29334d;
+  --ms-hidden-hover: #313c5a;
+  --ms-hi: rgba(255, 255, 255, 0.1);
+  --ms-lo: rgba(0, 0, 0, 0.45);
   --ms-open: #dcd8cf;
-  --ms-flag: #b0202a;
+  --ms-flag: #ff6b6b;
   --ms-mine: #1d1d22;
   --ms-boom: #d93a3a;
   --ms-boom-fg: #ffffff;
