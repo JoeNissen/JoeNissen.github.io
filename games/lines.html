@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game of Life | Joe Nissen</title>
-  <meta name="description" content="Conway's Game of Life cellular automaton." />
+  <title>Color Lines | Joe Nissen</title>
+  <meta name="description" content="Color Lines: move balls to line up five of a colour before the board fills up." />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css?v=7">
+  <link rel="stylesheet" href="../assets/lines.css?v=1">
 </head>
 
 <body>
@@ -42,30 +43,42 @@
 </nav>
 
 <header class="page-header" id="main">
-  <h1>Game of Life<span>.</span></h1>
-  <p class="lead">
-    A zero-player simulation invented by mathematician John Conway.
-    Each cell is either alive or dead. On each tick, cells evolve by three rules:
-    a live cell with 2 or 3 neighbors survives, a dead cell with exactly 3 neighbors is born,
-    and all other cells die. Click cells to draw a pattern (or hit Random), then press Play to watch it evolve.
-  </p>
+  <h1>Color Lines<span>.</span></h1>
+  <p class="lead">Line up five or more balls of one colour to clear them. Every move that doesn't clear a line brings three more.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <button id="life-play">Play</button>
-      <button id="life-clear">Clear</button>
-      <button id="life-random">Random</button>
-      <input type="range" id="life-speed" min="50" max="500" value="150" title="Speed">
+  <div class="game-card visible ln-card ln-game" id="ln-game">
+    <div class="game-controls ln-controls">
+      <button id="ln-restart">New Game</button>
+      <select id="ln-mode" aria-label="Movement rules">
+        <option value="classic">Moves: any open path</option>
+        <option value="straight">Moves: straight lines only</option>
+      </select>
     </div>
-    <div class="game-canvas-wrapper">
-      <canvas id="life-canvas" width="400" height="400"></canvas>
+
+    <div class="ln-hud">
+      <div class="game-score">Score: <strong id="ln-score">0</strong></div>
+      <div class="ln-next" id="ln-next" role="img">
+        Next
+        <span class="ln-ball"></span>
+        <span class="ln-ball"></span>
+        <span class="ln-ball"></span>
+      </div>
+      <div class="game-score">Best: <strong id="ln-best">0</strong></div>
     </div>
-    <div class="game-score">Generation: <strong id="life-gen">0</strong></div>
+
+    <div class="ln-board" id="ln-board" aria-label="Color Lines board"></div>
+
+    <p class="ln-status" id="ln-status" role="status" aria-live="polite"></p>
+    <p class="ln-help">
+      Click a ball, then click an empty cell to move it there. Rows, columns and
+      diagonals all count. Longer lines score more: 5 balls = 10, 6 = 24, 7 = 42.
+      Keyboard: arrow keys to move around, Enter to select and move.
+    </p>
   </div>
 </section>
 
@@ -75,7 +88,7 @@
 
 <script src="../assets/particles-config.js?v=8"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/lines.js?v=1"></script>
 
 </body>
 </html>
