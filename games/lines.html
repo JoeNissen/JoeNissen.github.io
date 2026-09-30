@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css?v=8">
-  <link rel="stylesheet" href="../assets/lines.css?v=1">
+  <link rel="stylesheet" href="../assets/lines.css?v=2">
 </head>
 
 <body>
@@ -53,7 +53,8 @@
 <section>
   <div class="game-card visible ln-card ln-game" id="ln-game">
     <div class="game-controls ln-controls">
-      <button id="ln-restart">New Game</button>
+      <button type="button" id="ln-restart">New Game</button>
+      <button type="button" id="ln-undo" disabled title="Undo last move (U)">Undo</button>
       <select id="ln-mode" aria-label="Movement rules">
         <option value="classic">Moves: any open path</option>
         <option value="straight">Moves: straight lines only</option>
@@ -61,23 +62,43 @@
     </div>
 
     <div class="ln-hud">
-      <div class="game-score">Score: <strong id="ln-score">0</strong></div>
-      <div class="ln-next" id="ln-next" role="img">
-        Next
-        <span class="ln-ball"></span>
-        <span class="ln-ball"></span>
-        <span class="ln-ball"></span>
+      <div class="ln-box ln-box-score">
+        <span class="ln-label">Score</span>
+        <strong id="ln-score">0</strong>
+        <span class="ln-gain" id="ln-gain" aria-hidden="true"></span>
       </div>
-      <div class="game-score">Best: <strong id="ln-best">0</strong></div>
+      <div class="ln-box ln-next" id="ln-next" role="img">
+        <span class="ln-label">Next</span>
+        <span class="ln-next-balls">
+          <span class="ln-ball"></span>
+          <span class="ln-ball"></span>
+          <span class="ln-ball"></span>
+        </span>
+      </div>
+      <div class="ln-box ln-box-best">
+        <span class="ln-label">Best</span>
+        <strong id="ln-best">0</strong>
+      </div>
     </div>
 
-    <div class="ln-board" id="ln-board" aria-label="Color Lines board"></div>
+    <div class="ln-stage">
+      <div class="ln-board" id="ln-board" aria-label="Color Lines board"></div>
+      <div class="ln-overlay" id="ln-overlay" role="alert" hidden>
+        <p class="ln-overlay-title">Game over</p>
+        <p class="ln-overlay-msg" id="ln-overlay-msg"></p>
+        <div class="ln-overlay-actions">
+          <button type="button" class="ln-btn-main" id="ln-overlay-main">Play again</button>
+          <button type="button" class="ln-btn-alt" id="ln-overlay-undo" hidden>Undo last move</button>
+        </div>
+      </div>
+    </div>
 
     <p class="ln-status" id="ln-status" role="status" aria-live="polite"></p>
     <p class="ln-help">
-      Click a ball, then click an empty cell to move it there. Rows, columns and
-      diagonals all count. Longer lines score more: 5 balls = 10, 6 = 24, 7 = 42.
-      Keyboard: arrow keys to move around, Enter to select and move.
+      Click a ball, then click an empty cell to move it there. Cells it can't reach are dimmed (or, in straight-line mode, the ones it can reach are dotted).
+      Rows, columns and diagonals all count. Longer lines score more: 5 balls = 10, 6 = 24, 7 = 42.
+      <span class="ln-help-keys">Keyboard: arrow keys to move around, <kbd>Enter</kbd> to select and move, <kbd>Esc</kbd> to deselect, <kbd>U</kbd> to undo.</span>
+      Your game is saved if you leave the page.
     </p>
   </div>
 </section>
@@ -88,7 +109,7 @@
 
 <script src="../assets/particles-config.js?v=10"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/lines.js?v=1"></script>
+<script src="../assets/lines.js?v=2"></script>
 
 </body>
 </html>

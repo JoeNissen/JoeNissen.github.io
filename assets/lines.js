@@ -4,7 +4,8 @@
    diagonal clear. A move that clears nothing brings three more balls, shown in
    advance. The game ends when the board fills up.
    Board state is a flat array indexed by r * SIZE + c. Game logic never
-   touches the DOM; render() turns state into DOM updates. */
+   touches the DOM; render() turns state into DOM updates. The game in
+   progress is saved, so a reload picks up where it left off. */
 (function() {
   'use strict';
 
@@ -14,11 +15,17 @@
   var el = {
     board: document.getElementById('ln-board'),
     restart: document.getElementById('ln-restart'),
+    undo: document.getElementById('ln-undo'),
     mode: document.getElementById('ln-mode'),
     score: document.getElementById('ln-score'),
     best: document.getElementById('ln-best'),
+    gain: document.getElementById('ln-gain'),
     next: document.getElementById('ln-next'),
-    status: document.getElementById('ln-status')
+    status: document.getElementById('ln-status'),
+    overlay: document.getElementById('ln-overlay'),
+    overlayMsg: document.getElementById('ln-overlay-msg'),
+    overlayMain: document.getElementById('ln-overlay-main'),
+    overlayUndo: document.getElementById('ln-overlay-undo')
   };
 
   var SIZE = 9;
@@ -33,12 +40,13 @@
   var STORE_PREFIX = 'jn.lines.v1.';
   var COLOR_NAMES = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'brown'];
   var DIRS = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  var MODES = {classic: true, straight: true};
 
   var reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ═══════════════════════════════════════════
-     Storage (best score per mode, last mode)
+     Storage (best score per mode, last mode, game in progress)
      ═══════════════════════════════════════════ */
 
   function storeGet(key) {
@@ -46,8 +54,10 @@
   }
 
   function storeSet(key, value) {
-    try { window.localStorage.setItem(STORE_PREFIX + key, value); }
-    catch (e) { /* storage unavailable: nothing persists, game still works */ }
+    try {
+      if (value === null) window.localStorage.removeItem(STORE_PREFIX + key);
+      else window.localStorage.setItem(STORE_PREFIX + key, value);
+    } catch (e) { /* storage unavailable: nothing persists, game still works */ }
   }
 
   /* ═══════════════════════════════════════════
@@ -61,12 +71,15 @@
     score: 0,
     best: 0,
     startBest: 0,     // best score when this game began
+    moves: 0,         // moves made this game
     selected: -1,
+    reachable: null,  // cells the selected ball can move to
     moving: null,     // {idx, color} while a ball is travelling
     fresh: [],        // just-spawned cells, for the pop-in animation
     clearing: [],     // cells animating out
     busy: false,      // an animation is running; input is ignored
     over: false,
+    undo: null,       // {board, next, score, moves} before the last move
     game: 0           // bumped by newGame so a running animation can tell it's stale
   };
 
@@ -136,6 +149,36 @@
     return path;
   }
 
+  // Every empty cell the ball at `from` could move to
+  function reachableFrom(board, from, mode) {
+    var seen = {}, out = [];
+    if (mode === 'straight') {
+      [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(function(d) {
+        var r = row(from) + d[0], c = col(from) + d[1];
+        while (r >= 0 && r < SIZE && c >= 0 && c < SIZE && board[r * SIZE + c] === EMPTY) {
+          out.push(r * SIZE + c);
+          r += d[0];
+          c += d[1];
+        }
+      });
+      return out;
+    }
+    var queue = [from];
+    seen[from] = true;
+    while (queue.length) {
+      var ns = neighbors(queue.shift());
+      for (var k = 0; k < ns.length; k++) {
+        var n = ns[k];
+        if (!seen[n] && board[n] === EMPTY) {
+          seen[n] = true;
+          out.push(n);
+          queue.push(n);
+        }
+      }
+    }
+    return out;
+  }
+
   // Every cell in a run of LINE+ matching the ball at idx, in any direction
   function linesThrough(board, idx) {
     var color = board[idx];
@@ -192,24 +235,72 @@
     return board;
   }
 
+  function loadBest() {
+    state.best = state.startBest = Number(storeGet('best.' + state.mode)) || 0;
+  }
+
+  // The board survives a reload; a finished game is forgotten
+  function save() {
+    storeSet('game', state.over ? null : JSON.stringify({
+      mode: state.mode, board: state.board, next: state.next,
+      score: state.score, moves: state.moves
+    }));
+  }
+
+  function restore() {
+    try {
+      var s = JSON.parse(storeGet('game'));
+      var isColor = function(v) { return v === (v | 0) && v >= 0 && v < COLORS; };
+      if (!s || !MODES[s.mode] || !Array.isArray(s.board) || s.board.length !== CELLS ||
+          !s.board.every(function(v) { return v === EMPTY || isColor(v); }) ||
+          !Array.isArray(s.next) || s.next.length !== SPAWN || !s.next.every(isColor) ||
+          typeof s.score !== 'number' || s.score < 0 ||
+          !emptyCells(s.board).length || !canMove(s.board)) return false;
+      state.mode = s.mode;
+      state.board = s.board;
+      state.next = s.next;
+      state.score = s.score;
+      state.moves = Number(s.moves) || 1;
+      loadBest();
+      state.best = Math.max(state.best, state.score);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /* ═══════════════════════════════════════════
      Turn flow
      ═══════════════════════════════════════════ */
 
-  function newGame() {
+  function resetTurnState() {
     state.game++;
-    state.board = newBoard();
-    state.next = rollNext();
-    state.score = 0;
-    state.best = state.startBest = Number(storeGet('best.' + state.mode)) || 0;
     state.selected = -1;
+    state.reachable = null;
     state.moving = null;
     state.fresh = [];
     state.clearing = [];
     state.busy = false;
     state.over = false;
+    state.undo = null;
+  }
+
+  function newGame() {
+    resetTurnState();
+    state.mode = MODES[el.mode.value] ? el.mode.value : 'classic';
+    state.board = newBoard();
+    state.next = rollNext();
+    state.score = 0;
+    state.moves = 0;
+    loadBest();
+    save();
     setStatus('');
     render();
+  }
+
+  function select(i) {
+    state.selected = i;
+    state.reachable = i < 0 ? null : reachableFrom(state.board, i, state.mode);
   }
 
   function onCell(i) {
@@ -217,8 +308,8 @@
     var board = state.board;
 
     if (board[i] !== EMPTY) {
-      state.selected = state.selected === i ? -1 : i;
-      setStatus('');
+      select(state.selected === i ? -1 : i);
+      setStatus(state.selected >= 0 && !state.reachable.length ? 'That ball is boxed in.' : '');
       render();
       return;
     }
@@ -233,10 +324,12 @@
       return;
     }
 
+    state.undo = {board: board.slice(), next: state.next.slice(), score: state.score, moves: state.moves};
     var color = board[state.selected];
-    state.selected = -1;
+    select(-1);
     state.fresh = [];
     state.busy = true;
+    state.moves++;
     setStatus('');
     travel(path, color, function() {
       board[i] = color;
@@ -268,11 +361,13 @@
   }
 
   function clear(cells, done) {
-    state.score += points(cells.length);
+    var gained = points(cells.length);
+    state.score += gained;
     if (state.score > state.best) {
       state.best = state.score;
       storeSet('best.' + state.mode, state.best);
     }
+    showGain(gained);
     function finish() {
       cells.forEach(function(c) { state.board[c] = EMPTY; });
       state.clearing = [];
@@ -310,10 +405,24 @@
     state.busy = false;
     if (!emptyCells(state.board).length || !canMove(state.board)) {
       state.over = true;
-      var best = state.score > state.startBest ? ' New best!' : '';
-      setStatus('Game over! No room left. Final score: ' + state.score + '.' + best);
+      setStatus(''); // the overlay says it
     }
+    save();
     render();
+  }
+
+  function undo() {
+    if (!state.undo || state.busy) return false;
+    var u = state.undo;
+    resetTurnState();
+    state.board = u.board;
+    state.next = u.next;
+    state.score = u.score;
+    state.moves = u.moves;
+    save();
+    setStatus('');
+    render();
+    return true;
   }
 
   /* ═══════════════════════════════════════════
@@ -341,6 +450,9 @@
 
   function render() {
     var board = state.board;
+    var reach = {};
+    if (state.reachable) state.reachable.forEach(function(i) { reach[i] = true; });
+
     for (var i = 0; i < CELLS; i++) {
       var color = board[i];
       if (state.moving && state.moving.idx === i) color = state.moving.color;
@@ -350,15 +462,20 @@
       else ball.setAttribute('data-color', color);
 
       cell.classList.toggle('is-selected', state.selected === i);
+      // Straight moves reach few cells, so mark those; open-path moves reach
+      // most cells, so mark the ones they can't
+      var hint = state.reachable && color === EMPTY;
+      cell.classList.toggle('is-reachable', !!(hint && state.mode === 'straight' && reach[i]));
+      cell.classList.toggle('is-unreachable', !!(hint && state.mode !== 'straight' && !reach[i]));
       cell.classList.toggle('is-new', state.fresh.indexOf(i) !== -1);
       cell.classList.toggle('is-clearing', state.clearing.indexOf(i) !== -1);
       cell.tabIndex = i === focusIdx ? 0 : -1;
       cell.setAttribute('aria-label', 'Row ' + (row(i) + 1) + ', column ' + (col(i) + 1) + ': ' +
-        (color === EMPTY ? 'empty' : COLOR_NAMES[color] + ' ball' +
+        (color === EMPTY ? 'empty' + (reach[i] ? ', reachable' : '') : COLOR_NAMES[color] + ' ball' +
           (state.selected === i ? ', selected' : '')));
     }
 
-    var nextBalls = el.next.children;
+    var nextBalls = el.next.querySelectorAll('.ln-ball');
     for (var n = 0; n < nextBalls.length; n++) {
       nextBalls[n].setAttribute('data-color', state.next[n]);
     }
@@ -367,11 +484,31 @@
 
     el.score.textContent = state.score;
     el.best.textContent = state.best;
+    el.undo.disabled = !state.undo || state.busy;
     el.board.dataset.status = state.over ? 'over' : 'playing';
+    root.dataset.mode = state.mode;
+    renderOverlay();
+  }
+
+  function renderOverlay() {
+    el.overlay.hidden = !state.over;
+    if (!state.over) return;
+    el.overlayMsg.textContent = 'Final score ' + state.score + '.' +
+      (state.score > state.startBest ? ' New best!' : '');
+    el.overlayUndo.hidden = !state.undo;
   }
 
   function setStatus(msg) {
     el.status.textContent = msg;
+  }
+
+  function showGain(n) {
+    if (!n || reduceMotion) return;
+    var node = document.createElement('span');
+    node.className = 'ln-gain-float';
+    node.textContent = '+' + n;
+    el.gain.appendChild(node);
+    node.addEventListener('animationend', function() { node.remove(); });
   }
 
   function flashBlocked(i) {
@@ -396,29 +533,67 @@
     if (e.animationName === 'ln-shake') e.target.classList.remove('is-blocked');
   });
 
-  // Arrow keys move focus around the grid; Enter/Space click natively
+  // Arrow keys move focus around the grid; Enter/Space click natively;
+  // Escape drops the selection
   el.board.addEventListener('keydown', function(e) {
     var r = row(focusIdx), c = col(focusIdx);
     if (e.key === 'ArrowUp') r = Math.max(0, r - 1);
     else if (e.key === 'ArrowDown') r = Math.min(SIZE - 1, r + 1);
     else if (e.key === 'ArrowLeft') c = Math.max(0, c - 1);
     else if (e.key === 'ArrowRight') c = Math.min(SIZE - 1, c + 1);
-    else return;
+    else if (e.key === 'Escape' && state.selected >= 0 && !state.busy) {
+      select(-1);
+      render();
+      return;
+    } else {
+      return;
+    }
     e.preventDefault();
     focusIdx = r * SIZE + c;
     render();
     cellEls[focusIdx].focus();
   });
 
-  el.restart.addEventListener('click', newGame);
+  function isFormField(t) {
+    return t && (t.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName));
+  }
 
-  el.mode.value = state.mode;
-  el.mode.addEventListener('change', function() {
-    state.mode = el.mode.value === 'straight' ? 'straight' : 'classic';
-    storeSet('mode', state.mode);
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.repeat || isFormField(e.target)) return;
+    if (e.key === 'u' || e.key === 'U') {
+      if (undo()) e.preventDefault();
+    }
+  });
+
+  el.restart.addEventListener('click', newGame);
+  el.overlayMain.addEventListener('click', function() {
     newGame();
+    cellEls[focusIdx].focus({preventScroll: true});
+  });
+  el.undo.addEventListener('click', undo);
+  el.overlayUndo.addEventListener('click', undo);
+
+  // Switching rules mid-game would wipe it out, so a game in progress keeps
+  // its rules and the new ones start with the next game
+  el.mode.addEventListener('change', function() {
+    var mode = MODES[el.mode.value] ? el.mode.value : 'classic';
+    storeSet('mode', mode);
+    if (state.moves === 0 || state.over) {
+      newGame();
+    } else if (mode !== state.mode) {
+      setStatus('The new movement rule starts with your next game.');
+    } else {
+      setStatus('');
+    }
   });
 
   buildBoard();
-  newGame();
+  if (restore()) {
+    resetTurnState();
+    el.mode.value = state.mode;
+    render();
+  } else {
+    el.mode.value = state.mode;
+    newGame();
+  }
 })();
