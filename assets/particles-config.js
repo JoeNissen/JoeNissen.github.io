@@ -63,9 +63,9 @@ particlesJS("particles-js", {
               ".theme-toggle, footer";
   var MARGIN = 16; // CSS px of clear space around each element
   var PUSH_RADIUS = 200; // CSS px around a click that gets pushed
-  var PUSH_SPEED = 3;     // CSS px per 60 Hz frame for a particle right at the click
+  var PUSH_SPEED = 2.6;   // CSS px per 60 Hz frame for a particle right at the click
   var PUSH_DECAY = 0.985; // per 60 Hz frame; a full kick eases out over ~4s
-  var DRIFT_MIN = 0.7;    // pushed particles keep drifting away at least this fast
+  var DRIFT_MIN = 0.45;   // pushed particles keep drifting away at least this fast
                           // (particles.js velocity units; unpushed ones are 0-0.7)
   var FRAME_MS = 1000 / 60;
   var REFRESH_MS = 300;
