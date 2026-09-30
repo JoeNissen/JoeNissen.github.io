@@ -22,6 +22,7 @@
     gain: document.getElementById('ln-gain'),
     next: document.getElementById('ln-next'),
     status: document.getElementById('ln-status'),
+    mover: document.getElementById('ln-mover'),
     overlay: document.getElementById('ln-overlay'),
     overlayMsg: document.getElementById('ln-overlay-msg'),
     overlayMain: document.getElementById('ln-overlay-main'),
@@ -35,7 +36,8 @@
   var START = 5;      // balls on a fresh board
   var SPAWN = 3;      // balls added after a move that clears nothing
   var EMPTY = -1;
-  var STEP_MS = 38;   // per cell while a ball travels
+  var STEP_MS = 42;   // per cell while a ball glides along its path
+  var MAX_TRAVEL_MS = 700;
   var CLEAR_MS = 300; // matches the ln-clear animation
   var STORE_PREFIX = 'jn.lines.v1.';
   var COLOR_NAMES = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'brown'];
@@ -74,7 +76,7 @@
     moves: 0,         // moves made this game
     selected: -1,
     reachable: null,  // cells the selected ball can move to
-    moving: null,     // {idx, color} while a ball is travelling
+    moving: null,     // the travelling ball's Animation, while one is running
     fresh: [],        // just-spawned cells, for the pop-in animation
     clearing: [],     // cells animating out
     busy: false,      // an animation is running; input is ignored
@@ -277,7 +279,9 @@
     state.game++;
     state.selected = -1;
     state.reachable = null;
+    if (state.moving) state.moving.cancel();
     state.moving = null;
+    el.mover.hidden = true;
     state.fresh = [];
     state.clearing = [];
     state.busy = false;
@@ -343,21 +347,36 @@
     });
   }
 
+  // A stand-in ball glides through the centre of each cell on the path,
+  // easing in and out over the whole trip, then lands in the target cell
   function travel(path, color, done) {
     state.board[path[0]] = EMPTY;
-    if (reduceMotion) return done();
-    var k = 0, game = state.game;
-    (function step() {
+    if (reduceMotion || !el.mover.animate) return done();
+
+    var stage = el.mover.parentNode.getBoundingClientRect();
+    var frames = path.map(function(i) {
+      var r = cellEls[i].getBoundingClientRect();
+      var x = r.left - stage.left + r.width / 2, y = r.top - stage.top + r.height / 2;
+      return {transform: 'translate(' + x + 'px, ' + y + 'px) translate(-50%, -50%)'};
+    });
+    var size = cellEls[path[0]].getBoundingClientRect().width * 0.74;
+    el.mover.style.width = el.mover.style.height = size + 'px';
+    el.mover.setAttribute('data-color', color);
+    el.mover.hidden = false;
+    render(); // the ball has left its old cell
+
+    var game = state.game;
+    state.moving = el.mover.animate(frames, {
+      duration: Math.min(120 + STEP_MS * (path.length - 1), MAX_TRAVEL_MS),
+      easing: 'ease-in-out',
+      fill: 'forwards'
+    });
+    state.moving.onfinish = function() {
       if (game !== state.game) return;
-      state.moving = {idx: path[k], color: color};
-      render();
-      if (++k < path.length) return setTimeout(step, STEP_MS);
-      setTimeout(function() {
-        if (game !== state.game) return;
-        state.moving = null;
-        done();
-      }, STEP_MS);
-    })();
+      state.moving = null;
+      done(); // draws the ball in its new cell...
+      el.mover.hidden = true; // ...in the same frame the stand-in goes
+    };
   }
 
   function clear(cells, done) {
@@ -455,7 +474,6 @@
 
     for (var i = 0; i < CELLS; i++) {
       var color = board[i];
-      if (state.moving && state.moving.idx === i) color = state.moving.color;
       var cell = cellEls[i], ball = cell.firstChild;
 
       if (color === EMPTY) ball.removeAttribute('data-color');
