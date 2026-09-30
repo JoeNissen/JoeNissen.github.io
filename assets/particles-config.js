@@ -48,7 +48,8 @@ particlesJS("particles-js", {
    AVOID (plus a margin), links that would cross it aren't drawn, and a particle
    that ends up underneath (the page scrolled over it, or it spawned there) is
    hidden until it drifts back out. Clicking pushes nearby particles away with a
-   kick that fades out; it replaces particles.js's own click repulse, which
+   kick that eases out into a steady drift away from the click; it replaces
+   particles.js's own click repulse, which
    overwrites velocities every frame (undoing bounces) and flings particles
    near the click off the screen. */
 (function () {
@@ -62,13 +63,17 @@ particlesJS("particles-js", {
               ".theme-toggle, footer";
   var MARGIN = 16; // CSS px of clear space around each element
   var PUSH_RADIUS = 200; // CSS px around a click that gets pushed
-  var PUSH_SPEED = 6;    // CSS px/frame for a particle right at the click
-  var PUSH_DECAY = 0.94; // per frame; a full kick travels about 100px
+  var PUSH_SPEED = 3;     // CSS px per 60 Hz frame for a particle right at the click
+  var PUSH_DECAY = 0.985; // per 60 Hz frame; a full kick eases out over ~4s
+  var DRIFT_MIN = 0.7;    // pushed particles keep drifting away at least this fast
+                          // (particles.js velocity units; unpushed ones are 0-0.7)
+  var FRAME_MS = 1000 / 60;
   var REFRESH_MS = 300;
 
   var zones = [];
   var dirty = true;
   var lastRefresh = 0;
+  var lastFrame = 0;
 
   function refreshZones() {
     var r = pJS.canvas.pxratio;
@@ -109,6 +114,11 @@ particlesJS("particles-js", {
   var update = pJS.fn.particlesUpdate;
   pJS.fn.particlesUpdate = function () {
     var now = performance.now();
+    // Kicks move and fade by elapsed time, so they glide the same on 60 Hz
+    // and 120 Hz screens (capped so a background tab doesn't lurch)
+    var frames = lastFrame ? Math.min(now - lastFrame, 50) / FRAME_MS : 1;
+    var decay = Math.pow(PUSH_DECAY, frames);
+    lastFrame = now;
     if (dirty || now - lastRefresh > REFRESH_MS) {
       refreshZones();
       dirty = false;
@@ -137,10 +147,10 @@ particlesJS("particles-js", {
         }
       }
       if (kx || ky) {
-        p.x += kx;
-        p.y += ky;
-        kx *= PUSH_DECAY;
-        ky *= PUSH_DECAY;
+        p.x += kx * frames;
+        p.y += ky * frames;
+        kx *= decay;
+        ky *= decay;
         if (Math.abs(kx) + Math.abs(ky) < 0.01) kx = ky = 0;
         p.kickX = kx;
         p.kickY = ky;
@@ -175,6 +185,11 @@ particlesJS("particles-js", {
       var speed = PUSH_SPEED * r * (1 - d / R);
       p.kickX = (p.kickX || 0) + dx / d * speed;
       p.kickY = (p.kickY || 0) + dy / d * speed;
+      // Turn the particle's own drift away from the click too, so when the
+      // kick fades it carries on drifting instead of coming to a stop
+      var v = Math.max(Math.sqrt(p.vx * p.vx + p.vy * p.vy), DRIFT_MIN);
+      p.vx = dx / d * v;
+      p.vy = dy / d * v;
     }
   });
 
