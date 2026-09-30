@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2048 | Joe Nissen</title>
-  <meta name="description" content="Slide and merge tiles to reach 2048." />
+  <meta name="description" content="2048: slide and merge numbered tiles to reach 2048. Keyboard and swipe controls, undo, and a saved best score." />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=7">
+  <link rel="stylesheet" href="../assets/style.css?v=8">
+  <link rel="stylesheet" href="../assets/2048.css?v=1">
 </head>
 
 <body>
@@ -43,19 +44,56 @@
 
 <header class="page-header" id="main">
   <h1>2048<span>.</span></h1>
-  <p class="lead">Use arrow keys or swipe to slide tiles. Merge matching numbers to reach 2048.</p>
+  <p class="lead">Slide the tiles. Two tiles with the same number merge into one. Reach 2048 to win.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <button id="game-2048-restart">New Game</button>
+  <div class="game-card visible tz-card tz-game" id="tz-game" data-status="playing">
+    <div class="tz-top">
+      <div class="tz-scores">
+        <div class="tz-scorebox">
+          <span class="tz-scorelabel">Score</span>
+          <strong id="tz-score">0</strong>
+          <span class="tz-gain" id="tz-gain" aria-hidden="true"></span>
+        </div>
+        <div class="tz-scorebox">
+          <span class="tz-scorelabel">Best</span>
+          <strong id="tz-best">0</strong>
+        </div>
+      </div>
+      <div class="game-controls tz-controls">
+        <button type="button" id="tz-undo" disabled title="Undo last move (U)">Undo</button>
+        <button type="button" id="tz-new">New Game</button>
+      </div>
     </div>
-    <div id="grid-2048" class="grid-2048"></div>
-    <div class="game-score" style="margin-top:0.75rem;">Score: <strong id="game-2048-score">0</strong></div>
+
+    <div class="tz-board" id="tz-board" role="img" aria-describedby="tz-help">
+      <div class="tz-cells" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="tz-tiles" id="tz-tiles" aria-hidden="true"></div>
+      <div class="tz-overlay" id="tz-overlay" hidden>
+        <p class="tz-overlay-title" id="tz-overlay-title"></p>
+        <p class="tz-overlay-msg" id="tz-overlay-msg"></p>
+        <div class="tz-overlay-actions">
+          <button type="button" class="tz-btn-main" id="tz-overlay-main">Try again</button>
+          <button type="button" class="tz-btn-alt" id="tz-overlay-alt" hidden>New game</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="tz-status" id="tz-status" role="status" aria-live="polite"></p>
+    <p class="tz-help" id="tz-help">
+      <span class="tz-help-keys"><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&rarr;</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to slide &middot; <kbd>U</kbd> undo.</span>
+      <span class="tz-help-touch">Swipe on the board to slide the tiles.</span>
+      Your game is saved if you leave the page.
+    </p>
   </div>
 </section>
 
@@ -65,7 +103,7 @@
 
 <script src="../assets/particles-config.js?v=8"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/2048.js?v=1"></script>
 
 </body>
 </html>

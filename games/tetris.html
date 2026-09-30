@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tetris | Joe Nissen</title>
-  <meta name="description" content="Classic Tetris with increasing speed per level." />
+  <meta name="description" content="Tetris with hold, ghost piece, next queue and modern rotation, playable with keyboard or touch." />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=7">
+  <link rel="stylesheet" href="../assets/style.css?v=8">
+  <link rel="stylesheet" href="../assets/tetris.css?v=1">
 </head>
 
 <body>
@@ -43,21 +44,64 @@
 
 <header class="page-header" id="main">
   <h1>Tetris<span>.</span></h1>
-  <p class="lead">Arrow keys to move and rotate. Clear lines to score. Speed increases each level.</p>
+  <p class="lead">Stack falling pieces to fill rows. Every ten lines the level goes up and the pieces fall faster.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <button id="tetris-restart">New Game</button>
+  <div class="game-card visible tt-card tt-game" id="tt-game" data-status="idle">
+    <div class="game-controls tt-controls">
+      <button type="button" id="tt-new">New Game</button>
+      <button type="button" id="tt-pause" disabled>Pause</button>
     </div>
-    <div class="game-canvas-wrapper">
-      <canvas id="tetris-canvas" width="200" height="400"></canvas>
+
+    <div class="tt-layout" id="tt-layout">
+      <div class="tt-panel tt-hold">
+        <h2 class="tt-label">Hold</h2>
+        <canvas id="tt-hold" aria-hidden="true"></canvas>
+      </div>
+
+      <dl class="tt-stats">
+        <div><dt>Score</dt><dd id="tt-score">0</dd></div>
+        <div><dt>Level</dt><dd id="tt-level">1</dd></div>
+        <div><dt>Lines</dt><dd id="tt-lines">0</dd></div>
+        <div><dt>Best</dt><dd id="tt-best">0</dd></div>
+      </dl>
+
+      <div class="tt-well" id="tt-well">
+        <canvas id="tt-board" tabindex="0" role="img" aria-label="Tetris playfield" aria-describedby="tt-help"></canvas>
+        <div class="tt-overlay" id="tt-overlay">
+          <p class="tt-overlay-title" id="tt-overlay-title">Tetris</p>
+          <p class="tt-overlay-msg" id="tt-overlay-msg"></p>
+          <button type="button" class="tt-overlay-btn" id="tt-overlay-btn">Start</button>
+        </div>
+      </div>
+
+      <div class="tt-panel tt-next">
+        <h2 class="tt-label">Next</h2>
+        <canvas id="tt-next" aria-hidden="true"></canvas>
+      </div>
     </div>
-    <div class="game-score">Score: <strong id="tetris-score">0</strong> &nbsp; Level: <strong id="tetris-level">1</strong></div>
+
+    <div class="tt-touch" id="tt-touch" aria-hidden="true">
+      <button type="button" tabindex="-1" data-action="hold">Hold</button>
+      <button type="button" tabindex="-1" data-action="ccw">&#x21BA;</button>
+      <button type="button" tabindex="-1" data-action="cw">&#x21BB;</button>
+      <button type="button" tabindex="-1" data-action="drop">&#x2913;</button>
+      <button type="button" tabindex="-1" data-action="left">&larr;</button>
+      <button type="button" tabindex="-1" data-action="down">&darr;</button>
+      <button type="button" tabindex="-1" data-action="right">&rarr;</button>
+    </div>
+
+    <p class="tt-status" id="tt-status" role="status" aria-live="polite"></p>
+    <p class="tt-help" id="tt-help">
+      <span class="tt-help-keys"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> move &middot; <kbd>&darr;</kbd> soft drop &middot;
+      <kbd>Space</kbd> hard drop &middot; <kbd>&uarr;</kbd>/<kbd>X</kbd> rotate &middot;
+      <kbd>Z</kbd> rotate back &middot; <kbd>C</kbd>/<kbd>Shift</kbd> hold &middot; <kbd>P</kbd>/<kbd>Esc</kbd> pause.</span>
+      <span class="tt-help-touch">Tap the board to rotate, drag to move, flick down to drop, or use the buttons.</span>
+    </p>
   </div>
 </section>
 
@@ -67,7 +111,7 @@
 
 <script src="../assets/particles-config.js?v=8"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/tetris.js?v=1"></script>
 
 </body>
 </html>

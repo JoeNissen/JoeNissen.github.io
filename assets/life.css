@@ -1,0 +1,163 @@
+/* ── Game of Life ──
+   The board is a canvas sized by life.js to the card's width (a whole
+   number of pixels per cell). Colours below are read by the script. */
+
+/* ── Palette (dark is the site default) ── */
+.lf-game {
+  --lf-bg: #0a0e17;
+  --lf-grid: rgba(122, 162, 247, 0.06);
+  --lf-live: #5b8def;
+  --lf-young: #a8c8ff;
+  --lf-hover: rgba(168, 200, 255, 0.6);
+}
+
+[data-theme="light"] .lf-game {
+  --lf-bg: #eceef1;
+  --lf-grid: rgba(44, 44, 52, 0.07);
+  --lf-live: #3b6cc2;
+  --lf-young: #1d3f80;
+  --lf-hover: rgba(59, 108, 194, 0.6);
+}
+
+/* ── Card and controls ── */
+.game-card.lf-card {
+  max-width: 50rem;
+  margin: 0 auto;
+  opacity: 1;
+  transform: none;
+}
+
+.lf-controls {
+  justify-content: center;
+}
+
+.lf-play {
+  min-width: 4.5rem;
+  font-weight: 600;
+}
+
+.game-controls .lf-play[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.lf-settings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.lf-settings label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.lf-speed input {
+  width: 8rem;
+  accent-color: var(--accent);
+}
+
+.lf-speed output {
+  min-width: 2.6rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.lf-edges input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+/* ── Board ── */
+.lf-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.lf-wrap canvas {
+  display: block;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px var(--card-border),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+  cursor: crosshair;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+[data-theme="light"] .lf-wrap canvas {
+  box-shadow:
+    0 0 0 1px var(--btn-border),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.lf-wrap canvas:focus {
+  outline: none;
+}
+
+.lf-wrap canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Stats, status and help ── */
+.lf-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lf-stats strong {
+  display: inline-block;
+  min-width: 3ch;
+}
+
+.lf-status {
+  min-height: 1.5em;
+  margin-top: 0.35rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.lf-help {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (pointer: coarse) {
+  .lf-help-keys { display: none; }
+}
+
+.lf-help kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+}
+
+[data-theme="light"] .lf-help kbd {
+  border-color: var(--btn-border);
+}

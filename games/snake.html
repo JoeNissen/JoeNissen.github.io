@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snake | Joe Nissen</title>
-  <meta name="description" content="Classic Snake game. Use arrow keys or swipe to control." />
+  <meta name="description" content="Classic Snake with three speeds, walls or wrap-around edges, and keyboard or touch controls." />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=7">
+  <link rel="stylesheet" href="../assets/style.css?v=8">
+  <link rel="stylesheet" href="../assets/snake.css?v=1">
 </head>
 
 <body>
@@ -43,21 +44,56 @@
 
 <header class="page-header" id="main">
   <h1>Snake<span>.</span></h1>
-  <p class="lead">Use arrow keys or swipe on mobile. Eat food to grow, avoid the walls and yourself.</p>
+  <p class="lead">Eat to grow, and don't run into yourself. Each bite speeds you up a little.</p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
   </div>
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <button id="snake-restart">New Game</button>
+  <div class="game-card visible sn-card sn-game" id="sn-game" data-status="idle">
+    <div class="game-controls sn-controls">
+      <button type="button" id="sn-new">New Game</button>
+      <button type="button" id="sn-pause" disabled>Pause</button>
+      <select id="sn-speed" aria-label="Speed">
+        <option value="slow">Slow</option>
+        <option value="normal">Normal</option>
+        <option value="fast">Fast</option>
+      </select>
+      <select id="sn-walls" aria-label="Edges">
+        <option value="walls">Solid walls</option>
+        <option value="wrap">Wrap around</option>
+      </select>
     </div>
-    <div class="game-canvas-wrapper">
-      <canvas id="snake-canvas" width="400" height="400"></canvas>
+
+    <div class="sn-hud">
+      <div class="game-score">Score: <strong id="sn-score">0</strong></div>
+      <div class="game-score">Best: <strong id="sn-best">0</strong></div>
     </div>
-    <div class="game-score">Score: <strong id="snake-score">0</strong></div>
+
+    <div class="sn-wrap" id="sn-wrap">
+      <div class="sn-stage">
+        <canvas id="sn-board" tabindex="0" role="img" aria-label="Snake board" aria-describedby="sn-help"></canvas>
+        <div class="sn-overlay" id="sn-overlay">
+          <p class="sn-overlay-title" id="sn-overlay-title">Snake</p>
+          <p class="sn-overlay-msg" id="sn-overlay-msg"></p>
+          <button type="button" class="sn-overlay-btn" id="sn-overlay-btn">Start</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-pad" id="sn-pad" aria-hidden="true">
+      <button type="button" tabindex="-1" data-dir="up" class="sn-up">&uarr;</button>
+      <button type="button" tabindex="-1" data-dir="left" class="sn-left">&larr;</button>
+      <button type="button" tabindex="-1" data-dir="down" class="sn-down">&darr;</button>
+      <button type="button" tabindex="-1" data-dir="right" class="sn-right">&rarr;</button>
+    </div>
+
+    <p class="sn-status" id="sn-status" role="status" aria-live="polite"></p>
+    <p class="sn-help" id="sn-help">
+      <span class="sn-help-keys"><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&rarr;</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to steer &middot; <kbd>Space</kbd>/<kbd>P</kbd> pause &middot; <kbd>Enter</kbd> start.</span>
+      <span class="sn-help-touch">Swipe on the board or use the arrows to steer.</span>
+    </p>
   </div>
 </section>
 
@@ -67,7 +103,7 @@
 
 <script src="../assets/particles-config.js?v=8"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/snake.js?v=1"></script>
 
 </body>
 </html>

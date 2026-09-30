@@ -1,0 +1,328 @@
+/* ── Typing Speed Test ──
+   The text is drawn as spans; a transparent input sits on top of it and
+   receives the keystrokes. */
+
+.ty-game {
+  --ty-ok: #73d98b;
+  --ty-bad: #ff7a7a;
+  --ty-bad-bg: rgba(255, 122, 122, 0.18);
+}
+
+[data-theme="light"] .ty-game {
+  --ty-ok: #146b34;
+  --ty-bad: #b0202a;
+  --ty-bad-bg: rgba(176, 32, 42, 0.14);
+}
+
+/* ── Card, controls and live stats ── */
+.game-card.ty-card {
+  max-width: 44rem;
+  margin: 0 auto;
+  opacity: 1;
+  transform: none;
+}
+
+.ty-controls {
+  justify-content: center;
+}
+
+.ty-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.ty-stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 5.5rem;
+  padding: 0.3rem 0.8rem 0.35rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  line-height: 1.25;
+}
+
+[data-theme="light"] .ty-stats div {
+  border-color: var(--btn-border);
+}
+
+.ty-stat-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ty-stats strong {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Text area ── */
+.ty-area {
+  position: relative;
+  padding: 1.25rem 1.4rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  cursor: text;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="light"] .ty-area {
+  border-color: var(--btn-border);
+}
+
+.ty-game.is-focused .ty-area {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.ty-text {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: var(--muted);
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+  word-break: normal;
+}
+
+.ty-game.is-focused .ty-text,
+.ty-game[data-status="done"] .ty-text {
+  opacity: 1;
+}
+
+.ty-word {
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .ty-area { padding: 1rem; }
+  .ty-text { font-size: 1rem; line-height: 1.75; }
+  .ty-stats div { min-width: 0; flex: 1; padding-inline: 0.4rem; }
+}
+
+.ty-ch {
+  position: relative;
+  border-radius: 2px;
+}
+
+.ty-ok {
+  color: var(--ty-ok);
+}
+
+.ty-bad {
+  color: var(--ty-bad);
+  background: var(--ty-bad-bg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* A mistyped space is otherwise invisible */
+.ty-space.ty-bad {
+  text-decoration: none;
+  box-shadow: inset 0 -2px 0 var(--ty-bad);
+}
+
+/* Caret: a bar before the next character, blinking only while idle */
+.ty-cur::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0.15em;
+  bottom: 0.1em;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.ty-game.is-focused .ty-cur::before {
+  animation: ty-blink 1s steps(1) infinite;
+}
+
+.ty-game[data-status="typing"] .ty-cur::before {
+  animation: none;
+}
+
+.ty-game:not(.is-focused) .ty-cur::before {
+  opacity: 0.4;
+}
+
+@keyframes ty-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ty-game.is-focused .ty-cur::before { animation: none; }
+}
+
+/* The real input covers the text, invisibly */
+.ty-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: 0;
+  padding: 0;
+  font-size: 16px; /* stops iOS zooming in on focus */
+  color: transparent;
+  background: transparent;
+  caret-color: transparent;
+  cursor: text;
+}
+
+.ty-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.3rem;
+  margin: 0;
+  font-size: 0.72rem;
+  text-align: center;
+  color: var(--muted);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.ty-game.is-focused .ty-hint,
+.ty-game:not([data-status="ready"]) .ty-hint {
+  opacity: 0;
+}
+
+.ty-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Result ── */
+.ty-result {
+  margin-top: 1rem;
+  padding: 1.1rem 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  background: var(--btn-bg);
+  text-align: center;
+  animation: ty-in 0.3s ease;
+}
+
+.ty-result[hidden] {
+  display: none;
+}
+
+@keyframes ty-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+.ty-result-main {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.ty-result-main div {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.ty-result-main strong {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ty-result-main span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.ty-result-detail {
+  margin: 0.7rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.ty-result-note {
+  min-height: 1.2em;
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.ty-next {
+  margin-top: 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1.4rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.ty-next:hover {
+  filter: brightness(1.1);
+}
+
+.ty-next:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* ── Help ── */
+.ty-help {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--muted);
+  text-align: center;
+}
+
+#ty-best:not(:empty) {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+#ty-best:not(:empty)::after {
+  content: " \00b7";
+  color: var(--muted);
+}
+
+@media (pointer: coarse) {
+  .ty-help-keys { display: none; }
+}
+
+.ty-help kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+}
+
+[data-theme="light"] .ty-help kbd {
+  border-color: var(--btn-border);
+}

@@ -1,0 +1,365 @@
+/* ── 2048 ──
+   The board is a square; gaps and tiles are percentages of its width, so it
+   scales freely. Tiles are absolutely positioned and slide by transitioning
+   transform from cell (--x, --y) to cell. */
+
+/* ── Palette (dark is the site default) ── */
+.tz-game {
+  --tz-board: #0a0e17;
+  --tz-cell: #182033;
+  --tz-dark-text: #1d1d22;
+  --tz-light-text: #ffffff;
+  --tz-2: #26324c;
+  --tz-4: #34466b;
+  --tz-2-text: #e6e6eb;
+  --tz-8: #f2a15a;
+  --tz-16: #f58a4b;
+  --tz-32: #f26b5b;
+  --tz-64: #e84b3c;
+  --tz-128: #edcf72;
+  --tz-256: #edcc61;
+  --tz-512: #edc850;
+  --tz-1024: #edc53f;
+  --tz-2048: #edc22e;
+  --tz-super: #7aa2f7;
+}
+
+[data-theme="light"] .tz-game {
+  --tz-board: #b3b7bf;
+  --tz-cell: #c9ccd2;
+  --tz-2: #eef0f3;
+  --tz-4: #e3e7f0;
+  --tz-2-text: #3d3f47;
+  --tz-super: #3b6cc2;
+}
+
+/* ── Card, scores and controls ── */
+.game-card.tz-card {
+  max-width: 32rem;
+  margin: 0 auto;
+  opacity: 1;
+  transform: none;
+}
+
+.tz-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.tz-controls {
+  margin: 0;
+}
+
+.tz-scores {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tz-scorebox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4.8rem;
+  padding: 0.3rem 0.8rem 0.35rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  line-height: 1.2;
+}
+
+[data-theme="light"] .tz-scorebox {
+  border-color: var(--btn-border);
+}
+
+.tz-scorelabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tz-scorebox strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* "+N" drifts up out of the score box after a merge */
+.tz-gain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tz-gain-float {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--accent);
+  animation: tz-float 0.7s ease-out forwards;
+}
+
+@keyframes tz-float {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-2.2rem); opacity: 0; }
+}
+
+/* ── Board ── */
+.tz-board {
+  --tz-gap: 3%;
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: var(--tz-board);
+  container-type: inline-size;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tz-cells {
+  position: absolute;
+  inset: var(--tz-gap);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  /* The gap between cells, as a share of the inset area: 3 / 94 of it */
+  gap: calc(100% * 3 / 94);
+}
+
+.tz-cells span {
+  border-radius: 8px;
+  background: var(--tz-cell);
+}
+
+.tz-tiles {
+  position: absolute;
+  inset: 0;
+}
+
+/* Each tile is 21.25% of the board; one step is a tile plus a 3% gap,
+   which is 24.25 / 21.25 of the tile's own size */
+.tz-tile {
+  position: absolute;
+  left: var(--tz-gap);
+  top: var(--tz-gap);
+  width: 21.25%;
+  height: 21.25%;
+  transform: translate(calc(var(--x) * 114.1176%), calc(var(--y) * 114.1176%));
+  transition: transform 100ms ease-in-out;
+  z-index: 1;
+}
+
+.tz-tile.is-merged {
+  z-index: 2;
+}
+
+.tz-inner {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 11cqw;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  background: var(--tz-bg, var(--tz-2));
+  color: var(--tz-fg, var(--tz-dark-text));
+}
+
+.tz-tile[data-digits="3"] .tz-inner { font-size: 9cqw; }
+.tz-tile[data-digits="4"] .tz-inner { font-size: 7cqw; }
+.tz-tile[data-digits="5"] .tz-inner,
+.tz-tile[data-digits="6"] .tz-inner { font-size: 5.5cqw; }
+
+.tz-tile[data-value="2"]    { --tz-bg: var(--tz-2);    --tz-fg: var(--tz-2-text); }
+.tz-tile[data-value="4"]    { --tz-bg: var(--tz-4);    --tz-fg: var(--tz-2-text); }
+.tz-tile[data-value="8"]    { --tz-bg: var(--tz-8); }
+.tz-tile[data-value="16"]   { --tz-bg: var(--tz-16); }
+.tz-tile[data-value="32"]   { --tz-bg: var(--tz-32);   --tz-fg: var(--tz-light-text); }
+.tz-tile[data-value="64"]   { --tz-bg: var(--tz-64);   --tz-fg: var(--tz-light-text); }
+.tz-tile[data-value="128"]  { --tz-bg: var(--tz-128); }
+.tz-tile[data-value="256"]  { --tz-bg: var(--tz-256); }
+.tz-tile[data-value="512"]  { --tz-bg: var(--tz-512); }
+.tz-tile[data-value="1024"] { --tz-bg: var(--tz-1024); }
+.tz-tile[data-value="2048"] { --tz-bg: var(--tz-2048); }
+.tz-tile[data-value="super"] { --tz-bg: var(--tz-super); --tz-fg: var(--tz-light-text); }
+
+/* Big tiles glow a little */
+.tz-tile[data-value="128"] .tz-inner,
+.tz-tile[data-value="256"] .tz-inner,
+.tz-tile[data-value="512"] .tz-inner,
+.tz-tile[data-value="1024"] .tz-inner,
+.tz-tile[data-value="2048"] .tz-inner {
+  box-shadow: 0 0 18px rgba(237, 200, 80, 0.35);
+}
+
+.tz-tile.is-new .tz-inner {
+  animation: tz-appear 0.18s ease-out;
+}
+
+.tz-tile.is-merged .tz-inner {
+  animation: tz-pop 0.18s ease-out;
+}
+
+@keyframes tz-appear {
+  from { transform: scale(0); opacity: 0; }
+}
+
+@keyframes tz-pop {
+  50% { transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tz-tile { transition: none; }
+  .tz-tile.is-new .tz-inner,
+  .tz-tile.is-merged .tz-inner { animation: none; }
+}
+
+/* ── End-of-game overlay ── */
+.tz-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(10, 14, 23, 0.72);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  color: #e6e6eb;
+  animation: tz-fade 0.4s ease;
+}
+
+[data-theme="light"] .tz-overlay {
+  background: rgba(236, 238, 241, 0.8);
+  color: var(--fg);
+}
+
+.tz-game[data-status="won"] .tz-overlay {
+  background: rgba(237, 194, 46, 0.55);
+  color: #1d1d22;
+}
+
+.tz-overlay[hidden] {
+  display: none;
+}
+
+@keyframes tz-fade {
+  from { opacity: 0; }
+}
+
+.tz-overlay-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.tz-overlay-msg {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.tz-overlay-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.tz-overlay button {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tz-btn-main {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.tz-btn-alt {
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+}
+
+.tz-overlay button:hover {
+  filter: brightness(1.1);
+}
+
+.tz-overlay button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Status and help ── */
+/* Announced to screen readers; the overlay shows the same thing */
+.tz-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.tz-help {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--muted);
+  text-align: center;
+}
+
+.tz-help-touch {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .tz-help-keys { display: none; }
+  .tz-help-touch { display: inline; }
+}
+
+.tz-help kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+}
+
+[data-theme="light"] .tz-help kbd {
+  border-color: var(--btn-border);
+}

@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=7">
+  <link rel="stylesheet" href="../assets/style.css?v=8">
+  <link rel="stylesheet" href="../assets/life.css?v=1">
 </head>
 
 <body>
@@ -44,10 +45,9 @@
 <header class="page-header" id="main">
   <h1>Game of Life<span>.</span></h1>
   <p class="lead">
-    A zero-player simulation invented by mathematician John Conway.
-    Each cell is either alive or dead. On each tick, cells evolve by three rules:
-    a live cell with 2 or 3 neighbors survives, a dead cell with exactly 3 neighbors is born,
-    and all other cells die. Click cells to draw a pattern (or hit Random), then press Play to watch it evolve.
+    John Conway's zero-player game. Each tick, a live cell with two or three live
+    neighbours survives, a dead cell with exactly three comes alive, and every other
+    cell dies. Draw a pattern or load a classic one, then press Play.
   </p>
   <div class="actions">
     <a class="btn" href="../games.html">&larr; All Games</a>
@@ -55,17 +55,45 @@
 </header>
 
 <section>
-  <div class="game-card visible" style="max-width:500px;margin:0 auto;opacity:1;transform:none;">
-    <div class="game-controls">
-      <button id="life-play">Play</button>
-      <button id="life-clear">Clear</button>
-      <button id="life-random">Random</button>
-      <input type="range" id="life-speed" min="50" max="500" value="150" title="Speed">
+  <div class="game-card visible lf-card lf-game" id="lf-game" data-running="false">
+    <div class="game-controls lf-controls">
+      <button type="button" id="lf-play" class="lf-play" aria-pressed="false">Play</button>
+      <button type="button" id="lf-step" title="Advance one generation (S)">Step</button>
+      <button type="button" id="lf-random" title="Random soup (R)">Random</button>
+      <button type="button" id="lf-clear" title="Clear the board (C)">Clear</button>
+      <select id="lf-pattern" aria-label="Load a pattern">
+        <option value="">Patterns&hellip;</option>
+        <option value="glider">Glider</option>
+        <option value="lwss">Lightweight spaceship</option>
+        <option value="pulsar">Pulsar</option>
+        <option value="pentadecathlon">Pentadecathlon</option>
+        <option value="gun">Gosper glider gun</option>
+        <option value="rpentomino">R-pentomino</option>
+        <option value="acorn">Acorn</option>
+        <option value="diehard">Diehard</option>
+      </select>
     </div>
-    <div class="game-canvas-wrapper">
-      <canvas id="life-canvas" width="400" height="400"></canvas>
+    <div class="lf-settings">
+      <label class="lf-speed">Speed
+        <input type="range" id="lf-speed" min="1" max="30" step="1" value="10">
+        <output id="lf-speed-out" for="lf-speed">10/s</output>
+      </label>
+      <label class="lf-edges"><input type="checkbox" id="lf-edges" checked> Wrap edges</label>
     </div>
-    <div class="game-score">Generation: <strong id="life-gen">0</strong></div>
+
+    <div class="lf-wrap" id="lf-wrap">
+      <canvas id="lf-board" tabindex="0" role="img" aria-label="Game of Life board" aria-describedby="lf-help"></canvas>
+    </div>
+
+    <div class="lf-stats">
+      <div class="game-score">Generation: <strong id="lf-gen">0</strong></div>
+      <div class="game-score">Population: <strong id="lf-pop">0</strong></div>
+    </div>
+    <p class="lf-status" id="lf-status" role="status" aria-live="polite"></p>
+    <p class="lf-help" id="lf-help">
+      Click or drag to draw; start on a live cell to erase. You can draw while it runs.
+      <span class="lf-help-keys">With the board focused: <kbd>Space</kbd> play/pause &middot; <kbd>S</kbd> step &middot; <kbd>R</kbd> random &middot; <kbd>C</kbd> clear.</span>
+    </p>
   </div>
 </section>
 
@@ -75,7 +103,7 @@
 
 <script src="../assets/particles-config.js?v=8"></script>
 <script src="../assets/animations.js?v=6"></script>
-<script src="../assets/games.js?v=9"></script>
+<script src="../assets/life.js?v=1"></script>
 
 </body>
 </html>

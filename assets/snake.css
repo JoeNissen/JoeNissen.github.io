@@ -1,0 +1,248 @@
+/* ── Snake ──
+   The board is a square canvas sized by snake.js to fit the card and the
+   viewport. Colours below are read by the script. */
+
+/* ── Palette (dark is the site default) ── */
+.sn-game {
+  --sn-bg: #0d1220;
+  --sn-tile: #111829;
+  --sn-body: #5b8def;
+  --sn-head: #8fb4ff;
+  --sn-eye: #0b0e14;
+  --sn-food: #f7768e;
+  --sn-dead: #6b7185;
+}
+
+[data-theme="light"] .sn-game {
+  --sn-bg: #e6e8eb;
+  --sn-tile: #dde0e4;
+  --sn-body: #3b6cc2;
+  --sn-head: #2a57a8;
+  --sn-eye: #ffffff;
+  --sn-food: #d6343f;
+  --sn-dead: #8a8d96;
+}
+
+/* ── Card, controls and HUD ── */
+.game-card.sn-card {
+  max-width: 36rem;
+  margin: 0 auto;
+  opacity: 1;
+  transform: none;
+}
+
+.sn-controls {
+  justify-content: center;
+}
+
+.sn-hud {
+  display: flex;
+  justify-content: space-between;
+  max-width: 520px;
+  margin: 0 auto 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Board ── */
+.sn-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.sn-stage {
+  position: relative;
+  line-height: 0;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px var(--card-border),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .sn-stage {
+  box-shadow:
+    0 0 0 1px var(--btn-border),
+    0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Solid walls get a solid frame; wrap-around a dashed one */
+.sn-game[data-walls="walls"] .sn-stage {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sn-game[data-walls="wrap"] .sn-stage {
+  outline: 2px dashed var(--muted);
+  outline-offset: 2px;
+}
+
+.sn-stage canvas {
+  display: block;
+  border-radius: 8px;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sn-stage canvas:focus {
+  outline: none;
+}
+
+.sn-stage:has(canvas:focus-visible) {
+  outline-color: var(--accent-bright);
+  outline-style: solid;
+}
+
+.sn-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  line-height: 1.4;
+  text-align: center;
+  border-radius: 8px;
+  background: rgba(10, 14, 23, 0.7);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  color: #e6e6eb;
+}
+
+[data-theme="light"] .sn-overlay {
+  background: rgba(230, 232, 235, 0.8);
+  color: var(--fg);
+}
+
+.sn-overlay[hidden] {
+  display: none;
+}
+
+.sn-overlay-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.sn-overlay-msg {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.sn-overlay-btn {
+  margin-top: 0.3rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1.4rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.sn-overlay-btn:hover {
+  filter: brightness(1.1);
+}
+
+.sn-overlay-btn:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* ── D-pad (touch screens only) ── */
+.sn-pad {
+  display: none;
+  grid-template-columns: repeat(3, 3.6rem);
+  grid-template-rows: repeat(2, 3.2rem);
+  grid-template-areas:
+    ".    up   ."
+    "left down right";
+  gap: 0.45rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+@media (pointer: coarse) {
+  .sn-pad { display: grid; }
+}
+
+.sn-up    { grid-area: up; }
+.sn-left  { grid-area: left; }
+.sn-down  { grid-area: down; }
+.sn-right { grid-area: right; }
+
+.sn-pad button {
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-theme="light"] .sn-pad button {
+  border-color: var(--btn-border);
+}
+
+.sn-pad button:active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+/* ── Status and help ── */
+/* Announced to screen readers; the overlay shows the same thing */
+.sn-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.sn-help {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--muted);
+  text-align: center;
+}
+
+.sn-help-touch {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .sn-help-keys { display: none; }
+  .sn-help-touch { display: inline; }
+}
+
+.sn-help kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+}
+
+[data-theme="light"] .sn-help kbd {
+  border-color: var(--btn-border);
+}
