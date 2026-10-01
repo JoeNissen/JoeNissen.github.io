@@ -1389,3 +1389,149 @@ body.fade-out {
     content: " (" attr(href) ")";
   }
 }
+
+/* ── Printed resume (Ctrl+P on the resume page): one clean page ── */
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.45in 0.55in;
+  }
+
+  .resume-page {
+    font-size: 9.5pt;
+    line-height: 1.3;
+  }
+
+  .resume-page footer,
+  .resume-page .download-btn,
+  .resume-page .page-header h1,
+  .resume-page .page-header .lead {
+    display: none !important;
+  }
+
+  .resume-page .print-only {
+    display: block;
+  }
+
+  .resume-page a[href]::after {
+    content: none;
+  }
+
+  .resume-page .page-header,
+  .resume-page section {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    min-height: 0;
+  }
+
+  .resume-page .resume-header {
+    gap: 0;
+  }
+
+  .resume-print-header {
+    text-align: center;
+    margin-bottom: 0.6em;
+  }
+
+  .resume-print-name {
+    font-size: 20pt;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .resume-print-contact {
+    font-size: 9pt;
+    margin: 0.15em 0 0;
+  }
+
+  .resume-page .resume-section {
+    margin-bottom: 0.7em;
+  }
+
+  .resume-page .resume-section-title {
+    font-size: 10pt;
+    margin-bottom: 0.4em;
+    padding-bottom: 0.15em;
+    border-bottom: 1px solid #999 !important;
+  }
+
+  .resume-page .resume-entry {
+    margin-bottom: 0.5em;
+    break-inside: avoid;
+  }
+
+  .resume-page .resume-entry-header h3 {
+    font-size: 10pt;
+  }
+
+  .resume-page .resume-date,
+  .resume-page .resume-subtitle,
+  .resume-page .resume-detail,
+  .resume-page .resume-list li {
+    font-size: 9pt;
+    line-height: 1.35;
+    margin-top: 0;
+  }
+
+  .resume-page .resume-list {
+    margin-top: 0.15em;
+  }
+
+  .resume-page .resume-list li {
+    margin-bottom: 0.1em;
+    padding-left: 1em;
+  }
+
+  .resume-page .resume-list li::before {
+    content: "\2022";
+    width: auto;
+    height: auto;
+    top: 0;
+    border-radius: 0;
+    background: none !important;
+    opacity: 1;
+  }
+
+  /* Skills as "Label: a, b, c" lines */
+  .resume-page .resume-skills {
+    gap: 0.15em;
+  }
+
+  .resume-page .resume-skill-group {
+    display: block;
+  }
+
+  .resume-page .resume-skill-label {
+    font-size: 9pt;
+    min-width: 0;
+  }
+
+  .resume-page .resume-skill-label::after {
+    content: ": ";
+  }
+
+  .resume-page .tag-row {
+    display: inline;
+  }
+
+  .resume-page .tag {
+    display: inline;
+    padding: 0;
+    border: none;
+    font-size: 9pt;
+  }
+
+  .resume-page .tag:not(:last-child)::after {
+    content: ",";
+  }
+
+  .resume-page .resume-awards .resume-entry {
+    margin-bottom: 0.15em;
+  }
+}
