@@ -465,11 +465,6 @@ section {
   gap: 2rem;
 }
 
-.grid.three-col {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -1226,10 +1221,6 @@ footer a {
   }
 
   .grid.two-col {
-    grid-template-columns: 1fr;
-  }
-
-  .grid.three-col {
     grid-template-columns: 1fr;
   }
 

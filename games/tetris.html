@@ -8,12 +8,12 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
-  <script src="../assets/particles.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("theme-choice")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");if(t==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}})()</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=8">
+  <link rel="stylesheet" href="../assets/style.css?v=9">
   <link rel="stylesheet" href="../assets/tetris.css?v=1">
 </head>
 
@@ -106,11 +106,12 @@
 </section>
 
 <footer>
-  &copy; 2026 Joe Nissen &middot; Last updated Sep 2026
+  &copy; 2026 Joe Nissen &middot; Last updated Oct 2026
 </footer>
 
+<script src="../assets/particles.min.js"></script>
 <script src="../assets/particles-config.js?v=11"></script>
-<script src="../assets/animations.js?v=6"></script>
+<script src="../assets/animations.js?v=7"></script>
 <script src="../assets/tetris.js?v=1"></script>
 
 </body>

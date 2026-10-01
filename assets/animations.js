@@ -13,17 +13,8 @@
     }
   });
 
-  /* 1. Navbar solidify on scroll */
+  /* 1. Navbar solidify on scroll (handled in onScroll, section 5) */
   var navbar = document.querySelector(".navbar");
-  if (navbar) {
-    window.addEventListener("scroll", function() {
-      if (window.scrollY > 40) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
-      }
-    }, { passive: true });
-  }
 
   /* 2. Scroll-triggered card reveals (IntersectionObserver) */
   var cards = document.querySelectorAll(".card, .game-card, .timeline-item");
@@ -116,11 +107,23 @@
   progressBar.className = "scroll-progress";
   document.body.appendChild(progressBar);
 
-  window.addEventListener("scroll", function() {
+  // One scroll listener for the navbar and progress bar, run at most once
+  // per frame so layout is read once per frame rather than on every event
+  var scrollQueued = false;
+  function onScroll() {
+    scrollQueued = false;
     var scrollTop = window.scrollY;
+    if (navbar) navbar.classList.toggle("scrolled", scrollTop > 40);
     var docHeight = document.documentElement.scrollHeight - window.innerHeight;
     if (docHeight > 0) {
       progressBar.style.transform = "scaleX(" + (scrollTop / docHeight) + ")";
+    }
+  }
+
+  window.addEventListener("scroll", function() {
+    if (!scrollQueued) {
+      scrollQueued = true;
+      requestAnimationFrame(onScroll);
     }
   }, { passive: true });
 
