@@ -44,8 +44,7 @@
   var DIRS = [[0, 1], [1, 0], [1, 1], [1, -1]];
   var MODES = {classic: true, straight: true};
 
-  var reduceMotion = window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduceMotion = document.documentElement.classList.contains('reduce-motion');
 
   /* ═══════════════════════════════════════════
      Storage (best score per mode, last mode, game in progress)

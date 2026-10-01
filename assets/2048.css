@@ -226,11 +226,9 @@
   50% { transform: scale(1.15); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tz-tile { transition: none; }
-  .tz-tile.is-new .tz-inner,
-  .tz-tile.is-merged .tz-inner { animation: none; }
-}
+.reduce-motion .tz-tile { transition: none; }
+.reduce-motion .tz-tile.is-new .tz-inner,
+.reduce-motion .tz-tile.is-merged .tz-inner { animation: none; }
 
 /* ── End-of-game overlay ── */
 .tz-overlay {

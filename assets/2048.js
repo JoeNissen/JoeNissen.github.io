@@ -32,8 +32,7 @@
   var STORE_PREFIX = 'jn.2048.v1.';
   var VECTORS = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
 
-  var reduceMotion = window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduceMotion = document.documentElement.classList.contains('reduce-motion');
   var SLIDE_MS = reduceMotion ? 0 : 100;
 
   /* ═══════════════════════════════════════════

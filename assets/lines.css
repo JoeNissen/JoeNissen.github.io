@@ -248,16 +248,14 @@
   75% { transform: translateX(3px); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ln-cell.is-selected .ln-ball,
-  .ln-cell.is-new .ln-ball,
-  .ln-cell.is-blocked {
-    animation: none;
-  }
+.reduce-motion .ln-cell.is-selected .ln-ball,
+.reduce-motion .ln-cell.is-new .ln-ball,
+.reduce-motion .ln-cell.is-blocked {
+  animation: none;
+}
 
-  .ln-cell.is-selected .ln-ball {
-    box-shadow: 0 0 0 3px var(--accent);
-  }
+.reduce-motion .ln-cell.is-selected .ln-ball {
+  box-shadow: 0 0 0 3px var(--accent);
 }
 
 /* The ball gliding from cell to cell during a move */

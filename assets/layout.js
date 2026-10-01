@@ -42,10 +42,42 @@
       '\n  <a class="navbar-brand" href="' + href("") + '">JN<span>.</span></a>' +
       '\n  <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>' +
       '\n  <ul class="navbar-links">\n' + links + "\n  </ul>" +
-      '\n  <button class="theme-toggle" aria-label="Toggle theme">' +
-      '\n    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' +
-      '\n    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
-      "\n  </button>\n";
+      '\n  <button class="settings-toggle" aria-label="Settings" aria-expanded="false" aria-controls="settingsPanel">' +
+      '\n    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>' +
+      "\n  </button>" +
+      settingsPanel() + "\n";
+  }
+
+  /* Settings panel (behaviour lives in animations.js, section 6) */
+  function segmented(label, name, options) {
+    return '\n    <div class="settings-row">' +
+      '\n      <span class="settings-label" id="set-' + name + '-label">' + label + "</span>" +
+      '\n      <div class="settings-segmented" role="group" aria-labelledby="set-' + name + '-label">' +
+      options.map(function(o) {
+        return '<button type="button" data-' + name + '="' + o[0] + '" aria-pressed="false">' + o[1] + "</button>";
+      }).join("") +
+      "</div>\n    </div>";
+  }
+
+  function toggle(label, note, name) {
+    return '\n    <div class="settings-row">' +
+      '\n      <span class="settings-label" id="set-' + name + '-label">' + label +
+      '<small>' + note + "</small></span>" +
+      '\n      <button type="button" class="settings-switch" role="switch" aria-checked="false" data-setting="' + name +
+      '" aria-labelledby="set-' + name + '-label"></button>' +
+      "\n    </div>";
+  }
+
+  function settingsPanel() {
+    return '\n  <div class="settings-panel" id="settingsPanel" role="dialog" aria-label="Settings" hidden>' +
+      '\n    <p class="settings-title">Settings</p>' +
+      segmented("Theme", "theme", [["system", "System"], ["light", "Light"], ["dark", "Dark"]]) +
+      toggle("Reduce motion", "Calmer animations and still particles", "motion") +
+      toggle("Background particles", "The drifting dots behind the page", "particles") +
+      segmented("Density", "density", [["low", "Low"], ["normal", "Normal"], ["high", "High"]]) +
+      '\n    <p class="settings-hint">Tip: press and hold on the background to pull the particles in, then let go.</p>' +
+      '\n    <button type="button" class="settings-reset">Reset to defaults</button>' +
+      "\n  </div>";
   }
 
   /* 2. Footer, with "Last updated" taken from the page's Last-Modified

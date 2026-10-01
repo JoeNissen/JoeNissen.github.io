@@ -36,8 +36,7 @@
   var STORE_PREFIX = 'jn.snake.v1.';
   var DIRS = {up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0]};
 
-  var reduceMotion = window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduceMotion = document.documentElement.classList.contains('reduce-motion');
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
   /* ═══════════════════════════════════════════

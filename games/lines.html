@@ -8,13 +8,13 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="../favicon.ico" sizes="any" />
 
-  <script>(function(){try{var t=localStorage.getItem("theme-choice")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");if(t==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}})()</script>
+  <script>(function(){var d=document.documentElement,g=function(k){try{return localStorage.getItem(k)}catch(e){return null}},q=function(m){return matchMedia(m).matches},t=g("theme-choice")||(q("(prefers-color-scheme: light)")?"light":"dark"),m=g("motion-choice");if(t==="light")d.setAttribute("data-theme","light");if(m==="reduce"||(!m&&q("(prefers-reduced-motion: reduce)")))d.classList.add("reduce-motion");if(g("particles-choice")==="off")d.classList.add("no-particles")})()</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css?v=11">
-  <link rel="stylesheet" href="../assets/lines.css?v=3">
+  <link rel="stylesheet" href="../assets/style.css?v=12">
+  <link rel="stylesheet" href="../assets/lines.css?v=4">
 </head>
 
 <body>
@@ -91,11 +91,11 @@
 
 <footer></footer>
 
-<script src="../assets/layout.js?v=1"></script>
+<script src="../assets/layout.js?v=3"></script>
 <script src="../assets/particles.min.js"></script>
-<script src="../assets/particles-config.js?v=11"></script>
-<script src="../assets/animations.js?v=7"></script>
-<script src="../assets/lines.js?v=3"></script>
+<script src="../assets/particles-config.js?v=13"></script>
+<script src="../assets/animations.js?v=8"></script>
+<script src="../assets/lines.js?v=4"></script>
 
 </body>
 </html>

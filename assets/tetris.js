@@ -100,8 +100,7 @@
     return out;
   }
 
-  var reduceMotion = window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduceMotion = document.documentElement.classList.contains('reduce-motion');
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
   /* ═══════════════════════════════════════════

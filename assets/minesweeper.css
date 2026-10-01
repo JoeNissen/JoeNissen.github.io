@@ -446,14 +446,12 @@ html {
 }
 
 /* ── Motion (opt-in only) ── */
-@media (prefers-reduced-motion: no-preference) {
-  .ms-cell {
-    transition: background-color 0.08s ease, box-shadow 0.08s ease;
-  }
+:root:not(.reduce-motion) .ms-cell {
+  transition: background-color 0.08s ease, box-shadow 0.08s ease;
+}
 
-  .ms-reset:active {
-    transform: translateY(1px);
-  }
+:root:not(.reduce-motion) .ms-reset:active {
+  transform: translateY(1px);
 }
 
 /* ── Responsive ──

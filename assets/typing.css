@@ -159,9 +159,7 @@
   50% { opacity: 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ty-game.is-focused .ty-cur::before { animation: none; }
-}
+.reduce-motion .ty-game.is-focused .ty-cur::before { animation: none; }
 
 /* The real input covers the text, invisibly */
 .ty-input {
