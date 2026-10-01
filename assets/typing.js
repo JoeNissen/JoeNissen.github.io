@@ -33,7 +33,7 @@
 
   var SENTENCES = [
     "Computer Science master's student focused on artificial intelligence, machine learning, and software systems.",
-    'Currently conducting research in quantum computing at Binghamton University.',
+    'Currently conducting research in quantum networking at Binghamton University.',
     'Can You Rely on Your Model Evaluation? Improving Model Evaluation with Synthetic Test Data.',
     'Fine-tuned instruction-based large language models to teach programming in Lua.',
     'Verified Connection Establishment for End-to-End Entanglement in Quantum Networks.',
