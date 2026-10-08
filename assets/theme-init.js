@@ -1,0 +1,3 @@
+/* Applies saved theme/motion/particle choices before first paint.
+   Kept as a file (not inline) so the Content-Security-Policy can stay script-src 'self'. */
+(function(){var d=document.documentElement,g=function(k){try{return localStorage.getItem(k)}catch(e){return null}},q=function(m){return matchMedia(m).matches},t=g("theme-choice")||(q("(prefers-color-scheme: light)")?"light":"dark"),m=g("motion-choice");if(t==="light")d.setAttribute("data-theme","light");if(m==="reduce"||(!m&&q("(prefers-reduced-motion: reduce)")))d.classList.add("reduce-motion");if(g("particles-choice")==="off")d.classList.add("no-particles")})()
